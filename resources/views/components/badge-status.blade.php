@@ -7,32 +7,32 @@
     $normalized = mb_strtolower(trim((string) $status));
     $config = match ($normalized) {
         'resmi', 'terkonfirmasi', 'disetujui', 'dijawab', 'aktif', 'berhasil', 'success' => [
-            'bg' => 'bg-[#DCFCE7]',
-            'text' => 'text-[#166534]',
+            'bg' => 'bg-success-bg',
+            'text' => 'text-success',
             'border' => 'border-[#BBF7D0]',
             'icon' => '✓',
         ],
         'perlu perbaikan', 'menunggu_konfirmasi', 'menunggu konfirmasi resmi', 'warning' => [
-            'bg' => 'bg-[#FEF3C7]',
-            'text' => 'text-[#92400E]',
+            'bg' => 'bg-warning-bg',
+            'text' => 'text-warning',
             'border' => 'border-[#FDE68A]',
             'icon' => '!',
         ],
         'ditolak', 'gagal', 'error' => [
-            'bg' => 'bg-[#FEE2E2]',
-            'text' => 'text-[#991B1B]',
+            'bg' => 'bg-error-bg',
+            'text' => 'text-error',
             'border' => 'border-[#FECACA]',
             'icon' => '✕',
         ],
         'dalam peninjauan', 'simulasi', 'review', 'in_review' => [
-            'bg' => 'bg-[#EDE6E3]',
-            'text' => 'text-[#6B574F]',
-            'border' => 'border-[#DDD9D6]',
+            'bg' => 'bg-highlight-light',
+            'text' => 'text-highlight-dark',
+            'border' => 'border-divider',
             'icon' => '●',
         ],
         default => [
-            'bg' => 'bg-[#DBEAFE]',
-            'text' => 'text-[#1E40AF]',
+            'bg' => 'bg-info-bg',
+            'text' => 'text-info',
             'border' => 'border-[#BFDBFE]',
             'icon' => 'ℹ',
         ],
@@ -47,4 +47,3 @@
     <span aria-hidden="true" class="font-bold">{{ $config['icon'] }}</span>
     <span>{{ $displayLabel }}</span>
 </span>
-

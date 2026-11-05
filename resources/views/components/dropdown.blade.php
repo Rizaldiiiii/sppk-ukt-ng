@@ -12,7 +12,7 @@
         type="button"
         @click="open = !open"
         :aria-expanded="open"
-        class="neu-btn-secondary px-4 py-2.5 inline-flex items-center gap-2 text-[14px]"
+        class="glass-btn-secondary px-4 py-2.5 inline-flex items-center gap-2 text-[14px]"
     >
         <span>{{ $label }}</span>
         <span
@@ -33,9 +33,8 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
         x-transition:leave-end="opacity-0 -translate-y-2 scale-95"
-        class="absolute right-0 top-full mt-2 w-56 rounded-[10px] bg-white p-2 shadow-[12px_12px_24px_#D9D3CD,-12px_-12px_24px_#FFFFFF] border border-[#E2DFDC] z-40"
+        class="absolute right-0 top-full mt-2 w-56 rounded-[12px] bg-glass-raised backdrop-blur-[24px] p-2 shadow-glass-lg border border-border-glass z-40"
     >
         {{ $slot }}
     </div>
 </div>
-

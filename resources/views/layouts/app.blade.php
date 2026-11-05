@@ -48,26 +48,33 @@
 </head>
 <body
     x-data="{ sidebarOpen: false }"
-    class="min-h-screen bg-[#f8f8f7] text-[#1C1917] font-body antialiased flex"
+    class="min-h-screen glass-bg-canvas text-ink font-body antialiased flex relative"
 >
+    <!-- Bentuk Dekoratif Lembut di Latar Belakang (Glassmorphism.md §2.2) -->
+    <div class="glass-blob-container" aria-hidden="true">
+        <div class="glass-blob glass-blob-rose"></div>
+        <div class="glass-blob glass-blob-taupe"></div>
+        <div class="glass-blob glass-blob-warm"></div>
+    </div>
+
     <!-- Overlay Drawer untuk Mobile & Tablet (<1280px) -->
     <div
         x-cloak
         x-show="sidebarOpen"
         @click="sidebarOpen = false"
         x-transition.opacity.duration.200ms
-        class="fixed inset-0 z-40 bg-[#1C1917]/45 xl:hidden"
+        class="fixed inset-0 z-40 bg-ink/35 backdrop-blur-[4px] xl:hidden"
     ></div>
 
-    <!-- Sidebar Kiri (Desktop-first >=1280px penuh, <1280px drawer) -->
+    <!-- Sidebar Kiri (Desktop-first >=1280px penuh, <1280px drawer — Glassmorphism.md §5.5) -->
     <aside
         aria-label="Navigasi Utama Sistem"
         :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full xl:translate-x-0'"
-        class="fixed xl:static inset-y-0 left-0 z-50 w-72 shrink-0 bg-[#f8f8f7] border-r border-[#E2DFDC] shadow-[8px_0_16px_rgba(217,211,205,0.45)] flex flex-col justify-between transition-transform duration-200 ease-out"
+        class="fixed xl:static inset-y-0 left-0 z-50 w-72 shrink-0 glass-sidebar flex flex-col justify-between transition-transform duration-200 ease-out"
     >
         <div>
-            <!-- Brand Header: Logo UNG + Universitas Negeri Gorontalo di atas permukaan terang -->
-            <div class="p-6 border-b border-[#DDD9D6] flex items-center justify-between gap-3 bg-[#f8f8f7]">
+            <!-- Brand Header: Logo UNG + Universitas Negeri Gorontalo di atas permukaan terang (Glassmorphism.md §5.10) -->
+            <div class="p-6 border-b border-divider/80 flex items-center justify-between gap-3 bg-primer/90">
                 <a href="{{ route('publik.beranda') }}" class="flex items-center gap-3">
                     <img
                         src="{{ asset('images/logo-ung.png') }}"
@@ -75,10 +82,10 @@
                         class="w-11 h-11 object-contain shrink-0"
                     >
                     <div>
-                        <div class="font-heading font-bold text-[14px] text-[#1C1917] leading-snug">
+                        <div class="font-heading font-bold text-[14px] text-ink leading-snug">
                             Universitas Negeri Gorontalo
                         </div>
-                        <div class="text-[12px] text-[#57534E] font-medium">
+                        <div class="text-[12px] text-ink-secondary font-medium">
                             SPPK-UKT UNG
                         </div>
                     </div>
@@ -88,28 +95,28 @@
                     type="button"
                     @click="sidebarOpen = false"
                     aria-label="Tutup menu samping"
-                    class="xl:hidden w-11 h-11 rounded-[10px] inline-flex items-center justify-center text-[#57534E] hover:bg-[#F1EFED]"
+                    class="xl:hidden w-11 h-11 rounded-[10px] inline-flex items-center justify-center text-ink-secondary hover:bg-glass-hover"
                 >
                     ✕
                 </button>
             </div>
 
-            <!-- Profil Singkat & Badge Peran Pengguna (Neumorphism.md §5.5) -->
+            <!-- Profil Singkat & Badge Peran Pengguna (Glassmorphism.md §5.5) -->
             @if($currentUser)
-                <div class="px-6 py-4 border-b border-[#DDD9D6] bg-[#F3F2F0]/60">
+                <div class="px-6 py-4 border-b border-divider/80 bg-white/50">
                     <div class="flex items-center justify-between gap-2">
-                        <span class="font-heading font-bold text-[14px] text-[#1C1917] truncate">
+                        <span class="font-heading font-bold text-[14px] text-ink truncate">
                             {{ $currentUser->nama }}
                         </span>
-                        <span class="px-2.5 py-0.5 rounded-[8px] text-[11px] font-heading font-bold bg-[#F5E8E9] text-[#550b14] border border-[#E2DFDC]">
+                        <span class="px-2.5 py-0.5 rounded-[8px] text-[11px] font-heading font-bold bg-sekunder-light text-sekunder border border-border-subtle">
                             {{ $currentUser->labelPeran() }}
                         </span>
                     </div>
-                    <div class="text-[12px] text-[#57534E] truncate mt-0.5">
+                    <div class="text-[12px] text-ink-secondary truncate mt-0.5">
                         {{ $currentUser->email }}
                     </div>
                     @if($currentUser->mahasiswa)
-                        <div class="text-[12px] text-[#78716C] mt-0.5">
+                        <div class="text-[12px] text-ink-muted mt-0.5">
                             NIM {{ $currentUser->mahasiswa->nim }} • {{ $currentUser->mahasiswa->program_studi }}
                         </div>
                     @endif
@@ -122,10 +129,10 @@
                     @php $isActive = request()->routeIs($item['pattern']); @endphp
                     <a
                         href="{{ route($item['route']) }}"
-                        class="flex items-center gap-3 px-4 py-3 min-h-[44px] rounded-[10px] font-heading text-[14px] transition-all duration-150 {{ $isActive ? 'bg-[#F5E8E9] text-[#550b14] font-bold shadow-[inset_2px_2px_5px_#D9D3CD,inset_-2px_-2px_5px_#FFFFFF]' : 'text-[#1C1917] font-semibold hover:bg-[#F1EFED]' }}"
+                        class="flex items-center gap-3 px-4 py-3 min-h-[44px] rounded-[10px] font-heading text-[14px] transition-all duration-150 {{ $isActive ? 'bg-sekunder-light/90 text-sekunder font-bold shadow-glass-xs border border-border-glass' : 'text-ink font-semibold hover:bg-glass-hover' }}"
                     >
                         <svg
-                            class="w-5 h-5 shrink-0 {{ $isActive ? 'text-[#550b14]' : 'text-[#57534E]' }}"
+                            class="w-5 h-5 shrink-0 {{ $isActive ? 'text-sekunder' : 'text-ink-secondary' }}"
                             fill="none"
                             stroke="currentColor"
                             stroke-width="1.9"
@@ -138,20 +145,20 @@
                     </a>
                 @endforeach
 
-                <div class="pt-4 mt-4 border-t border-[#DDD9D6]">
-                    <div class="px-4 pb-2 text-[11px] font-heading font-bold uppercase tracking-wider text-[#78716C]">
+                <div class="pt-4 mt-4 border-t border-divider/80">
+                    <div class="px-4 pb-2 text-[11px] font-heading font-bold uppercase tracking-wider text-ink-muted">
                         Informasi Terbuka
                     </div>
-                    <a href="{{ route('publik.alur') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-[10px] text-[13px] font-medium text-[#57534E] hover:bg-[#F1EFED] hover:text-[#1C1917]">
+                    <a href="{{ route('publik.alur') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-[10px] text-[13px] font-medium text-ink-secondary hover:bg-glass-hover hover:text-ink">
                         <span>Alur Penentuan UKT</span>
                     </a>
-                    <a href="{{ route('publik.faktor') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-[10px] text-[13px] font-medium text-[#57534E] hover:bg-[#F1EFED] hover:text-[#1C1917]">
+                    <a href="{{ route('publik.faktor') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-[10px] text-[13px] font-medium text-ink-secondary hover:bg-glass-hover hover:text-ink">
                         <span>Daftar Faktor Penentu</span>
                     </a>
-                    <a href="{{ route('publik.golongan') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-[10px] text-[13px] font-medium text-[#57534E] hover:bg-[#F1EFED] hover:text-[#1C1917]">
+                    <a href="{{ route('publik.golongan') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-[10px] text-[13px] font-medium text-ink-secondary hover:bg-glass-hover hover:text-ink">
                         <span>Rentang Nominal Golongan</span>
                     </a>
-                    <a href="{{ route('publik.prosedur-keberatan') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-[10px] text-[13px] font-medium text-[#57534E] hover:bg-[#F1EFED] hover:text-[#1C1917]">
+                    <a href="{{ route('publik.prosedur-keberatan') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-[10px] text-[13px] font-medium text-ink-secondary hover:bg-glass-hover hover:text-ink">
                         <span>Prosedur Keberatan</span>
                     </a>
                 </div>
@@ -159,12 +166,12 @@
         </div>
 
         <!-- Tombol Keluar -->
-        <div class="p-4 border-t border-[#DDD9D6]">
+        <div class="p-4 border-t border-divider/80">
             <form method="POST" action="{{ route('logout') }}" data-prevent-double-submit>
                 @csrf
                 <button
                     type="submit"
-                    class="neu-btn-secondary w-full px-4 py-2.5 flex items-center justify-center gap-2 text-[14px] text-[#991B1B]"
+                    class="glass-btn-secondary w-full px-4 py-2.5 flex items-center justify-center gap-2 text-[14px] text-error"
                 >
                     <span>Keluar dari Sesi</span>
                 </button>
@@ -173,26 +180,26 @@
     </aside>
 
     <!-- Area Konten Utama -->
-    <div class="flex-1 flex flex-col min-w-0">
+    <div class="flex-1 flex flex-col min-w-0 relative z-10">
         <!-- Header Halaman Sticky -->
-        <header class="sticky top-0 z-30 bg-[#f8f8f7]/95 backdrop-blur-sm border-b border-[#E2DFDC] px-4 md:px-6 xl:px-8 py-4 flex items-center justify-between gap-4">
+        <header class="sticky top-0 z-30 glass-header px-4 md:px-6 xl:px-8 py-4 flex items-center justify-between gap-4">
             <div class="flex items-center gap-3">
                 <button
                     type="button"
                     @click="sidebarOpen = true"
                     aria-label="Buka navigasi samping"
-                    class="xl:hidden neu-btn-secondary w-11 h-11 inline-flex items-center justify-center"
+                    class="xl:hidden glass-btn-secondary w-11 h-11 inline-flex items-center justify-center"
                 >
-                    <svg class="w-5 h-5 text-[#1C1917]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
                 <div>
-                    <h1 class="text-[21px] md:text-[26px] font-heading font-bold text-[#1C1917] leading-tight">
+                    <h1 class="text-[21px] md:text-[26px] font-heading font-bold text-ink leading-tight">
                         {{ $title }}
                     </h1>
                     @if($subtitle)
-                        <p class="text-[13px] md:text-[14px] text-[#57534E] mt-0.5">{{ $subtitle }}</p>
+                        <p class="text-[13px] md:text-[14px] text-ink-secondary mt-0.5">{{ $subtitle }}</p>
                     @endif
                 </div>
             </div>
@@ -206,14 +213,14 @@
                 <a
                     href="{{ route('notifikasi.index') }}"
                     aria-label="Notifikasi Sistem ({{ $unreadCount }} belum dibaca)"
-                    class="relative neu-btn-secondary px-3.5 py-2.5 inline-flex items-center gap-2 text-[13px]"
+                    class="relative glass-btn-secondary px-3.5 py-2.5 inline-flex items-center gap-2 text-[13px]"
                 >
-                    <svg class="w-5 h-5 text-[#550b14]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <svg class="w-5 h-5 text-sekunder" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                     </svg>
-                    <span class="hidden sm:inline font-heading font-semibold text-[#1C1917]">Notifikasi</span>
+                    <span class="hidden sm:inline font-heading font-semibold text-ink">Notifikasi</span>
                     @if($unreadCount > 0)
-                        <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#550b14] text-white">
+                        <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-sekunder text-white">
                             {{ $unreadCount }}
                         </span>
                     @endif
@@ -221,7 +228,7 @@
             </div>
         </header>
 
-        <!-- Toast Umpan Balik -->
+        <!-- Toast Umpan Balik (Glassmorphism.md §5.7) -->
         @if(session('toast_success') || session('toast_error'))
             <div
                 x-data="{ show: true }"
@@ -231,21 +238,21 @@
                 class="px-4 md:px-6 xl:px-8 pt-6"
             >
                 @if(session('toast_success'))
-                    <div class="rounded-[10px] bg-white border border-[#BBF7D0] shadow-[8px_8px_16px_#D9D3CD,-8px_-8px_16px_#FFFFFF] p-4 flex items-center justify-between gap-3">
+                    <div class="rounded-[12px] bg-glass-raised backdrop-blur-[24px] border border-[#BBF7D0] shadow-glass-lg p-4 flex items-center justify-between gap-3">
                         <div class="flex items-center gap-3">
-                            <span class="px-2.5 py-1 rounded-[8px] bg-[#DCFCE7] text-[#166534] font-bold text-xs">✓ Berhasil</span>
-                            <span class="text-[#1C1917] font-medium">{{ session('toast_success') }}</span>
+                            <span class="px-2.5 py-1 rounded-[8px] bg-success-bg text-success font-bold text-xs">✓ Berhasil</span>
+                            <span class="text-ink font-medium">{{ session('toast_success') }}</span>
                         </div>
-                        <button type="button" @click="show = false" aria-label="Tutup pesan" class="w-11 h-11 inline-flex items-center justify-center text-[#57534E] hover:bg-[#F1EFED] rounded-[8px]">✕</button>
+                        <button type="button" @click="show = false" aria-label="Tutup pesan" class="w-11 h-11 inline-flex items-center justify-center text-ink-secondary hover:bg-glass-hover rounded-[8px]">✕</button>
                     </div>
                 @endif
                 @if(session('toast_error'))
-                    <div class="rounded-[10px] bg-white border border-[#FECACA] shadow-[8px_8px_16px_#D9D3CD,-8px_-8px_16px_#FFFFFF] p-4 flex items-center justify-between gap-3">
+                    <div class="rounded-[12px] bg-glass-raised backdrop-blur-[24px] border border-[#FECACA] shadow-glass-lg p-4 flex items-center justify-between gap-3">
                         <div class="flex items-center gap-3">
-                            <span class="px-2.5 py-1 rounded-[8px] bg-[#FEE2E2] text-[#991B1B] font-bold text-xs">! Perhatian</span>
-                            <span class="text-[#1C1917] font-medium">{{ session('toast_error') }}</span>
+                            <span class="px-2.5 py-1 rounded-[8px] bg-error-bg text-error font-bold text-xs">! Perhatian</span>
+                            <span class="text-ink font-medium">{{ session('toast_error') }}</span>
                         </div>
-                        <button type="button" @click="show = false" aria-label="Tutup pesan" class="w-11 h-11 inline-flex items-center justify-center text-[#57534E] hover:bg-[#F1EFED] rounded-[8px]">✕</button>
+                        <button type="button" @click="show = false" aria-label="Tutup pesan" class="w-11 h-11 inline-flex items-center justify-center text-ink-secondary hover:bg-glass-hover rounded-[8px]">✕</button>
                     </div>
                 @endif
             </div>
@@ -258,4 +265,3 @@
     </div>
 </body>
 </html>
-

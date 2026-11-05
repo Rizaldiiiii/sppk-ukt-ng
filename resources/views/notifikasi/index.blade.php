@@ -25,22 +25,22 @@
                     $data = $item->data ?? [];
                     $sudahDibaca = $item->read_at !== null;
                 @endphp
-                <article class="neu-card p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 {{ !$sudahDibaca ? 'border-l-4 border-l-[#550b14]' : 'opacity-90' }}">
+                <article class="glass-card p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 {{ !$sudahDibaca ? 'border-l-4 border-l-sekunder' : 'opacity-90' }}">
                     <div class="space-y-1.5">
                         <div class="flex flex-wrap items-center gap-2.5">
                             @if(!$sudahDibaca)
                                 <x-badge-status status="info" label="Baru" />
                             @else
-                                <span class="px-2.5 py-0.5 rounded-[8px] text-[12px] font-medium bg-[#F3F2F0] text-[#57534E]">Sudah dibaca</span>
+                                <span class="px-2.5 py-0.5 rounded-[8px] text-[12px] font-medium bg-surface-soft text-ink-secondary">Sudah dibaca</span>
                             @endif
-                            <span class="text-[12px] text-[#78716C]">
+                            <span class="text-[12px] text-ink-muted">
                                 {{ $data['tanggal'] ?? $item->created_at?->locale('id')->translatedFormat('d M Y H:i') }}
                             </span>
                         </div>
-                        <h2 class="text-[18px] font-heading font-bold text-[#1C1917]">
+                        <h2 class="text-[18px] font-heading font-bold text-ink">
                             {{ $data['judul'] ?? 'Pemberitahuan Sistem' }}
                         </h2>
-                        <p class="text-[14px] text-[#57534E] leading-relaxed">
+                        <p class="text-[14px] text-ink-secondary leading-relaxed">
                             {{ $data['pesan'] ?? ('Status baru: ' . ($data['status_baru'] ?? '-')) }}
                         </p>
                     </div>
@@ -70,4 +70,3 @@
         </div>
     @endif
 </x-layouts.app>
-

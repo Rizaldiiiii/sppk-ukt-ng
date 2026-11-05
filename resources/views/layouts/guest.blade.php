@@ -17,30 +17,37 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen flex flex-col bg-[#f8f8f7] text-[#1C1917] font-body antialiased">
+<body class="min-h-screen flex flex-col glass-bg-canvas text-ink font-body antialiased relative">
+    <!-- Bentuk Dekoratif Lembut di Latar Belakang (Glassmorphism.md §2.2) -->
+    <div class="glass-blob-container" aria-hidden="true">
+        <div class="glass-blob glass-blob-rose"></div>
+        <div class="glass-blob glass-blob-taupe"></div>
+        <div class="glass-blob glass-blob-warm"></div>
+    </div>
+
     @if($showScrollProgress)
         <div class="scroll-progress" aria-hidden="true"></div>
     @endif
 
-    <!-- Header Navigasi Publik (Light Surface, Logo UNG + Universitas Negeri Gorontalo) -->
+    <!-- Header Navigasi Publik (Glass Strong Surface, Logo UNG + Universitas Negeri Gorontalo) -->
     <header
         x-data="{ mobileOpen: false, scrolled: false }"
         @scroll.window="scrolled = window.scrollY > 40"
-        :class="scrolled ? 'py-2.5 shadow-[8px_8px_16px_#D9D3CD,-8px_-8px_16px_#FFFFFF]' : 'py-4'"
-        class="sticky top-0 z-40 bg-[#f8f8f7]/95 backdrop-blur-sm border-b border-[#E2DFDC] transition-all duration-300"
+        :class="scrolled ? 'py-2.5 shadow-glass-md' : 'py-4'"
+        class="sticky top-0 z-40 glass-header transition-all duration-300"
     >
         <div class="max-w-7xl mx-auto px-4 md:px-6 xl:px-8 flex items-center justify-between gap-4">
-            <a href="{{ route('publik.beranda') }}" class="flex items-center gap-3.5 min-h-[44px] rounded-[10px] pr-2">
+            <a href="{{ route('publik.beranda') }}" class="flex items-center gap-3.5 min-h-[44px] rounded-[10px] px-2 py-1 bg-primer/90">
                 <img
                     src="{{ asset('images/logo-ung.png') }}"
                     alt="Universitas Negeri Gorontalo"
                     class="w-11 h-11 object-contain shrink-0"
                 >
                 <div>
-                    <div class="font-heading font-bold text-[15px] md:text-[16px] text-[#1C1917] leading-tight">
+                    <div class="font-heading font-bold text-[15px] md:text-[16px] text-ink leading-tight">
                         Universitas Negeri Gorontalo
                     </div>
-                    <div class="text-[12px] text-[#57534E] font-medium">
+                    <div class="text-[12px] text-ink-secondary font-medium">
                         SPPK-UKT UNG — Peninjauan &amp; Keberatan UKT
                     </div>
                 </div>
@@ -62,7 +69,7 @@
                     @php $active = request()->routeIs($item['route']); @endphp
                     <a
                         href="{{ route($item['route']) }}"
-                        class="px-3.5 py-2.5 min-h-[44px] inline-flex items-center rounded-[10px] font-heading text-[14px] transition-colors duration-150 {{ $active ? 'bg-[#F5E8E9] text-[#550b14] font-bold' : 'text-[#1C1917] font-semibold hover:bg-[#F1EFED]' }}"
+                        class="px-3.5 py-2.5 min-h-[44px] inline-flex items-center rounded-[10px] font-heading text-[14px] transition-colors duration-150 {{ $active ? 'bg-sekunder-light/90 text-sekunder font-bold shadow-glass-xs' : 'text-ink font-semibold hover:bg-glass-hover' }}"
                     >
                         {{ $item['label'] }}
                     </a>
@@ -79,11 +86,11 @@
                             default => route('mahasiswa.beranda'),
                         };
                     @endphp
-                    <a href="{{ $dashboardUrl }}" class="neu-btn-primary px-5 py-2.5 inline-flex items-center gap-2 text-[14px]">
+                    <a href="{{ $dashboardUrl }}" class="glass-btn-primary px-5 py-2.5 inline-flex items-center gap-2 text-[14px]">
                         <span>Buka Dasbor</span>
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="neu-btn-primary px-5 py-2.5 inline-flex items-center gap-2 text-[14px]">
+                    <a href="{{ route('login') }}" class="glass-btn-primary px-5 py-2.5 inline-flex items-center gap-2 text-[14px]">
                         <span>Masuk Akun</span>
                     </a>
                 @endauth
@@ -95,9 +102,9 @@
                 @click="mobileOpen = !mobileOpen"
                 :aria-expanded="mobileOpen"
                 aria-label="Buka menu navigasi"
-                class="lg:hidden neu-btn-secondary w-11 h-11 inline-flex items-center justify-center"
+                class="lg:hidden glass-btn-secondary w-11 h-11 inline-flex items-center justify-center"
             >
-                <svg class="w-5 h-5 text-[#1C1917]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
@@ -110,24 +117,24 @@
             x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0 -translate-y-2"
             x-transition:enter-end="opacity-100 translate-y-0"
-            class="lg:hidden border-t border-[#DDD9D6] bg-[#f8f8f7] px-4 pt-3 pb-5 mt-2 space-y-1.5"
+            class="lg:hidden border-t border-border-glass bg-glass-raised backdrop-blur-[16px] px-4 pt-3 pb-5 mt-2 space-y-1.5"
         >
             @foreach($navItems as $item)
                 @php $active = request()->routeIs($item['route']); @endphp
                 <a
                     href="{{ route($item['route']) }}"
-                    class="flex items-center px-4 py-3 min-h-[44px] rounded-[10px] font-heading text-[14px] {{ $active ? 'bg-[#F5E8E9] text-[#550b14] font-bold' : 'text-[#1C1917] font-semibold hover:bg-[#F1EFED]' }}"
+                    class="flex items-center px-4 py-3 min-h-[44px] rounded-[10px] font-heading text-[14px] {{ $active ? 'bg-sekunder-light/90 text-sekunder font-bold shadow-glass-xs' : 'text-ink font-semibold hover:bg-glass-hover' }}"
                 >
                     {{ $item['label'] }}
                 </a>
             @endforeach
-            <div class="pt-3 border-t border-[#DDD9D6]">
+            <div class="pt-3 border-t border-divider/80">
                 @auth
-                    <a href="{{ $dashboardUrl }}" class="neu-btn-primary w-full px-5 py-3 inline-flex items-center justify-center text-[14px]">
+                    <a href="{{ $dashboardUrl }}" class="glass-btn-primary w-full px-5 py-3 inline-flex items-center justify-center text-[14px]">
                         Buka Dasbor Saya
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="neu-btn-primary w-full px-5 py-3 inline-flex items-center justify-center text-[14px]">
+                    <a href="{{ route('login') }}" class="glass-btn-primary w-full px-5 py-3 inline-flex items-center justify-center text-[14px]">
                         Masuk Akun
                     </a>
                 @endauth
@@ -142,46 +149,45 @@
             x-show="show"
             role="status"
             aria-live="polite"
-            class="max-w-7xl w-full mx-auto px-4 md:px-6 xl:px-8 mt-4"
+            class="max-w-7xl w-full mx-auto px-4 md:px-6 xl:px-8 mt-4 relative z-10"
         >
             @if(session('toast_success'))
-                <div class="rounded-[10px] bg-white border border-[#BBF7D0] shadow-[12px_12px_24px_#D9D3CD,-12px_-12px_24px_#FFFFFF] p-4 flex items-center justify-between gap-3">
+                <div class="rounded-[12px] bg-glass-raised backdrop-blur-[24px] border border-[#BBF7D0] shadow-glass-lg p-4 flex items-center justify-between gap-3">
                     <div class="flex items-center gap-3">
-                        <span class="px-2.5 py-1 rounded-[8px] bg-[#DCFCE7] text-[#166534] font-bold text-xs">✓ Berhasil</span>
-                        <span class="text-[#1C1917] font-medium">{{ session('toast_success') }}</span>
+                        <span class="px-2.5 py-1 rounded-[8px] bg-success-bg text-success font-bold text-xs">✓ Berhasil</span>
+                        <span class="text-ink font-medium">{{ session('toast_success') }}</span>
                     </div>
-                    <button type="button" @click="show = false" aria-label="Tutup notifikasi" class="w-11 h-11 inline-flex items-center justify-center text-[#57534E] hover:bg-[#F1EFED] rounded-[8px]">✕</button>
+                    <button type="button" @click="show = false" aria-label="Tutup notifikasi" class="w-11 h-11 inline-flex items-center justify-center text-ink-secondary hover:bg-glass-hover rounded-[8px]">✕</button>
                 </div>
             @endif
         </div>
     @endif
 
     <!-- Konten Utama -->
-    <main class="flex-1 page-content max-w-7xl w-full mx-auto px-4 md:px-6 xl:px-8 py-8 md:py-10">
+    <main class="flex-1 page-content max-w-7xl w-full mx-auto px-4 md:px-6 xl:px-8 py-8 md:py-10 relative z-10">
         {{ $slot }}
     </main>
 
     <!-- Footer Publik -->
-    <footer class="border-t border-[#DDD9D6] bg-[#F3F2F0] mt-16">
+    <footer class="border-t border-border-glass bg-glass-strong backdrop-blur-[16px] mt-16 relative z-10">
         <div class="max-w-7xl mx-auto px-4 md:px-6 xl:px-8 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div class="flex items-center gap-3.5">
+            <div class="flex items-center gap-3.5 px-2.5 py-1.5 rounded-[10px] bg-primer/90">
                 <img
                     src="{{ asset('images/logo-ung.png') }}"
                     alt="Universitas Negeri Gorontalo"
                     class="w-10 h-10 object-contain shrink-0"
                 >
                 <div>
-                    <div class="font-heading font-bold text-[#1C1917]">Universitas Negeri Gorontalo</div>
-                    <div class="text-[13px] text-[#57534E]">
+                    <div class="font-heading font-bold text-ink">Universitas Negeri Gorontalo</div>
+                    <div class="text-[13px] text-ink-secondary">
                         Sistem Informasi Peninjauan dan Pengajuan Keberatan Uang Kuliah Tunggal (SPPK-UKT UNG)
                     </div>
                 </div>
             </div>
-            <div class="text-[13px] text-[#57534E] max-w-xl leading-relaxed">
-                <strong class="text-[#1C1917]">Catatan Keterbukaan:</strong> Sistem ini menyediakan rincian penjelasan komponen penilaian dan alur pengajuan keberatan UKT. Penetapan resmi golongan UKT tetap menjadi kewenangan penuh Universitas Negeri Gorontalo.
+            <div class="text-[13px] text-ink-secondary max-w-xl leading-relaxed">
+                <strong class="text-ink">Catatan Keterbukaan:</strong> Sistem ini menyediakan rincian penjelasan komponen penilaian dan alur pengajuan keberatan UKT. Penetapan resmi golongan UKT tetap menjadi kewenangan penuh Universitas Negeri Gorontalo.
             </div>
         </div>
     </footer>
 </body>
 </html>
-
