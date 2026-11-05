@@ -1,0 +1,187 @@
+@props([
+    'title' => 'SPPK-UKT UNG',
+    'showScrollProgress' => false,
+])
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ $title }} — Universitas Negeri Gorontalo</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="min-h-screen flex flex-col bg-[#f8f8f7] text-[#1C1917] font-body antialiased">
+    @if($showScrollProgress)
+        <div class="scroll-progress" aria-hidden="true"></div>
+    @endif
+
+    <!-- Header Navigasi Publik (Light Surface, Logo UNG + Universitas Negeri Gorontalo) -->
+    <header
+        x-data="{ mobileOpen: false, scrolled: false }"
+        @scroll.window="scrolled = window.scrollY > 40"
+        :class="scrolled ? 'py-2.5 shadow-[8px_8px_16px_#D9D3CD,-8px_-8px_16px_#FFFFFF]' : 'py-4'"
+        class="sticky top-0 z-40 bg-[#f8f8f7]/95 backdrop-blur-sm border-b border-[#E2DFDC] transition-all duration-300"
+    >
+        <div class="max-w-7xl mx-auto px-4 md:px-6 xl:px-8 flex items-center justify-between gap-4">
+            <a href="{{ route('publik.beranda') }}" class="flex items-center gap-3.5 min-h-[44px] rounded-[10px] pr-2">
+                <img
+                    src="{{ asset('images/logo-ung.png') }}"
+                    alt="Universitas Negeri Gorontalo"
+                    class="w-11 h-11 object-contain shrink-0"
+                >
+                <div>
+                    <div class="font-heading font-bold text-[15px] md:text-[16px] text-[#1C1917] leading-tight">
+                        Universitas Negeri Gorontalo
+                    </div>
+                    <div class="text-[12px] text-[#57534E] font-medium">
+                        SPPK-UKT UNG — Peninjauan &amp; Keberatan UKT
+                    </div>
+                </div>
+            </a>
+
+            <!-- Navigasi Desktop -->
+            <nav aria-label="Navigasi Publik Utama" class="hidden lg:flex items-center gap-1.5">
+                @php
+                    $navItems = [
+                        ['route' => 'publik.beranda', 'label' => 'Beranda'],
+                        ['route' => 'publik.alur', 'label' => 'Alur Penentuan'],
+                        ['route' => 'publik.faktor', 'label' => 'Faktor Penentu'],
+                        ['route' => 'publik.golongan', 'label' => 'Rentang Golongan'],
+                        ['route' => 'publik.prosedur-keberatan', 'label' => 'Prosedur Keberatan'],
+                        ['route' => 'publik.bantuan', 'label' => 'Bantuan'],
+                    ];
+                @endphp
+                @foreach($navItems as $item)
+                    @php $active = request()->routeIs($item['route']); @endphp
+                    <a
+                        href="{{ route($item['route']) }}"
+                        class="px-3.5 py-2.5 min-h-[44px] inline-flex items-center rounded-[10px] font-heading text-[14px] transition-colors duration-150 {{ $active ? 'bg-[#F5E8E9] text-[#550b14] font-bold' : 'text-[#1C1917] font-semibold hover:bg-[#F1EFED]' }}"
+                    >
+                        {{ $item['label'] }}
+                    </a>
+                @endforeach
+            </nav>
+
+            <!-- Tombol Login / Dashboard -->
+            <div class="hidden lg:flex items-center gap-3">
+                @auth
+                    @php
+                        $dashboardUrl = match(auth()->user()->peran) {
+                            'petugas' => route('petugas.beranda'),
+                            'pimpinan' => route('pimpinan.rekap'),
+                            default => route('mahasiswa.beranda'),
+                        };
+                    @endphp
+                    <a href="{{ $dashboardUrl }}" class="neu-btn-primary px-5 py-2.5 inline-flex items-center gap-2 text-[14px]">
+                        <span>Buka Dasbor</span>
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="neu-btn-primary px-5 py-2.5 inline-flex items-center gap-2 text-[14px]">
+                        <span>Masuk Akun</span>
+                    </a>
+                @endauth
+            </div>
+
+            <!-- Tombol Drawer Mobile/Tablet -->
+            <button
+                type="button"
+                @click="mobileOpen = !mobileOpen"
+                :aria-expanded="mobileOpen"
+                aria-label="Buka menu navigasi"
+                class="lg:hidden neu-btn-secondary w-11 h-11 inline-flex items-center justify-center"
+            >
+                <svg class="w-5 h-5 text-[#1C1917]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Drawer Navigasi Mobile/Tablet -->
+        <div
+            x-cloak
+            x-show="mobileOpen"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 -translate-y-2"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            class="lg:hidden border-t border-[#DDD9D6] bg-[#f8f8f7] px-4 pt-3 pb-5 mt-2 space-y-1.5"
+        >
+            @foreach($navItems as $item)
+                @php $active = request()->routeIs($item['route']); @endphp
+                <a
+                    href="{{ route($item['route']) }}"
+                    class="flex items-center px-4 py-3 min-h-[44px] rounded-[10px] font-heading text-[14px] {{ $active ? 'bg-[#F5E8E9] text-[#550b14] font-bold' : 'text-[#1C1917] font-semibold hover:bg-[#F1EFED]' }}"
+                >
+                    {{ $item['label'] }}
+                </a>
+            @endforeach
+            <div class="pt-3 border-t border-[#DDD9D6]">
+                @auth
+                    <a href="{{ $dashboardUrl }}" class="neu-btn-primary w-full px-5 py-3 inline-flex items-center justify-center text-[14px]">
+                        Buka Dasbor Saya
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="neu-btn-primary w-full px-5 py-3 inline-flex items-center justify-center text-[14px]">
+                        Masuk Akun
+                    </a>
+                @endauth
+            </div>
+        </div>
+    </header>
+
+    <!-- Toast Umpan Balik -->
+    @if(session('toast_success') || session('toast_error'))
+        <div
+            x-data="{ show: true }"
+            x-show="show"
+            role="status"
+            aria-live="polite"
+            class="max-w-7xl w-full mx-auto px-4 md:px-6 xl:px-8 mt-4"
+        >
+            @if(session('toast_success'))
+                <div class="rounded-[10px] bg-white border border-[#BBF7D0] shadow-[12px_12px_24px_#D9D3CD,-12px_-12px_24px_#FFFFFF] p-4 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <span class="px-2.5 py-1 rounded-[8px] bg-[#DCFCE7] text-[#166534] font-bold text-xs">✓ Berhasil</span>
+                        <span class="text-[#1C1917] font-medium">{{ session('toast_success') }}</span>
+                    </div>
+                    <button type="button" @click="show = false" aria-label="Tutup notifikasi" class="w-11 h-11 inline-flex items-center justify-center text-[#57534E] hover:bg-[#F1EFED] rounded-[8px]">✕</button>
+                </div>
+            @endif
+        </div>
+    @endif
+
+    <!-- Konten Utama -->
+    <main class="flex-1 page-content max-w-7xl w-full mx-auto px-4 md:px-6 xl:px-8 py-8 md:py-10">
+        {{ $slot }}
+    </main>
+
+    <!-- Footer Publik -->
+    <footer class="border-t border-[#DDD9D6] bg-[#F3F2F0] mt-16">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 xl:px-8 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div class="flex items-center gap-3.5">
+                <img
+                    src="{{ asset('images/logo-ung.png') }}"
+                    alt="Universitas Negeri Gorontalo"
+                    class="w-10 h-10 object-contain shrink-0"
+                >
+                <div>
+                    <div class="font-heading font-bold text-[#1C1917]">Universitas Negeri Gorontalo</div>
+                    <div class="text-[13px] text-[#57534E]">
+                        Sistem Informasi Peninjauan dan Pengajuan Keberatan Uang Kuliah Tunggal (SPPK-UKT UNG)
+                    </div>
+                </div>
+            </div>
+            <div class="text-[13px] text-[#57534E] max-w-xl leading-relaxed">
+                <strong class="text-[#1C1917]">Catatan Keterbukaan:</strong> Sistem ini menyediakan rincian penjelasan komponen penilaian dan alur pengajuan keberatan UKT. Penetapan resmi golongan UKT tetap menjadi kewenangan penuh Universitas Negeri Gorontalo.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+
