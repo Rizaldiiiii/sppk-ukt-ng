@@ -17,7 +17,7 @@
                             <span>Transparansi Peninjauan &amp; Keberatan UKT — Universitas Negeri Gorontalo</span>
                         </div>
 
-                        <h1 class="text-[36px] md:text-[48px] lg:text-[56px] font-heading font-extrabold text-white leading-tight max-w-3xl">
+                        <h1 class="text-[28px] md:text-[32px] lg:text-[40px] font-heading font-extrabold text-white leading-tight max-w-3xl">
                             Pahami Dasar Komponen Penilaian, Rentang Golongan, dan Prosedur Keberatan UKT dalam Satu Tempat
                         </h1>
 

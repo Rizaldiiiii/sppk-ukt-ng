@@ -2,9 +2,9 @@
     title="Beranda Mahasiswa"
     :subtitle="'Ringkasan status peninjauan UKT untuk ' . $user->nama . ($mahasiswa ? ' (NIM ' . $mahasiswa->nim . ')' : '')"
 >
-    <div class="flex flex-col gap-6 xl:gap-8 xl:flex-1">
-        <!-- Kartu Utama Status Hasil UKT (Memanjang mengisi ruang vertikal di desktop >=1280px) -->
-        <section class="glass-card glass-card-glow p-6 md:p-8 xl:p-12 relative overflow-hidden xl:flex-1 flex flex-col justify-center" data-reveal="up">
+    <div class="flex flex-col gap-6 xl:gap-8">
+        <!-- Kartu Utama Status Hasil UKT -->
+        <section class="glass-card glass-card-glow p-6 md:p-8 xl:px-10 xl:py-9 relative overflow-hidden" data-reveal="up">
             <div class="accent-bar absolute top-0 inset-x-0" aria-hidden="true"></div>
 
             @if($hasilTerbaru)
@@ -66,9 +66,9 @@
             @endif
         </section>
 
-        <!-- Ringkasan Cepat & Notifikasi Terbaru (Align Stretch & mengisi proporsional di desktop) -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 xl:gap-8 items-stretch xl:min-h-[210px]">
-            <div class="glass-card glass-card-light p-6 xl:p-8 flex flex-col justify-between space-y-3 h-full" data-reveal="up" style="--reveal-delay: 0ms">
+        <!-- Ringkasan Cepat & Notifikasi Terbaru -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 xl:gap-8 items-stretch">
+            <div class="glass-card glass-card-light p-6 xl:p-7 flex flex-col justify-between space-y-3 h-full" data-reveal="up" style="--reveal-delay: 0ms">
                 <div class="text-[13px] font-medium text-ink-secondary">Identitas Akademik</div>
                 <div class="text-[22px] xl:text-[26px] font-heading font-bold text-ink">{{ $mahasiswa?->nim ?? '-' }}</div>
                 <div class="text-[13px] xl:text-[14px] text-ink-secondary">
@@ -76,7 +76,7 @@
                 </div>
             </div>
 
-            <div class="glass-card glass-card-light p-6 xl:p-8 flex flex-col justify-between space-y-3 h-full" data-reveal="up" style="--reveal-delay: 80ms">
+            <div class="glass-card glass-card-light p-6 xl:p-7 flex flex-col justify-between space-y-3 h-full" data-reveal="up" style="--reveal-delay: 80ms">
                 <div class="text-[13px] font-medium text-ink-secondary">Komponen Penilaian Tercatat</div>
                 <div class="text-[28px] xl:text-[32px] font-heading font-extrabold text-sekunder tabular-nums">
                     {{ $hasilTerbaru ? $hasilTerbaru->rincianPenilaian->count() : 0 }} Komponen
@@ -86,7 +86,7 @@
                 </div>
             </div>
 
-            <div class="glass-card glass-card-light p-6 xl:p-8 flex flex-col justify-between space-y-3 h-full" data-reveal="up" style="--reveal-delay: 160ms">
+            <div class="glass-card glass-card-light p-6 xl:p-7 flex flex-col justify-between space-y-3 h-full" data-reveal="up" style="--reveal-delay: 160ms">
                 <div class="text-[13px] font-medium text-ink-secondary">Pemberitahuan Sistem (KF-15)</div>
                 <div class="text-[28px] xl:text-[32px] font-heading font-extrabold text-ink tabular-nums">
                     {{ $jumlahNotifikasiBelumDibaca }} Belum Dibaca
