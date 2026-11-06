@@ -76,13 +76,15 @@
     >
         <div>
             <!-- Brand Header: Logo UNG + Universitas Negeri Gorontalo di atas permukaan terang (Glassmorphism.md §5.10) -->
-            <div class="p-6 border-b border-divider/80 flex items-center justify-between gap-3 bg-primer/90">
+            <div class="p-5 border-b border-white/85 flex items-center justify-between gap-3 bg-primer/95">
                 <a href="{{ route('publik.beranda') }}" class="flex items-center gap-3">
-                    <img
-                        src="{{ asset('images/logo-ung.png') }}"
-                        alt="Universitas Negeri Gorontalo"
-                        class="w-11 h-11 object-contain shrink-0"
-                    >
+                    <div class="w-11 h-11 rounded-full bg-white border border-white shadow-glass-xs flex items-center justify-center shrink-0">
+                        <img
+                            src="{{ asset('images/logo-ung.png') }}"
+                            alt="Universitas Negeri Gorontalo"
+                            class="w-9 h-9 object-contain shrink-0"
+                        >
+                    </div>
                     <div>
                         <div class="font-heading font-bold text-[14px] text-ink leading-snug">
                             Universitas Negeri Gorontalo
@@ -105,12 +107,12 @@
 
             <!-- Profil Singkat & Badge Peran Pengguna (Glassmorphism.md §5.5) -->
             @if($currentUser)
-                <div class="px-6 py-4 border-b border-divider/80 bg-white/50">
+                <div class="px-5 py-4 border-b border-white/80 bg-white/65">
                     <div class="flex items-center justify-between gap-2">
                         <span class="font-heading font-bold text-[14px] text-ink truncate">
                             {{ $currentUser->nama }}
                         </span>
-                        <span class="px-2.5 py-0.5 rounded-[8px] text-[11px] font-heading font-bold bg-sekunder-light text-sekunder border border-border-subtle">
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-heading font-bold bg-sekunder-light text-sekunder border border-white/90 shadow-glass-xs">
                             {{ $currentUser->labelPeran() }}
                         </span>
                     </div>
@@ -125,42 +127,44 @@
                 </div>
             @endif
 
-            <!-- Daftar Menu Peran -->
-            <nav class="p-4 space-y-1.5" aria-label="Menu Peran">
+            <!-- Daftar Menu Peran (Pill Kaca Tegas meniru glassmorphism-side-navbar.jpeg) -->
+            <nav class="p-4 space-y-2" aria-label="Menu Peran">
                 @foreach($menuItems as $item)
                     @php $isActive = request()->routeIs($item['pattern']); @endphp
                     <a
                         href="{{ route($item['route']) }}"
-                        class="flex items-center gap-3 px-4 py-3 min-h-[44px] rounded-[10px] font-heading text-[14px] transition-colors duration-150 {{ $isActive ? 'bg-sekunder-light/90 text-sekunder font-bold shadow-glass-xs border border-border-glass' : 'text-ink font-semibold hover:bg-glass-hover' }}"
+                        class="flex items-center gap-3 px-3.5 py-2.5 min-h-[46px] rounded-full font-heading text-[14px] transition-colors duration-150 {{ $isActive ? 'glass-side-nav-item-active font-bold' : 'text-ink-secondary font-semibold hover:text-ink hover:bg-white/65 border border-transparent hover:border-white/80' }}"
                     >
-                        <svg
-                            class="w-5 h-5 shrink-0 {{ $isActive ? 'text-sekunder' : 'text-ink-secondary' }}"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.9"
-                            viewBox="0 0 24 24"
-                            aria-hidden="true"
-                        >
-                            <path stroke-linecap="round" stroke-linejoin="round" d="{{ $item['icon'] }}" />
-                        </svg>
+                        <span class="w-8 h-8 rounded-full inline-flex items-center justify-center shrink-0 {{ $isActive ? 'bg-sekunder text-white shadow-glass-xs' : 'bg-white/75 text-ink-secondary border border-white/90' }}">
+                            <svg
+                                class="w-4 h-4 shrink-0"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                            >
+                                <path stroke-linecap="round" stroke-linejoin="round" d="{{ $item['icon'] }}" />
+                            </svg>
+                        </span>
                         <span>{{ $item['label'] }}</span>
                     </a>
                 @endforeach
 
-                <div class="pt-4 mt-4 border-t border-divider/80">
+                <div class="pt-4 mt-4 border-t border-white/80">
                     <div class="px-4 pb-2 text-[11px] font-heading font-bold uppercase tracking-wider text-ink-muted">
                         Informasi Terbuka
                     </div>
-                    <a href="{{ route('publik.alur') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-[10px] text-[13px] font-medium text-ink-secondary hover:bg-glass-hover hover:text-ink">
+                    <a href="{{ route('publik.alur') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-full text-[13px] font-medium text-ink-secondary hover:bg-white/65 hover:text-ink transition-colors duration-150">
                         <span>Alur Penentuan UKT</span>
                     </a>
-                    <a href="{{ route('publik.faktor') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-[10px] text-[13px] font-medium text-ink-secondary hover:bg-glass-hover hover:text-ink">
+                    <a href="{{ route('publik.faktor') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-full text-[13px] font-medium text-ink-secondary hover:bg-white/65 hover:text-ink transition-colors duration-150">
                         <span>Daftar Faktor Penentu</span>
                     </a>
-                    <a href="{{ route('publik.golongan') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-[10px] text-[13px] font-medium text-ink-secondary hover:bg-glass-hover hover:text-ink">
+                    <a href="{{ route('publik.golongan') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-full text-[13px] font-medium text-ink-secondary hover:bg-white/65 hover:text-ink transition-colors duration-150">
                         <span>Rentang Nominal Golongan</span>
                     </a>
-                    <a href="{{ route('publik.prosedur-keberatan') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-[10px] text-[13px] font-medium text-ink-secondary hover:bg-glass-hover hover:text-ink">
+                    <a href="{{ route('publik.prosedur-keberatan') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-full text-[13px] font-medium text-ink-secondary hover:bg-white/65 hover:text-ink transition-colors duration-150">
                         <span>Prosedur Keberatan</span>
                     </a>
                 </div>
@@ -262,7 +266,7 @@
         @endif
 
         <!-- Isi Halaman -->
-        <main class="flex-1 page-content p-4 md:p-6 xl:p-8 space-y-8">
+        <main class="flex-1 flex flex-col page-content p-4 md:p-6 xl:p-8 space-y-8">
             {{ $slot }}
         </main>
 

@@ -7,25 +7,25 @@
         >
             <div class="hero-rektorat-overlay absolute inset-0" aria-hidden="true"></div>
 
-            <div class="max-w-7xl w-full mx-auto px-4 md:px-6 xl:px-8 py-12 md:py-20 relative z-10">
-                <div class="glass-card glass-hero-panel p-6 md:p-10 max-w-3xl relative overflow-hidden" data-reveal="up">
+            <div class="max-w-7xl w-full mx-auto px-4 md:px-6 xl:px-8 py-10 md:py-16 relative z-10">
+                <div class="glass-card glass-hero-panel p-6 md:p-10 lg:p-12 max-w-4xl relative overflow-hidden" data-reveal="up">
                     <div class="accent-bar absolute top-0 inset-x-0" aria-hidden="true"></div>
 
-                    <div class="space-y-4">
+                    <div class="space-y-5">
                         <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[8px] bg-highlight-light text-sekunder text-[12px] font-heading font-bold">
                             <span class="w-2 h-2 rounded-full bg-highlight shrink-0" aria-hidden="true"></span>
                             <span>Transparansi Peninjauan &amp; Keberatan UKT — Universitas Negeri Gorontalo</span>
                         </div>
 
-                        <h1 class="text-[28px] md:text-[32px] font-heading font-extrabold text-white leading-tight">
+                        <h1 class="text-[36px] md:text-[48px] lg:text-[56px] font-heading font-extrabold text-white leading-tight max-w-3xl">
                             Pahami Dasar Komponen Penilaian, Rentang Golongan, dan Prosedur Keberatan UKT dalam Satu Tempat
                         </h1>
 
-                        <p class="text-[16px] text-white/95 leading-relaxed">
+                        <p class="text-[16px] text-white/95 leading-relaxed max-w-3xl">
                             SPPK-UKT UNG menjelaskan bagaimana data ekonomi keluarga diolah menjadi komponen penilaian, mengapa nominal tertentu muncul, serta bagaimana prosedur resmi bila Anda ingin mengajukan peninjauan ulang. Informasi umum dapat dibaca langsung tanpa login.
                         </p>
 
-                        <div class="pt-2 flex flex-wrap items-center gap-3.5">
+                        <div class="pt-3 flex flex-wrap items-center gap-3.5">
                             @auth
                                 <x-button :href="auth()->user()->isPetugas() ? route('petugas.beranda') : (auth()->user()->isPimpinan() ? route('pimpinan.rekap') : route('mahasiswa.hasil'))" variant="primary">
                                     Lihat Rincian Hasil UKT Saya

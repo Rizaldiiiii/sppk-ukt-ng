@@ -354,19 +354,66 @@ textarea:focus-visible,
     box-shadow: 0 24px 56px -16px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
+/*
+ * Sidebar & Top Navbar Kaca Tegas (adaptasi docs/referensi/glassmorphism-side-navbar.jpeg
+ * & glassmorphism-top-navbar.jpeg dalam palet terang #f8f8f7 / #550b14 / #F5B301):
+ * blur 24px, border putih terang yang jelas, shadow glass-md yang terasa, dan pill navigasi tegas.
+ */
 .glass-sidebar {
-    background: var(--color-glass-strong);
-    backdrop-filter: var(--glass-blur-md);
-    -webkit-backdrop-filter: var(--glass-blur-md);
-    border-right: 1px solid var(--color-border-glass);
-    box-shadow: var(--shadow-glass-sm);
+    background-color: rgba(255, 255, 255, 0.78);
+    background-image:
+        radial-gradient(180px 36px at 85% 0%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 72%),
+        linear-gradient(165deg, rgba(255, 255, 255, 0.55) 0%, rgba(245, 232, 233, 0.28) 55%, rgba(255, 255, 255, 0.40) 100%);
+    backdrop-filter: var(--glass-blur-lg);
+    -webkit-backdrop-filter: var(--glass-blur-lg);
+    border-right: 1.5px solid rgba(255, 255, 255, 0.92);
+    box-shadow:
+        8px 0 32px -6px rgba(28, 25, 23, 0.12),
+        2px 0 10px rgba(85, 11, 20, 0.05),
+        inset -1px 0 0 rgba(255, 255, 255, 0.95);
 }
 
 .glass-header {
-    background: var(--color-glass-strong);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--color-border-glass);
+    background-color: rgba(255, 255, 255, 0.78);
+    background-image:
+        radial-gradient(220px 28px at 82% 0%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 75%),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.50) 0%, rgba(245, 232, 233, 0.25) 50%, rgba(255, 255, 255, 0.50) 100%);
+    backdrop-filter: var(--glass-blur-lg);
+    -webkit-backdrop-filter: var(--glass-blur-lg);
+    border-bottom: 1.5px solid rgba(255, 255, 255, 0.90);
+    box-shadow: var(--shadow-glass-md);
+}
+
+/* Bar kapsul/pill mengambang pada Top Navbar Publik (meniru glassmorphism-top-navbar.jpeg) */
+.glass-top-nav-pill {
+    background-color: rgba(255, 255, 255, 0.62);
+    backdrop-filter: var(--glass-blur-lg);
+    -webkit-backdrop-filter: var(--glass-blur-lg);
+    border: 1.5px solid rgba(255, 255, 255, 0.92);
+    border-radius: 9999px;
+    box-shadow:
+        0 8px 24px -6px rgba(28, 25, 23, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.glass-top-nav-item-active {
+    background-color: var(--color-sekunder-light);
+    color: var(--color-sekunder);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    box-shadow:
+        0 4px 12px rgba(85, 11, 20, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.glass-side-nav-item-active {
+    background-color: rgba(255, 255, 255, 0.92);
+    background-image: linear-gradient(90deg, rgba(245, 232, 233, 0.95) 0%, rgba(255, 255, 255, 0.96) 100%);
+    color: var(--color-sekunder);
+    border: 1.5px solid rgba(255, 255, 255, 0.98);
+    box-shadow:
+        0 6px 18px -4px rgba(85, 11, 20, 0.14),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
 .glass-table-panel {

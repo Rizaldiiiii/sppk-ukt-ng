@@ -31,15 +31,15 @@
         <div class="scroll-progress" aria-hidden="true"></div>
     @endif
 
-    <!-- Header Navigasi Publik (Glass Strong Surface, Logo UNG + Universitas Negeri Gorontalo) -->
+    <!-- Header Navigasi Publik (Bar Kaca Tegas + Pill Navigasi Mengambang — Glassmorphism.md §5.5 & §5.10) -->
     <header
         x-data="{ mobileOpen: false, scrolled: false }"
         @scroll.window="scrolled = window.scrollY > 40"
-        :class="scrolled ? 'py-2.5 shadow-glass-md' : 'py-4'"
-        class="sticky top-0 z-40 glass-header transition-all duration-300"
+        :class="scrolled ? 'py-2.5 shadow-glass-lg' : 'py-3.5 shadow-glass-md'"
+        class="sticky top-0 z-40 glass-header transition-[padding,box-shadow] duration-300"
     >
         <div class="max-w-7xl mx-auto px-4 md:px-6 xl:px-8 flex items-center justify-between gap-4">
-            <a href="{{ route('publik.beranda') }}" class="flex items-center gap-3.5 min-h-[44px] rounded-[10px] px-2 py-1 bg-primer/90">
+            <a href="{{ route('publik.beranda') }}" class="flex items-center gap-3.5 min-h-[44px] rounded-[12px] px-3 py-1.5 bg-primer/95 border border-white/90 shadow-glass-xs shrink-0">
                 <img
                     src="{{ asset('images/logo-ung.png') }}"
                     alt="Universitas Negeri Gorontalo"
@@ -55,8 +55,8 @@
                 </div>
             </a>
 
-            <!-- Navigasi Desktop -->
-            <nav aria-label="Navigasi Publik Utama" class="hidden lg:flex items-center gap-1.5">
+            <!-- Navigasi Desktop (Bar Pill Kaca Mengambang meniru glassmorphism-top-navbar.jpeg) -->
+            <nav aria-label="Navigasi Publik Utama" class="hidden lg:flex items-center gap-1 p-1.5 glass-top-nav-pill">
                 @php
                     $navItems = [
                         ['route' => 'publik.beranda', 'label' => 'Beranda'],
@@ -71,9 +71,12 @@
                     @php $active = request()->routeIs($item['route']); @endphp
                     <a
                         href="{{ route($item['route']) }}"
-                        class="px-3.5 py-2.5 min-h-[44px] inline-flex items-center rounded-[10px] font-heading text-[14px] transition-colors duration-150 {{ $active ? 'bg-sekunder-light/90 text-sekunder font-bold shadow-glass-xs' : 'text-ink font-semibold hover:bg-glass-hover' }}"
+                        class="px-4 py-2 min-h-[40px] inline-flex items-center gap-2 rounded-full font-heading text-[13px] xl:text-[14px] transition-colors duration-150 {{ $active ? 'glass-top-nav-item-active font-bold' : 'text-ink-secondary font-medium hover:text-ink hover:bg-white/65' }}"
                     >
-                        {{ $item['label'] }}
+                        @if($active)
+                            <span class="w-1.5 h-1.5 rounded-full bg-sekunder shrink-0" aria-hidden="true"></span>
+                        @endif
+                        <span>{{ $item['label'] }}</span>
                     </a>
                 @endforeach
             </nav>
