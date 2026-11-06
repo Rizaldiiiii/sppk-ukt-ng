@@ -2,7 +2,7 @@
     title="Entri & Kelola Hasil UKT Mahasiswa"
     subtitle="Masukkan hasil penetapan resmi kampus atau hitung simulasi baru dengan versi parameter aktif"
 >
-    <div x-data="{ mode: 'resmi' }" class="glass-card p-6 md:p-8 space-y-6">
+    <div x-data="{ mode: 'resmi' }" class="glass-card glass-card-glow p-6 md:p-8 space-y-6">
         <div class="flex flex-wrap items-center justify-between gap-4 border-b border-divider/80 pb-4">
             <div>
                 <h2 class="text-[21px] font-heading font-bold text-ink">

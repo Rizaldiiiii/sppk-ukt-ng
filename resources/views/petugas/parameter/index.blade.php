@@ -4,7 +4,7 @@
 >
     <!-- Versi Parameter yang Sedang Aktif -->
     @if($versiAktif)
-        <section class="glass-card p-6 md:p-8 space-y-6 relative overflow-hidden">
+        <section class="glass-card glass-card-glow p-6 md:p-8 space-y-6 relative overflow-hidden">
             <div class="accent-bar absolute top-0 inset-x-0" aria-hidden="true"></div>
 
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">

@@ -8,7 +8,7 @@
 <x-layouts.guest title="Prosedur Pengajuan Keberatan UKT" :showScrollProgress="true">
     <div class="space-y-10">
         <!-- Header & Tautan Langsung sesuai Status Login (KF-06) -->
-        <section class="glass-card p-6 md:p-8 relative overflow-hidden">
+        <section class="glass-card glass-card-glow p-6 md:p-8 relative overflow-hidden">
             <div class="accent-bar absolute top-0 inset-x-0" aria-hidden="true"></div>
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                 <div class="max-w-3xl space-y-3">
@@ -24,7 +24,7 @@
                 </div>
 
                 <!-- CTA Pengajuan (Tertaut ke formulir bila login, atau ke login bila belum login — Kriteria KF-06) -->
-                <div class="glass-card-raised p-5 shrink-0 lg:w-80 space-y-3">
+                <div class="glass-card-raised glass-card-light p-5 shrink-0 lg:w-80 space-y-3">
                     @auth
                         @if(auth()->user()->isMahasiswa())
                             <div class="text-[13px] font-medium text-ink">

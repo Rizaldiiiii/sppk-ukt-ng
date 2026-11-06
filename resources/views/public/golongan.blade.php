@@ -1,7 +1,7 @@
 <x-layouts.guest title="Rentang Nominal Tiap Golongan UKT" :showScrollProgress="true">
     <div class="space-y-10">
         <!-- Header -->
-        <section class="glass-card p-6 md:p-8 relative overflow-hidden">
+        <section class="glass-card glass-card-glow p-6 md:p-8 relative overflow-hidden">
             <div class="accent-bar absolute top-0 inset-x-0" aria-hidden="true"></div>
             <div class="max-w-3xl space-y-3">
                 <span class="inline-block px-3 py-1 rounded-[8px] bg-sekunder-light text-sekunder font-heading font-bold text-[12px]">
@@ -71,7 +71,7 @@
             <!-- Kartu Mobile (<768px) -->
             <div class="md:hidden space-y-4">
                 @foreach($daftarGolongan as $golongan)
-                    <article class="glass-card p-5 space-y-3">
+                    <article class="glass-card glass-card-light p-5 space-y-3">
                         <div class="flex items-center justify-between">
                             <span class="font-heading font-bold text-[16px] text-ink">{{ $golongan->nama }}</span>
                             <span class="px-2.5 py-1 rounded-[8px] bg-sekunder-light text-sekunder font-heading font-bold text-xs">{{ $golongan->kode }}</span>

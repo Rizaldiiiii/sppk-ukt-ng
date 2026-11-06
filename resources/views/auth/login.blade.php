@@ -1,6 +1,6 @@
 <x-layouts.guest title="Masuk ke Akun SPPK-UKT UNG">
     <div class="max-w-lg mx-auto py-4">
-        <div class="glass-card p-6 md:p-8 overflow-hidden relative">
+        <div class="glass-card glass-card-glow p-6 md:p-8 overflow-hidden relative">
             <div class="accent-bar absolute top-0 inset-x-0" aria-hidden="true"></div>
 
             <!-- Brand Logo UNG 56–64px di atas form (Glassmorphism.md §5.10) -->

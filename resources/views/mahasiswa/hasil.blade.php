@@ -22,7 +22,7 @@
         </x-empty-state>
     @else
         <!-- Ringkasan Atas: Berbeda antara Hasil Resmi vs Simulasi (Blueprint §6.3) -->
-        <section class="glass-card p-6 md:p-8 relative overflow-hidden">
+        <section class="glass-card glass-card-glow p-6 md:p-8 relative overflow-hidden">
             <div class="accent-bar absolute top-0 inset-x-0" aria-hidden="true"></div>
 
             @if($hasil->isResmi())
@@ -48,7 +48,7 @@
                         </p>
                     </div>
 
-                    <div class="glass-card-raised p-5 shrink-0 lg:w-72 space-y-1.5">
+                    <div class="glass-card-raised glass-card-light p-5 shrink-0 lg:w-72 space-y-1.5">
                         <div class="text-[12px] text-ink-secondary font-medium">Total Poin Komponen Penjelasan</div>
                         <div class="text-[28px] font-heading font-extrabold text-sekunder tabular-nums">
                             {{ number_format((float) $hasil->skor_total, 2, ',', '.') }} <span class="text-[14px] font-normal text-ink-secondary">/ 5,00</span>
@@ -77,7 +77,7 @@
                         </p>
                     </div>
 
-                    <div class="glass-card-raised p-5 shrink-0 lg:w-72 space-y-1.5">
+                    <div class="glass-card-raised glass-card-light p-5 shrink-0 lg:w-72 space-y-1.5">
                         <div class="text-[12px] text-ink-secondary font-medium">Total Poin Komponen</div>
                         <div class="text-[28px] font-heading font-extrabold text-sekunder tabular-nums">
                             {{ number_format((float) $hasil->skor_total, 2, ',', '.') }} <span class="text-[14px] font-normal text-ink-secondary">/ 5,00</span>
@@ -149,7 +149,7 @@
             <!-- Kartu Mobile (<768px) — Responsif sesuai Glassmorphism.md §12 -->
             <div class="md:hidden space-y-4">
                 @foreach($hasil->rincianPenilaian as $baris)
-                    <article class="glass-card p-5 space-y-3">
+                    <article class="glass-card glass-card-light p-5 space-y-3">
                         <div class="flex items-start justify-between gap-3">
                             <div>
                                 <h3 class="font-heading font-bold text-[16px] text-ink">

@@ -3,7 +3,7 @@
     :subtitle="'Ringkasan status peninjauan UKT untuk ' . $user->nama . ($mahasiswa ? ' (NIM ' . $mahasiswa->nim . ')' : '')"
 >
     <!-- Kartu Utama Status Hasil UKT -->
-    <section class="glass-card p-6 md:p-8 relative overflow-hidden" data-reveal="up">
+    <section class="glass-card glass-card-glow p-6 md:p-8 relative overflow-hidden" data-reveal="up">
         <div class="accent-bar absolute top-0 inset-x-0" aria-hidden="true"></div>
 
         @if($hasilTerbaru)

@@ -5,7 +5,7 @@
 <x-layouts.guest title="Alur Penentuan Golongan UKT" :showScrollProgress="true">
     <div class="space-y-10">
         <!-- Header Halaman -->
-        <section class="glass-card p-6 md:p-8 relative overflow-hidden">
+        <section class="glass-card glass-card-glow p-6 md:p-8 relative overflow-hidden">
             <div class="accent-bar absolute top-0 inset-x-0" aria-hidden="true"></div>
             <div class="max-w-3xl space-y-3">
                 <span class="inline-block px-3 py-1 rounded-[8px] bg-sekunder-light text-sekunder font-heading font-bold text-[12px]">
@@ -104,7 +104,7 @@
             <!-- Kartu Mobile -->
             <div class="md:hidden space-y-4">
                 @foreach($faktorAktif as $faktor)
-                    <div class="glass-card p-5 space-y-2">
+                    <div class="glass-card glass-card-light p-5 space-y-2">
                         <h3 class="font-heading font-bold text-[16px] text-ink">{{ $faktor->nama }}</h3>
                         <p class="text-[13px] text-ink-secondary">{{ $faktor->penjelasan_singkat }}</p>
                         <p class="text-[13px] text-ink pt-2 border-t border-divider/80">

@@ -55,6 +55,8 @@
         <div class="glass-blob glass-blob-rose"></div>
         <div class="glass-blob glass-blob-taupe"></div>
         <div class="glass-blob glass-blob-warm"></div>
+        <div class="glass-blob glass-blob-maroon glass-blob-maroon-top"></div>
+        <div class="glass-blob glass-blob-maroon glass-blob-maroon-bottom"></div>
     </div>
 
     <!-- Overlay Drawer untuk Mobile & Tablet (<1280px) -->
@@ -228,14 +230,15 @@
             </div>
         </header>
 
-        <!-- Toast Umpan Balik (Glassmorphism.md §5.7) -->
+        <!-- Toast Umpan Balik: overlay mengambang (fixed), tidak menggeser layout (Glassmorphism.md §5.7) -->
         @if(session('toast_success') || session('toast_error'))
             <div
                 x-data="{ show: true }"
                 x-show="show"
+                x-transition.opacity.duration.200ms
                 role="status"
                 aria-live="polite"
-                class="px-4 md:px-6 xl:px-8 pt-6"
+                class="fixed top-[92px] right-4 md:right-6 xl:right-8 left-4 md:left-auto z-[60] md:w-[min(36rem,calc(100vw-3rem))] space-y-3"
             >
                 @if(session('toast_success'))
                     <div class="rounded-[12px] bg-glass-raised backdrop-blur-[24px] border border-[#BBF7D0] shadow-glass-lg p-4 flex items-center justify-between gap-3">

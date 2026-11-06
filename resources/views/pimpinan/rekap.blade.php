@@ -3,7 +3,7 @@
     subtitle="Hanya menampilkan ringkasan agregat tanpa daftar mahasiswa, tanpa NIM, dan tanpa data ekonomi perorangan (PRD Bagian 3.3)"
 >
     <!-- Peringatan Batas Kewenangan Pimpinan -->
-    <section class="glass-card-raised p-6 border-l-4 border-l-sekunder">
+    <section class="glass-card-raised glass-card-glow p-6 border-l-4 border-l-sekunder">
         <h2 class="text-[16px] font-heading font-bold text-ink">
             Pembatasan Akses Data Pribadi (Default Terbatas)
         </h2>

@@ -23,6 +23,8 @@
         <div class="glass-blob glass-blob-rose"></div>
         <div class="glass-blob glass-blob-taupe"></div>
         <div class="glass-blob glass-blob-warm"></div>
+        <div class="glass-blob glass-blob-maroon glass-blob-maroon-top"></div>
+        <div class="glass-blob glass-blob-maroon glass-blob-maroon-bottom"></div>
     </div>
 
     @if($showScrollProgress)
@@ -142,24 +144,29 @@
         </div>
     </header>
 
-    <!-- Toast Umpan Balik -->
+    <!-- Toast Umpan Balik: overlay mengambang (fixed) di atas hero, tidak menggeser layout -->
     @if(session('toast_success') || session('toast_error'))
         <div
             x-data="{ show: true }"
             x-show="show"
+            x-transition.opacity.duration.200ms
             role="status"
             aria-live="polite"
-            class="max-w-7xl w-full mx-auto px-4 md:px-6 xl:px-8 mt-4 relative z-10"
+            class="fixed top-[88px] inset-x-0 z-[60] px-4 md:px-6 xl:px-8 pointer-events-none"
         >
-            @if(session('toast_success'))
-                <div class="rounded-[12px] bg-glass-raised backdrop-blur-[24px] border border-[#BBF7D0] shadow-glass-lg p-4 flex items-center justify-between gap-3">
-                    <div class="flex items-center gap-3">
-                        <span class="px-2.5 py-1 rounded-[8px] bg-success-bg text-success font-bold text-xs">✓ Berhasil</span>
-                        <span class="text-ink font-medium">{{ session('toast_success') }}</span>
-                    </div>
-                    <button type="button" @click="show = false" aria-label="Tutup notifikasi" class="w-11 h-11 inline-flex items-center justify-center text-ink-secondary hover:bg-glass-hover rounded-[8px]">✕</button>
+            <div class="max-w-7xl mx-auto flex justify-end">
+                <div class="w-full max-w-xl pointer-events-auto">
+                    @if(session('toast_success'))
+                        <div class="rounded-[12px] bg-glass-raised backdrop-blur-[24px] border border-[#BBF7D0] shadow-glass-lg p-4 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-3">
+                                <span class="px-2.5 py-1 rounded-[8px] bg-success-bg text-success font-bold text-xs shrink-0">✓ Berhasil</span>
+                                <span class="text-ink font-medium">{{ session('toast_success') }}</span>
+                            </div>
+                            <button type="button" @click="show = false" aria-label="Tutup notifikasi" class="w-11 h-11 shrink-0 inline-flex items-center justify-center text-ink-secondary hover:bg-glass-hover rounded-[8px]">✕</button>
+                        </div>
+                    @endif
                 </div>
-            @endif
+            </div>
         </div>
     @endif
 
