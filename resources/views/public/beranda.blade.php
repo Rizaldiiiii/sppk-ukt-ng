@@ -1,40 +1,52 @@
 <x-layouts.guest title="Beranda Informasi Transparansi UKT">
-    <!-- Hero Utama -->
-    <section class="glass-card p-6 md:p-10 relative overflow-hidden" data-reveal="up">
-        <div class="accent-bar absolute top-0 inset-x-0" aria-hidden="true"></div>
+    <!-- Hero Utama Full-Width Viewport Pertama (Foto Rektorat + Overlay Maroon Tipis + Panel Kaca) -->
+    <x-slot:hero>
+        <section
+            class="w-full min-h-[520px] lg:min-h-[calc(100vh-76px)] flex items-center hero-rektorat overflow-hidden relative z-10"
+            style="background-image: url('{{ asset('images/foto-rektorat.jpg') }}');"
+        >
+            <div class="hero-rektorat-overlay absolute inset-0" aria-hidden="true"></div>
 
-        <div class="max-w-3xl space-y-4">
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[8px] bg-sekunder-light text-sekunder text-[12px] font-heading font-bold">
-                <span>Transparansi Peninjauan &amp; Keberatan UKT — Universitas Negeri Gorontalo</span>
+            <div class="max-w-7xl w-full mx-auto px-4 md:px-6 xl:px-8 py-12 md:py-20 relative z-10">
+                <div class="glass-card glass-hero-panel p-6 md:p-10 max-w-3xl relative overflow-hidden" data-reveal="up">
+                    <div class="accent-bar absolute top-0 inset-x-0" aria-hidden="true"></div>
+
+                    <div class="space-y-4">
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[8px] bg-highlight-light text-sekunder text-[12px] font-heading font-bold">
+                            <span class="w-2 h-2 rounded-full bg-highlight shrink-0" aria-hidden="true"></span>
+                            <span>Transparansi Peninjauan &amp; Keberatan UKT — Universitas Negeri Gorontalo</span>
+                        </div>
+
+                        <h1 class="text-[28px] md:text-[32px] font-heading font-extrabold text-white leading-tight">
+                            Pahami Dasar Komponen Penilaian, Rentang Golongan, dan Prosedur Keberatan UKT dalam Satu Tempat
+                        </h1>
+
+                        <p class="text-[16px] text-white/95 leading-relaxed">
+                            SPPK-UKT UNG menjelaskan bagaimana data ekonomi keluarga diolah menjadi komponen penilaian, mengapa nominal tertentu muncul, serta bagaimana prosedur resmi bila Anda ingin mengajukan peninjauan ulang. Informasi umum dapat dibaca langsung tanpa login.
+                        </p>
+
+                        <div class="pt-2 flex flex-wrap items-center gap-3.5">
+                            @auth
+                                <x-button :href="auth()->user()->isPetugas() ? route('petugas.beranda') : (auth()->user()->isPimpinan() ? route('pimpinan.rekap') : route('mahasiswa.hasil'))" variant="primary">
+                                    Lihat Rincian Hasil UKT Saya
+                                </x-button>
+                            @else
+                                <x-button :href="route('login')" variant="primary">
+                                    Masuk untuk Melihat Rincian Saya
+                                </x-button>
+                            @endauth
+                            <x-button :href="route('publik.alur')" variant="secondary">
+                                Pelajari Alur Penentuan UKT
+                            </x-button>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <h1 class="text-[28px] md:text-[32px] font-heading font-extrabold text-ink leading-tight">
-                Pahami Dasar Komponen Penilaian, Rentang Golongan, dan Prosedur Keberatan UKT dalam Satu Tempat
-            </h1>
-
-            <p class="text-[16px] text-ink-secondary leading-relaxed">
-                SPPK-UKT UNG menjelaskan bagaimana data ekonomi keluarga diolah menjadi komponen penilaian, mengapa nominal tertentu muncul, serta bagaimana prosedur resmi bila Anda ingin mengajukan peninjauan ulang. Informasi umum dapat dibaca langsung tanpa login.
-            </p>
-
-            <div class="pt-2 flex flex-wrap items-center gap-3.5">
-                @auth
-                    <x-button :href="auth()->user()->isPetugas() ? route('petugas.beranda') : (auth()->user()->isPimpinan() ? route('pimpinan.rekap') : route('mahasiswa.hasil'))" variant="primary">
-                        Lihat Rincian Hasil UKT Saya
-                    </x-button>
-                @else
-                    <x-button :href="route('login')" variant="primary">
-                        Masuk untuk Melihat Rincian Saya
-                    </x-button>
-                @endauth
-                <x-button :href="route('publik.alur')" variant="secondary">
-                    Pelajari Alur Penentuan UKT
-                </x-button>
-            </div>
-        </div>
-    </section>
+        </section>
+    </x-slot:hero>
 
     <!-- Empat Pintu Informasi Publik Tanpa Login (KF-02, KF-03, KF-14, KF-06) -->
-    <section class="mt-12 space-y-6">
+    <section class="mt-4 space-y-6">
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-3">
             <div>
                 <h2 class="text-[26px] font-heading font-bold text-ink">

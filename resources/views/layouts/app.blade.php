@@ -262,6 +262,16 @@
         <main class="flex-1 page-content p-4 md:p-6 xl:p-8 space-y-8">
             {{ $slot }}
         </main>
+
+        <!-- Footer Aplikasi (Putih Solid #FFFFFF) -->
+        <footer class="border-t border-divider bg-white px-4 md:px-6 xl:px-8 py-4 text-[12px] text-ink-secondary flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            <div>
+                <strong class="text-ink font-heading">Universitas Negeri Gorontalo</strong> — SPPK-UKT UNG
+            </div>
+            <div>
+                Penetapan resmi golongan UKT tetap menjadi kewenangan penuh Universitas Negeri Gorontalo.
+            </div>
+        </footer>
     </div>
 </body>
 </html>

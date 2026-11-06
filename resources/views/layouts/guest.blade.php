@@ -163,15 +163,20 @@
         </div>
     @endif
 
+    <!-- Slot Hero Full-Width (Khusus Beranda Publik Viewport Pertama) -->
+    @if(isset($hero))
+        {{ $hero }}
+    @endif
+
     <!-- Konten Utama -->
     <main class="flex-1 page-content max-w-7xl w-full mx-auto px-4 md:px-6 xl:px-8 py-8 md:py-10 relative z-10">
         {{ $slot }}
     </main>
 
-    <!-- Footer Publik -->
-    <footer class="border-t border-border-glass bg-glass-strong backdrop-blur-[16px] mt-16 relative z-10">
+    <!-- Footer Publik (Putih Solid #FFFFFF) -->
+    <footer class="border-t border-divider bg-white mt-16 relative z-10">
         <div class="max-w-7xl mx-auto px-4 md:px-6 xl:px-8 py-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div class="flex items-center gap-3.5 px-2.5 py-1.5 rounded-[10px] bg-primer/90">
+            <div class="flex items-center gap-3.5 px-2.5 py-1.5 rounded-[10px] bg-white">
                 <img
                     src="{{ asset('images/logo-ung.png') }}"
                     alt="Universitas Negeri Gorontalo"
