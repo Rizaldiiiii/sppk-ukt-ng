@@ -14,7 +14,7 @@
 
     <!-- Kartu Ringkasan Agregat -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="glass-card p-6 space-y-2">
+        <div class="glass-card glass-card-light p-6 space-y-2">
             <div class="text-[13px] font-medium text-ink-secondary">Total Hasil Tercatat (Agregat)</div>
             <div class="text-[28px] font-heading font-extrabold text-ink tabular-nums">
                 {{ $totalHasilTercatat }} Hasil
@@ -22,7 +22,7 @@
             <div class="text-[12px] text-ink-secondary">Gabungan hasil resmi dan simulasi</div>
         </div>
 
-        <div class="glass-card p-6 space-y-2">
+        <div class="glass-card glass-card-light p-6 space-y-2">
             <div class="text-[13px] font-medium text-ink-secondary">Hasil Penetapan Resmi</div>
             <div class="text-[28px] font-heading font-extrabold text-sekunder tabular-nums">
                 {{ $rekapPerSumber['resmi'] ?? 0 }} Hasil
@@ -30,7 +30,7 @@
             <div class="text-[12px] text-ink-secondary">Ditetapkan melalui entri resmi petugas</div>
         </div>
 
-        <div class="glass-card p-6 space-y-2">
+        <div class="glass-card glass-card-light p-6 space-y-2">
             <div class="text-[13px] font-medium text-ink-secondary">Hasil Simulasi Berparameter</div>
             <div class="text-[28px] font-heading font-extrabold text-highlight tabular-nums">
                 {{ $rekapPerSumber['simulasi'] ?? 0 }} Hasil

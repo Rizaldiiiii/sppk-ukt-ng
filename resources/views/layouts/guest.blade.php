@@ -165,6 +165,15 @@
                             <button type="button" @click="show = false" aria-label="Tutup notifikasi" class="w-11 h-11 shrink-0 inline-flex items-center justify-center text-ink-secondary hover:bg-glass-hover rounded-[8px]">✕</button>
                         </div>
                     @endif
+                    @if(session('toast_error'))
+                        <div class="rounded-[12px] bg-glass-raised backdrop-blur-[24px] border border-[#FECACA] shadow-glass-lg p-4 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-3">
+                                <span class="px-2.5 py-1 rounded-[8px] bg-error-bg text-error font-bold text-xs shrink-0">! Perhatian</span>
+                                <span class="text-ink font-medium">{{ session('toast_error') }}</span>
+                            </div>
+                            <button type="button" @click="show = false" aria-label="Tutup notifikasi" class="w-11 h-11 shrink-0 inline-flex items-center justify-center text-ink-secondary hover:bg-glass-hover rounded-[8px]">✕</button>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

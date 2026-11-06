@@ -36,7 +36,7 @@
         </section>
 
         <!-- Form Ubah Kata Sandi -->
-        <section class="glass-card p-6 md:p-8 space-y-4">
+        <section class="glass-card glass-card-glow p-6 md:p-8 space-y-4">
             <h2 class="text-[21px] font-heading font-bold text-ink">
                 Perbarui Kata Sandi
             </h2>

@@ -67,7 +67,7 @@
 
     <!-- Ringkasan Cepat & Notifikasi Terbaru -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="glass-card p-6 space-y-2" data-reveal="up" style="--reveal-delay: 0ms">
+        <div class="glass-card glass-card-light p-6 space-y-2" data-reveal="up" style="--reveal-delay: 0ms">
             <div class="text-[13px] font-medium text-ink-secondary">Identitas Akademik</div>
             <div class="text-[21px] font-heading font-bold text-ink">{{ $mahasiswa?->nim ?? '-' }}</div>
             <div class="text-[13px] text-ink-secondary">
@@ -75,7 +75,7 @@
             </div>
         </div>
 
-        <div class="glass-card p-6 space-y-2" data-reveal="up" style="--reveal-delay: 80ms">
+        <div class="glass-card glass-card-light p-6 space-y-2" data-reveal="up" style="--reveal-delay: 80ms">
             <div class="text-[13px] font-medium text-ink-secondary">Komponen Penilaian Tercatat</div>
             <div class="text-[28px] font-heading font-extrabold text-sekunder tabular-nums">
                 {{ $hasilTerbaru ? $hasilTerbaru->rincianPenilaian->count() : 0 }} Komponen
@@ -85,7 +85,7 @@
             </div>
         </div>
 
-        <div class="glass-card p-6 space-y-2" data-reveal="up" style="--reveal-delay: 160ms">
+        <div class="glass-card glass-card-light p-6 space-y-2" data-reveal="up" style="--reveal-delay: 160ms">
             <div class="text-[13px] font-medium text-ink-secondary">Pemberitahuan Sistem (KF-15)</div>
             <div class="text-[28px] font-heading font-extrabold text-ink tabular-nums">
                 {{ $jumlahNotifikasiBelumDibaca }} Belum Dibaca

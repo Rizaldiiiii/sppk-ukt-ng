@@ -131,7 +131,7 @@
                     @php $isActive = request()->routeIs($item['pattern']); @endphp
                     <a
                         href="{{ route($item['route']) }}"
-                        class="flex items-center gap-3 px-4 py-3 min-h-[44px] rounded-[10px] font-heading text-[14px] transition-all duration-150 {{ $isActive ? 'bg-sekunder-light/90 text-sekunder font-bold shadow-glass-xs border border-border-glass' : 'text-ink font-semibold hover:bg-glass-hover' }}"
+                        class="flex items-center gap-3 px-4 py-3 min-h-[44px] rounded-[10px] font-heading text-[14px] transition-colors duration-150 {{ $isActive ? 'bg-sekunder-light/90 text-sekunder font-bold shadow-glass-xs border border-border-glass' : 'text-ink font-semibold hover:bg-glass-hover' }}"
                     >
                         <svg
                             class="w-5 h-5 shrink-0 {{ $isActive ? 'text-sekunder' : 'text-ink-secondary' }}"

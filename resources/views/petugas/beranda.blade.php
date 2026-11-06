@@ -4,13 +4,13 @@
 >
     <!-- Statistik Ringkas Petugas -->
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-        <div class="glass-card p-6 space-y-2" data-reveal="up" style="--reveal-delay: 0ms">
+        <div class="glass-card glass-card-light p-6 space-y-2" data-reveal="up" style="--reveal-delay: 0ms">
             <div class="text-[13px] font-medium text-ink-secondary">Mahasiswa Terdaftar</div>
             <div class="text-[28px] font-heading font-extrabold text-ink tabular-nums">{{ $totalMahasiswa }}</div>
             <div class="text-[12px] text-ink-secondary">Profil mahasiswa pada sistem</div>
         </div>
 
-        <div class="glass-card p-6 space-y-2" data-reveal="up" style="--reveal-delay: 80ms">
+        <div class="glass-card glass-card-light p-6 space-y-2" data-reveal="up" style="--reveal-delay: 80ms">
             <div class="text-[13px] font-medium text-ink-secondary">Hasil Resmi vs Simulasi</div>
             <div class="text-[28px] font-heading font-extrabold text-sekunder tabular-nums">
                 {{ $totalHasilResmi }} Resmi <span class="text-[16px] text-highlight">/ {{ $totalHasilSimulasi }} Simulasi</span>
@@ -18,7 +18,7 @@
             <div class="text-[12px] text-ink-secondary">Dikelola lewat menu Entri &amp; Kelola Hasil</div>
         </div>
 
-        <div class="glass-card p-6 space-y-2" data-reveal="up" style="--reveal-delay: 160ms">
+        <div class="glass-card glass-card-light p-6 space-y-2" data-reveal="up" style="--reveal-delay: 160ms">
             <div class="text-[13px] font-medium text-ink-secondary">Versi Parameter Aktif (KF-05)</div>
             <div class="text-[21px] font-heading font-extrabold text-ink">
                 {{ $versiAktif?->versi ?? 'Belum ada' }}
@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <div class="glass-card p-6 space-y-2" data-reveal="up" style="--reveal-delay: 240ms">
+        <div class="glass-card glass-card-light p-6 space-y-2" data-reveal="up" style="--reveal-delay: 240ms">
             <div class="text-[13px] font-medium text-ink-secondary">Faktor &amp; Golongan Publik</div>
             <div class="text-[28px] font-heading font-extrabold text-ink tabular-nums">
                 {{ $totalFaktorAktif }} Faktor • {{ $totalGolonganAktif }} Golongan
@@ -39,7 +39,7 @@
 
     <!-- Aksi Utama Tahap 1 -->
     <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="glass-card p-6 flex flex-col justify-between space-y-4">
+        <div class="glass-card glass-card-glow p-6 flex flex-col justify-between space-y-4">
             <div class="space-y-2">
                 <h2 class="text-[21px] font-heading font-bold text-ink">
                     Entri &amp; Kelola Hasil UKT
