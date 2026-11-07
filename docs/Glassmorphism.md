@@ -74,7 +74,7 @@ Palet warna tetap sama dengan sistem sebelumnya, supaya identitas tidak berubah.
 | Sekunder Active | `#3A0710` | Active/pressed tombol utama |
 | Sekunder Light | `#F5E8E9` | Background selected, navigasi aktif, highlight ringan |
 | Sekunder Soft | `#FBEFF0` | Background aksen yang sangat ringan |
-| Highlight | `#7e6961` | Aksen sekunder, ikon pendukung, seri grafik kedua |
+| Highlight | `#F5B301` | Aksen sekunder, ikon pendukung, seri grafik kedua |
 | Highlight Dark | `#6B574F` | Teks highlight bila perlu penekanan lebih kuat |
 | Highlight Light | `#EDE6E3` | Background aksen highlight, salah satu ujung gradien latar |
 
@@ -130,7 +130,7 @@ Warna status tidak dibuat transparan. Badge dan latar status memakai warna solid
 Gradien hanya dipakai tipis, di dua tempat saja:
 
 - Tombol utama: `linear-gradient(135deg, #550b14, #6E1420)`.
-- Garis aksen 3px di atas kartu utama atau di bawah judul halaman: `linear-gradient(90deg, #550b14, #7e6961)`.
+- Garis aksen 3px di atas kartu utama atau di bawah judul halaman: `linear-gradient(90deg, #550b14, #F5B301)`.
 - Gradien latar halaman: lihat Bagian 2.2.
 
 Jangan memakai gradien pelangi, gradien gelap, atau gradien pada teks judul. Jangan memakai gradien sebagai background kartu kaca — kartu kaca memakai putih transparan + blur.
@@ -558,7 +558,7 @@ Proyek ini memakai Tailwind v4, jadi token didefinisikan di `@theme` di `resourc
   --color-sekunder-active: #3A0710;
   --color-sekunder-light: #F5E8E9;
   --color-sekunder-soft: #FBEFF0;
-  --color-highlight: #7e6961;
+  --color-highlight: #F5B301;
   --color-highlight-dark: #6B574F;
   --color-highlight-light: #EDE6E3;
 
@@ -638,7 +638,7 @@ Pindahkan nilai yang sama ke `@theme`. Jangan menulis nilai hex mentah di dalam 
   --color-sekunder-light: #F5E8E9;
   --color-sekunder-soft: #FBEFF0;
 
-  --color-highlight: #7e6961;
+  --color-highlight: #F5B301;
   --color-highlight-dark: #6B574F;
   --color-highlight-light: #EDE6E3;
 
@@ -685,7 +685,7 @@ Aturan pemakaian token: komponen merujuk ke token, bukan nilai hex mentah di dal
 | `.neu-btn-secondary` | `.glass-btn-secondary` | Putih 0.60 + blur 16px + border kaca |
 | `.shadow-neu-xs` / `sm` / `md` / `lg` | `.shadow-glass-xs` / `sm` / `md` / `lg` | Lihat Bagian 3.2 |
 | `.shadow-neu-inset` | Hapus, pakai shadow input pada Bagian 3.3 | Jangan bawa inset gelap ke tema kaca |
-| `.accent-bar` | `.accent-bar` (tetap) | Gradien 90deg `#550b14 → #7e6961`, tinggi 3px |
+| `.accent-bar` | `.accent-bar` (tetap) | Gradien 90deg `#550b14 → #F5B301`, tinggi 3px |
 | `.interactive-card` | `.interactive-card` (tetap, definisi diubah) | Hover: naik 4px + shadow MD, durasi 200ms |
 
 Class `.page-content`, `.scroll-progress`, `.loading-spinner`, `.skeleton`, dan aturan `prefers-reduced-motion` di `app.css` tetap dipakai, definisinya disesuaikan ke Bagian 9 bila perlu.
@@ -723,7 +723,7 @@ Kombinasi final yang direkomendasikan:
 | Tema | Light saja |
 | Primer | `#f8f8f7` (hampir putih, background dasar) |
 | Sekunder | `#550b14` (maroon gelap, tindakan utama) |
-| Highlight | `#7e6961` (aksen sekunder) |
+| Highlight | `#F5B301` (aksen sekunder) |
 | Gradien | Tipis saja: tombol utama, garis aksen 3px, dan latar halaman |
 | Background | Gradien tipis primer + blob buram `#F5E8E9` / `#EDE6E3` |
 | Heading Font | Poppins |

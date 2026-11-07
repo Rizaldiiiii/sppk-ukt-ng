@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panduan Visual — Alur Penentuan UKT | SPPK-UKT UNG (KF-10)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primer: #f8f8f7; --sekunder: #550b14; --emas: #F5B301;
+    --ink: #2b2118; --ink-soft: #6f6259; --kaca: rgba(255,255,255,.72);
+    --garis: rgba(85,11,20,.14);
+  }
+  body {
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #f8f8f7 0%, #F3EDEA 55%, #F5E8E9 100%);
+    color: var(--ink); line-height: 1.6; padding: 32px 16px 48px;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 8px; }
+  .badge {
+    display: inline-block; background: var(--emas); color: var(--sekunder);
+    font-weight: 800; font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 999px; margin-bottom: 14px;
+  }
+  h1 { font-family: "Poppins", "Inter", sans-serif; font-size: clamp(26px, 4vw, 36px); color: var(--sekunder); line-height: 1.2; }
+  header p { color: var(--ink-soft); max-width: 640px; margin: 10px auto 0; font-size: 15px; }
+  .accent { width: 72px; height: 4px; border-radius: 4px; margin: 16px auto 18px;
+    background: linear-gradient(90deg, var(--sekunder), var(--emas)); }
+
+  /* ---- Legenda aktor ---- */
+  .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 26px; }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 700;
+    color: var(--sekunder); background: rgba(255,255,255,.8); border: 1px solid var(--garis);
+    border-radius: 999px; padding: 5px 12px; }
+  .legend i.sw { width: 14px; height: 14px; border-radius: 4px; display: inline-block; flex-shrink: 0; }
+  .legend i.mhs { background: #2b2826; border: 2px solid var(--emas); }
+  .legend i.petugas { background: #fff; border: 2px solid var(--emas); }
+  .legend i.pimpinan { background: #3d3a38; border: 2px solid var(--emas); }
+  .legend i.sistem { background: #e8ebee; border: 2px solid #9aa3ab; }
+
+  /* ---- Jalan berliku di belakang kartu ---- */
+  .road-wrap { position: relative; padding: 8px 0 4px; }
+  .road { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  .stage { position: relative; z-index: 1; display: flex; margin-bottom: 28px; }
+  .stage.left  { justify-content: flex-start; }
+  .stage.right { justify-content: flex-end; }
+  .card {
+    width: min(430px, 88%);
+    background: var(--kaca); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,.9); border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(85,11,20,.10); padding: 20px 22px; position: relative;
+  }
+  .card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    border-radius: 16px 16px 0 0; background: linear-gradient(90deg, var(--sekunder), var(--emas)); }
+  .num {
+    position: absolute; top: -16px; left: 20px; width: 34px; height: 34px; border-radius: 50%;
+    background: var(--sekunder); color: #fff; font-weight: 800; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    border: 3px solid var(--emas); box-shadow: 0 4px 10px rgba(85,11,20,.25);
+  }
+  .actor { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800;
+    padding: 4px 11px; border-radius: 999px; margin-top: 4px; }
+  .actor.mhs { background: #2b2826; color: #fff; }
+  .actor.petugas { background: #F5E8E9; color: var(--sekunder); border: 1px solid rgba(85,11,20,.3); }
+  .actor.pimpinan { background: #3d3a38; color: #fff; border: 1px solid var(--emas); }
+  .actor.sistem { background: #e8ebee; color: #3d3a38; border: 1px solid #9aa3ab; }
+  .art {
+    background: linear-gradient(135deg, #F5E8E9, #FDF6E3);
+    border: 1px solid var(--garis); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; padding: 8px; margin: 12px 0;
+  }
+  .art svg { width: 168px; height: 132px; }
+  .card h2 { font-family: "Poppins", sans-serif; font-size: 19px; color: var(--sekunder); line-height: 1.3; }
+  .card p { font-size: 14px; color: var(--ink-soft); margin-top: 6px; }
+  .card p b { color: var(--ink); }
+  .see { margin-top: 10px; font-size: 13px; background: #F5E8E9; border-radius: 8px; padding: 8px 10px; }
+  .see b { color: var(--sekunder); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .chip { font-size: 12px; font-weight: 700; color: var(--sekunder); background: #fff;
+    border: 1px solid var(--garis); border-radius: 999px; padding: 4px 10px; }
+  .chip.arrow { background: transparent; border: none; color: var(--ink-soft); padding: 4px 0; }
+  .chip.final { background: var(--emas); border-color: var(--emas); }
+
+  .finish { text-align: center; position: relative; z-index: 1; margin: 4px 0 30px; }
+  .finish .flag { display: inline-block; background: var(--sekunder); color: #fff; font-weight: 700;
+    font-size: 14px; padding: 10px 18px; border-radius: 12px; box-shadow: 0 8px 20px rgba(85,11,20,.22); }
+
+  /* ---- Versi teks (alternatif aksesibel) ---- */
+  .text-alt { background: rgba(255,255,255,.85); border: 1px solid var(--garis); border-radius: 16px;
+    padding: 22px 24px; box-shadow: 0 8px 24px rgba(85,11,20,.08); }
+  .text-alt h2 { font-family: "Poppins", sans-serif; font-size: 19px; color: var(--sekunder); margin-bottom: 8px; }
+  .text-alt ol { padding-left: 22px; font-size: 14px; color: var(--ink-soft); }
+  .text-alt li { margin-bottom: 8px; }
+  .text-alt li b { color: var(--ink); }
+  .note { font-size: 13px; color: var(--ink-soft); margin-top: 12px; border-top: 1px dashed var(--garis); padding-top: 12px; }
+  footer { text-align: center; font-size: 12px; color: var(--ink-soft); margin-top: 26px; }
+
+  @media (max-width: 640px) {
+    .stage.left, .stage.right { justify-content: flex-start; }
+    .card { width: 100%; }
+    .road { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="badge">KF-10 &middot; Panduan Visual</span>
+    <h1>Alur Penentuan UKT, dari Data sampai Keputusan</h1>
+    <p>Ikuti jalannya dari atas ke bawah. Setiap tahap ada karakternya sendiri — kenali dari pakaiannya — supaya langsung kebayang siapa melakukan apa.</p>
+    <div class="accent"></div>
+    <div class="legend" aria-label="Legenda aktor">
+      <span><i class="sw mhs"></i>Mahasiswa — toga</span>
+      <span><i class="sw petugas"></i>Petugas — lanyard + kartu ID</span>
+      <span><i class="sw pimpinan"></i>Pimpinan — jas gelap + dasi emas</span>
+      <span><i class="sw sistem"></i>Sistem — roda gigi, otomatis</span>
+    </div>
+  </header>
+
+  <main>
+  <div class="road-wrap">
+    <svg class="road" viewBox="0 0 920 1480" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M460 0 C 180 140, 180 260, 460 380 C 740 500, 740 620, 460 740 C 180 860, 180 980, 460 1100 C 740 1220, 740 1340, 460 1480"
+        fill="none" stroke="#3d3a38" stroke-width="26" stroke-linecap="round"/>
+      <path d="M460 0 C 180 140, 180 260, 460 380 C 740 500, 740 620, 460 740 C 180 860, 180 980, 460 1100 C 740 1220, 740 1340, 460 1480"
+        fill="none" stroke="#ffffff" stroke-width="3" stroke-dasharray="14 16" stroke-linecap="round"/>
+    </svg>
+
+    <!-- Tahap 1 : Mahasiswa, duduk menulis di meja -->
+    <article class="stage left">
+      <div class="card">
+        <span class="num">1</span>
+        <span class="actor mhs">Mahasiswa &middot; toga</span>
+        <div class="art">
+          <svg viewBox="0 0 180 132" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-label="Mahasiswa bertoga duduk menulis formulir di meja">
+            <ellipse cx="70" cy="120" rx="58" ry="5" fill="rgba(85,11,20,.10)" stroke="none"/>
+            <!-- meja + kertas -->
+            <rect x="98" y="76" width="64" height="8" rx="2" fill="#b9a48f" stroke="#8a6d5a" stroke-width="2"/>
+            <path d="M156 84 L156 116" stroke="#8a6d5a" stroke-width="5"/>
+            <rect x="104" y="56" width="38" height="20" rx="2" fill="#fff" stroke="#550b14" stroke-width="2.5"/>
+            <path d="M110 63 h26 M110 69 h18" stroke="#F5B301" stroke-width="2.5"/>
+            <!-- kursi -->
+            <rect x="26" y="38" width="7" height="44" rx="2" fill="#b9a48f" stroke="#8a6d5a" stroke-width="2"/>
+            <rect x="26" y="78" width="36" height="7" rx="2" fill="#b9a48f" stroke="#8a6d5a" stroke-width="2"/>
+            <path d="M30 85 L30 116 M58 85 L58 116" stroke="#8a6d5a" stroke-width="4"/>
+            <!-- kaki belakang (duduk, tertekuk, sampai lantai) -->
+            <path d="M54 82 L82 82 M82 82 L82 112 M82 112 L92 112" stroke="#1f1c1a" stroke-width="8"/>
+            <!-- badan berisi: jubah toga hitam + selempang emas -->
+            <rect x="42" y="42" width="30" height="38" rx="13" fill="#2b2826" stroke="#2b2826" stroke-width="3"/>
+            <path d="M48 44 L66 78" stroke="#F5B301" stroke-width="3"/>
+            <!-- kaki depan (duduk, tertekuk, sampai lantai) -->
+            <path d="M58 76 L88 76 M88 76 L88 114 M88 114 L99 114" stroke="#2b2826" stroke-width="9"/>
+            <!-- kepala berisi + topi toga -->
+            <circle cx="57" cy="27" r="15" fill="#fff" stroke="#550b14" stroke-width="4"/>
+            <path d="M40 14 L57 6 L74 14 L57 22 Z" fill="#2b2826" stroke="#2b2826" stroke-width="2"/>
+            <path d="M72 14 L72 22" stroke="#F5B301" stroke-width="2.5"/>
+            <circle cx="72" cy="24" r="2.5" fill="#F5B301" stroke="none"/>
+            <!-- lengan menulis -->
+            <path d="M68 54 L102 62" stroke="#2b2826" stroke-width="8"/>
+            <path d="M44 54 L38 72" stroke="#2b2826" stroke-width="8"/>
+          </svg>
+        </div>
+        <h2>Isi Data &amp; Unggah Bukti</h2>
+        <p><b>Mahasiswa</b> mengisi data ekonomi keluarga: penghasilan, jumlah tanggungan, daya listrik, kondisi hunian, dan aset — lalu mengunggah dokumen buktinya.</p>
+        <p class="see"><b>Yang kamu lihat nanti:</b> setiap data ini menjadi satu baris di tabel rincian hasilmu.</p>
+      </div>
+    </article>
+
+    <!-- Tahap 2 : Petugas, berdiri memeriksa dokumen -->
+    <article class="stage right">
+      <div class="card">
+        <span class="num">2</span>
+        <span class="actor petugas">Petugas &middot; lanyard + kartu ID</span>
+        <div class="art">
+          <svg viewBox="0 0 180 132" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-label="Petugas berlanyard memeriksa dokumen dengan kaca pembesar">
+            <ellipse cx="80" cy="120" rx="62" ry="5" fill="rgba(85,11,20,.10)" stroke="none"/>
+            <!-- dokumen -->
+            <rect x="106" y="22" width="48" height="64" rx="4" fill="#fff" stroke="#550b14" stroke-width="3"/>
+            <path d="M114 38 l5 5 9 -11" stroke="#F5B301" stroke-width="4"/>
+            <path d="M114 56 h28 M114 66 h20" stroke="#550b14" stroke-width="2.5"/>
+            <!-- kaca pembesar -->
+            <circle cx="130" cy="58" r="13" fill="rgba(245,179,1,.18)" stroke="#F5B301" stroke-width="4"/>
+            <path d="M140 68 L150 78" stroke="#F5B301" stroke-width="5"/>
+            <!-- kaki berdiri -->
+            <path d="M48 84 L42 114 M62 84 L70 114" stroke="#550b14" stroke-width="9"/>
+            <!-- badan berisi: kemeja + lanyard + kartu ID -->
+            <rect x="38" y="40" width="30" height="46" rx="13" fill="#fffdf8" stroke="#550b14" stroke-width="3"/>
+            <path d="M46 40 L60 64 M62 40 L60 64" stroke="#F5B301" stroke-width="3"/>
+            <rect x="52" y="62" width="16" height="13" rx="2" fill="#fff" stroke="#550b14" stroke-width="2.5"/>
+            <path d="M55 67 h10 M55 71 h7" stroke="#550b14" stroke-width="1.6"/>
+            <!-- kepala berisi -->
+            <circle cx="53" cy="25" r="15" fill="#fff" stroke="#550b14" stroke-width="4"/>
+            <!-- lengan memegang kaca pembesar -->
+            <path d="M66 52 L132 70" stroke="#550b14" stroke-width="8"/>
+            <path d="M40 52 L34 70" stroke="#550b14" stroke-width="8"/>
+          </svg>
+        </div>
+        <h2>Verifikasi Dokumen oleh Petugas</h2>
+        <p><b>Petugas UKT</b> memeriksa apakah angka yang diisi cocok dengan bukti resmi: slip gaji, Kartu Keluarga, tagihan listrik, dan foto hunian.</p>
+        <p class="see"><b>Tujuannya:</b> tidak ada komponen yang dihitung dari data yang keliru atau belum terverifikasi.</p>
+      </div>
+    </article>
+
+    <!-- Tahap 3 : Sistem, mahasiswa berdiri menunjuk diagram batang -->
+    <article class="stage left">
+      <div class="card">
+        <span class="num">3</span>
+        <div class="art">
+          <svg viewBox="0 0 200 132" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-label="Mesin sistem menghitung komponen penilaian, digambarkan roda gigi dan diagram batang">
+            <ellipse cx="62" cy="116" rx="44" ry="5" fill="rgba(85,11,20,.10)" stroke="none"/>
+            <!-- mesin penilaian -->
+            <circle cx="62" cy="34" r="12" fill="#fff" stroke="#550b14" stroke-width="3"/>
+            <path d="M62 18 v6 M62 44 v6 M46 34 h6 M72 34 h6 M51 23 l4 4 M69 41 l4 4 M73 23 l-4 4 M55 41 l-4 4" stroke="#550b14" stroke-width="3"/>
+            <rect x="30" y="46" width="64" height="58" rx="8" fill="#fff" stroke="#550b14" stroke-width="3"/>
+            <rect x="40" y="56" width="44" height="20" rx="3" fill="#FDF6E3" stroke="#F5B301" stroke-width="2.5"/>
+            <path d="M46 63 h32 M46 69 h22" stroke="#550b14" stroke-width="2.5"/>
+            <circle cx="46" cy="88" r="4" fill="#F5B301" stroke="none"/>
+            <circle cx="62" cy="88" r="4" fill="#550b14" stroke="none"/>
+            <circle cx="78" cy="88" r="4" fill="#F5B301" stroke="none"/>
+            <!-- panah ke diagram -->
+            <path d="M96 74 L110 74 M104 68 L112 74 L104 80" stroke="#F5B301" stroke-width="4"/>
+            <!-- diagram batang 5 komponen -->
+            <path d="M116 108 H192" stroke="#550b14" stroke-width="3"/>
+            <rect x="120" y="86" width="11" height="22" rx="2" fill="#550b14"/>
+            <rect x="134" y="70" width="11" height="38" rx="2" fill="#F5B301"/>
+            <rect x="148" y="78" width="11" height="30" rx="2" fill="#550b14"/>
+            <rect x="162" y="60" width="11" height="48" rx="2" fill="#F5B301"/>
+            <rect x="176" y="72" width="11" height="36" rx="2" fill="#550b14"/>
+            <text x="116" y="126" font-size="11" font-weight="700" fill="#550b14" stroke="none" font-family="Inter, sans-serif">Total 3,20 / 5,00</text>
+            <path d="M188 30 l3 6 M194 26 l-2 7" stroke="#F5B301" stroke-width="2.5"/>
+          </svg>
+        </div>
+        <h2>Dihitung per Komponen</h2>
+        <p><b>Sistem</b> memetakan setiap data ke kategorinya, lalu menghitung poin tiap komponen beserta kalimat alasannya — semuanya bisa kamu telusuri. Di gambar, sistem digambarkan sebagai mesin beroda gigi yang mengeluarkan diagram batang hasil perhitungan.</p>
+        <p class="see"><b>Yang kamu lihat nanti:</b> tabel rincian komponen, langkah perhitungan, dan alasan tiap baris.</p>
+      </div>
+    </article>
+
+    <!-- Tahap 4 : Pimpinan, jas + dasi emas, memberi stempel -->
+    <article class="stage right">
+      <div class="card">
+        <span class="num">4</span>
+        <span class="actor pimpinan">Pimpinan &middot; jas gelap + dasi emas</span>
+        <div class="art">
+          <svg viewBox="0 0 180 132" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-label="Pimpinan berjas dan berdasi memberi stempel pada surat keputusan">
+            <ellipse cx="80" cy="120" rx="62" ry="5" fill="rgba(85,11,20,.10)" stroke="none"/>
+            <!-- meja + surat keputusan -->
+            <rect x="100" y="92" width="60" height="8" rx="2" fill="#b9a48f" stroke="#8a6d5a" stroke-width="2"/>
+            <rect x="106" y="54" width="46" height="38" rx="3" fill="#fff" stroke="#550b14" stroke-width="3"/>
+            <path d="M112 64 h34 M112 72 h24" stroke="#550b14" stroke-width="2.5"/>
+            <circle cx="138" cy="82" r="8" fill="#F5B301" stroke="#550b14" stroke-width="2"/>
+            <!-- stempel di tangan -->
+            <rect x="112" y="38" width="7" height="14" rx="2" fill="#550b14"/>
+            <rect x="106" y="50" width="19" height="6" rx="2" fill="#F5B301"/>
+            <!-- kaki berdiri -->
+            <path d="M48 84 L42 114 M62 84 L70 114" stroke="#3d3a38" stroke-width="9"/>
+            <!-- badan berisi: jas gelap + kemeja + dasi emas -->
+            <rect x="38" y="40" width="30" height="46" rx="13" fill="#3d3a38" stroke="#2b2826" stroke-width="3"/>
+            <path d="M45 40 L53 40 L49 52 L45 40 Z" fill="#fff" stroke="none"/>
+            <path d="M53 40 L61 40 L57 52 L53 40 Z" fill="#fff" stroke="none"/>
+            <path d="M51 40 L55 40 L56 50 L53 60 L50 50 Z" fill="#F5B301" stroke="none"/>
+            <!-- kepala berisi -->
+            <circle cx="53" cy="25" r="15" fill="#fff" stroke="#550b14" stroke-width="4"/>
+            <!-- lengan memegang stempel -->
+            <path d="M66 52 L112 46" stroke="#3d3a38" stroke-width="8"/>
+            <path d="M40 52 L34 70" stroke="#3d3a38" stroke-width="8"/>
+          </svg>
+        </div>
+        <h2>Ditetapkan oleh Kampus</h2>
+        <p><b>Pimpinan kampus yang berwenang</b> menetapkan golongan dan nominal UKT per semester melalui keputusan resmi. Sistem hanya menampilkan dan menjelaskan hasil itu.</p>
+        <p class="see"><b>Yang kamu lihat nanti:</b> golongan, nominal per semester, tanggal penetapan, dan sumbernya.</p>
+      </div>
+    </article>
+
+    <!-- Tahap 5 : Mahasiswa + Petugas, serah terima surat keberatan -->
+    <article class="stage left">
+      <div class="card">
+        <span class="num">5</span>
+        <span class="actor mhs">Mahasiswa</span>
+        <span class="actor petugas">Petugas</span>
+        <div class="art">
+          <svg viewBox="0 0 220 132" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-label="Mahasiswa bertoga menyerahkan surat keberatan kepada petugas berlanyard">
+            <ellipse cx="48" cy="120" rx="40" ry="5" fill="rgba(85,11,20,.10)" stroke="none"/>
+            <ellipse cx="172" cy="120" rx="40" ry="5" fill="rgba(85,11,20,.10)" stroke="none"/>
+            <!-- surat di tengah -->
+            <rect x="96" y="52" width="34" height="24" rx="3" fill="#fff" stroke="#F5B301" stroke-width="3"/>
+            <path d="M96 54 L113 66 L130 54" stroke="#F5B301" stroke-width="2.5"/>
+            <text x="146" y="46" font-size="24" font-weight="800" fill="#F5B301" stroke="none" font-family="Poppins, sans-serif">?</text>
+            <!-- mahasiswa kiri -->
+            <path d="M42 84 L36 114 M56 84 L62 114" stroke="#2b2826" stroke-width="9"/>
+            <rect x="34" y="40" width="30" height="46" rx="13" fill="#2b2826" stroke="#2b2826" stroke-width="3"/>
+            <path d="M40 42 L58 84" stroke="#F5B301" stroke-width="3"/>
+            <circle cx="49" cy="25" r="15" fill="#fff" stroke="#550b14" stroke-width="4"/>
+            <path d="M32 13 L49 5 L66 13 L49 21 Z" fill="#2b2826" stroke="#2b2826" stroke-width="2"/>
+            <path d="M64 13 L64 21" stroke="#F5B301" stroke-width="2.5"/>
+            <circle cx="64" cy="23" r="2.5" fill="#F5B301" stroke="none"/>
+            <path d="M62 52 L98 60" stroke="#2b2826" stroke-width="8"/>
+            <path d="M36 52 L30 70" stroke="#2b2826" stroke-width="8"/>
+            <!-- petugas kanan -->
+            <path d="M166 84 L160 114 M180 84 L186 114" stroke="#550b14" stroke-width="9"/>
+            <rect x="158" y="40" width="30" height="46" rx="13" fill="#fffdf8" stroke="#550b14" stroke-width="3"/>
+            <path d="M166 40 L180 64 M182 40 L180 64" stroke="#F5B301" stroke-width="3"/>
+            <rect x="172" y="62" width="16" height="13" rx="2" fill="#fff" stroke="#550b14" stroke-width="2.5"/>
+            <path d="M175 67 h10 M175 71 h7" stroke="#550b14" stroke-width="1.6"/>
+            <circle cx="173" cy="25" r="15" fill="#fff" stroke="#550b14" stroke-width="4"/>
+            <path d="M160 52 L130 60" stroke="#550b14" stroke-width="8"/>
+            <path d="M186 52 L192 70" stroke="#550b14" stroke-width="8"/>
+          </svg>
+        </div>
+        <h2>Keberatan, bila Hasil Tidak Sesuai</h2>
+        <p><b>Mahasiswa</b> yang merasa golongan belum mencerminkan kondisi ekonomi sebenarnya menyerahkan surat keberatan beserta bukti, lalu <b>petugas</b> meninjaunya.</p>
+        <div class="chips">
+          <span class="chip">Diajukan</span><span class="chip arrow">&rarr;</span>
+          <span class="chip">Dalam Peninjauan</span><span class="chip arrow">&rarr;</span>
+          <span class="chip">Perlu Perbaikan</span><span class="chip arrow">&rarr;</span>
+          <span class="chip final">Disetujui / Ditolak</span>
+        </div>
+        <p class="see"><b>Keputusan</b> dibuat petugas berwenang berdasarkan bukti, dan tercatat di riwayat.</p>
+      </div>
+    </article>
+
+    <div class="finish"><span class="flag">Selesai — kamu bisa memantau statusnya di sistem</span></div>
+  </div>
+
+  <section class="text-alt" aria-label="Versi teks dari diagram alur">
+    <h2>Versi teks (alternatif dari diagram di atas)</h2>
+    <ol>
+      <li><b>Isi Data &amp; Unggah Bukti</b> — Aktor: Mahasiswa (toga). Mengisi data ekonomi keluarga dan mengunggah dokumen bukti.</li>
+      <li><b>Verifikasi Dokumen oleh Petugas</b> — Aktor: Petugas (lanyard + kartu ID). Memeriksa kesesuaian angka dengan bukti resmi.</li>
+      <li><b>Dihitung per Komponen</b> — Tanpa aktor manusia: sistem digambarkan sebagai mesin beroda gigi yang menghitung poin tiap komponen beserta kalimat alasannya, hasilnya berupa diagram batang.</li>
+      <li><b>Ditetapkan oleh Kampus</b> — Aktor: Pimpinan (jas gelap + dasi emas). Menetapkan golongan dan nominal UKT lewat keputusan resmi.</li>
+      <li><b>Keberatan, bila Hasil Tidak Sesuai</b> — Aktor: Mahasiswa + Petugas. Mahasiswa menyerahkan surat keberatan, petugas meninjau; statusnya Diajukan &rarr; Dalam Peninjauan &rarr; Perlu Perbaikan &rarr; Disetujui / Ditolak.</li>
+    </ol>
+    <p class="note">Diagram ini pelengkap penjelasan tertulis dan tabel (KF-02 dan KF-06), bukan penggantinya. Tahapannya sama dengan halaman Alur dan Prosedur Keberatan. Bila alur berubah dan diagram belum diperbarui, diagram diberi label kedaluwarsa.</p>
+  </section>
+  </main>
+
+  <footer>SPPK-UKT UNG &middot; Sistem Peninjauan dan Pengajuan Keberatan UKT Universitas Negeri Gorontalo &middot; KF-10</footer>
+</div>
+</body>
+</html>

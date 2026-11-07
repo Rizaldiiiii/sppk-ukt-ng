@@ -7,7 +7,7 @@
 **Produk:** SPPK-UKT UNG — Sistem Peninjauan dan Pengajuan Keberatan UKT Universitas Negeri Gorontalo (definisi lengkap di `PRD.md`)
 **Stack yang ditetapkan:** Laravel + Blade + Tailwind CSS + Alpine.js
 **Desain yang ditetapkan:** Light neumorphism, profesional, simple, tegas
-(lihat `Neumorphism.md` dan `Motion.md`)
+(lihat `Glassmorphism.md` dan `Motion.md`)
 **Status dokumen:** Draf v1.0, pendamping `PRD.md`
 **Bahasa dokumen:** Bahasa Indonesia
 
@@ -18,8 +18,8 @@ berdiri sendiri untuk urusan arsitektur: definisi fungsi, alasan, dan
 kriteria penerimaannya ada di `PRD.md`, tetapi pemetaan fitur ke modul,
 halaman, dan alur di sini ditulis lengkap supaya pembaca tidak harus
 membuka PRD untuk memahami gambaran besarnya. File yang menyertainya
-adalah `PRD.md`, `Neumorphism.md`, `Motion.md`, `AGENTS.md`, `DESIGN.md`,
-`LOGO UNG (1).png`, dan `ss contoh neumorphism.jpeg`. Bila ada hal yang
+adalah `PRD.md`, `Glassmorphism.md`, `Motion.md`, `AGENTS.md`, `DESIGN.md`, dan
+`LOGO UNG (1).png`. Bila ada hal yang
 tidak diatur di sini atau di file penyerta tersebut, ikuti spesifikasi
 sistem yang diberikan bersama tugas — jangan mencari sumber arsitektur
 lain di luar daftar itu.
@@ -145,7 +145,7 @@ tinggal di Service; aturan siapa boleh apa tinggal di Policy.
 
 ### 4.1 Layout dan navigasi
 
-- **Desktop-first, sidebar kiri** (sesuai `Neumorphism.md`): desain
+- **Desktop-first, sidebar kiri** (sesuai `Glassmorphism.md`): desain
   utama dibuat untuk lebar 1280px ke atas, lalu disesuaikan ke bawah.
 - **Sidebar atas:** logo dari `LOGO UNG (1).png` berdampingan dengan
   teks lengkap `Universitas Negeri Gorontalo`. Logo tidak diwarnai ulang
@@ -157,9 +157,9 @@ tinggal di Service; aturan siapa boleh apa tinggal di Policy.
 - **Tablet (768–1279px):** sidebar menjadi rail ikon atau drawer.
 - **Mobile (<768px):** sidebar menjadi drawer; tabel menjadi kartu
   (judul, status, 1–2 field kunci, menu aksi); filter masuk ke panel.
-- **Token visual** (nilai lengkap di `Neumorphism.md`): primer
-  `#f8f8f7`, sekunder `#550b14`, highlight `#7e6961`, radius tombol/input
-  10px, kartu/modal 12px, bayangan ganda `#D9D3CD` / `#FFFFFF`, font
+- **Token visual** (nilai lengkap di `Glassmorphism.md`): primer
+  `#f8f8f7`, sekunder `#550b14`, highlight `#f5b301`, radius tombol/input
+  10px, kartu/modal 16px, permukaan kaca putih transparan + backdrop-blur 16px, font
   Poppins untuk heading dan Inter untuk body.
 - **Motion** (nilai lengkap di `Motion.md`): hover 150ms, tekan tombol
   100ms, dropdown 150ms, modal 200ms, card hover 200ms, reveal 500–650ms,
@@ -170,7 +170,7 @@ tinggal di Service; aturan siapa boleh apa tinggal di Policy.
 
 Tanda (P) = publik tanpa login. Tanda (L) = perlu login. Halaman yang
 tidak ada di daftar ini tidak dibuat sampai ada fungsi yang memakainya
-(prinsip komponen kondisional di `Neumorphism.md`).
+(prinsip komponen kondisional di `Glassmorphism.md`).
 
 **Publik (P)**
 

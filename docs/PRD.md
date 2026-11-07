@@ -8,8 +8,8 @@
 **Pengguna utama:** Mahasiswa, petugas UKT, dan (sebagai pembaca rekap)
 pimpinan / auditor — lihat Bagian 3 untuk batas kewenangannya
 **Stack yang ditetapkan:** Laravel + Blade + Tailwind CSS + Alpine.js
-**Desain yang ditetapkan:** Light neumorphism, profesional, simple, tegas
-(lihat `Neumorphism.md` dan `Motion.md`)
+**Desain yang ditetapkan:** Light glassmorphism, profesional, simple, tegas
+(lihat `Glassmorphism.md` dan `Motion.md`)
 **Status dokumen:** Draf v1.0 untuk pembangunan Tahap 1–3
 **Bahasa dokumen:** Bahasa Indonesia
 
@@ -17,9 +17,8 @@ pimpinan / auditor — lihat Bagian 3 untuk batas kewenangannya
 *apa* yang dibangun dan *mengapa*. Angka-angka bukti dari survei sudah
 ditulis lengkap di Bagian 2, sehingga pembaca tidak perlu membuka laporan
 aslinya untuk memahami alasan tiap fungsi. File yang menyertainya adalah
-`blueprint.md` (cara membangunnya), `Neumorphism.md`, `Motion.md`,
-`AGENTS.md`, `DESIGN.md`, `LOGO UNG (1).png`, dan
-`ss contoh neumorphism.jpeg`. Bila ada hal yang tidak diatur di sini atau
+`blueprint.md` (cara membangunnya), `Glassmorphism.md`, `Motion.md`,
+`AGENTS.md`, `DESIGN.md`, dan `LOGO UNG (1).png`. Bila ada hal yang tidak diatur di sini atau
 di file penyerta tersebut, ikuti spesifikasi sistem yang diberikan bersama
 tugas — jangan mencari sumber produk lain di luar daftar itu.
 
@@ -275,7 +274,7 @@ bila spesifikasi di bawah masih menyisakan pilihan.
    resmi beserta sumbernya. Tidak ada label ganda yang membingungkan.
 8. **Satu halaman tidak dipadatkan.** Bila konten terasa penuh, pakai
    scroll, tab, atau pagination — jangan mengecilkan font dan merapatkan
-   isi sampai tidak terbaca (lihat `Neumorphism.md`).
+   isi sampai tidak terbaca (lihat `Glassmorphism.md`).
 
 ---
 
@@ -695,7 +694,7 @@ eksplisit supaya tidak disangka hasil survei):
 
 - **Aksesibilitas konten:** kontras teks minimal 4,5:1 (WCAG AA),
   fokus keyboard terlihat, target sentuh minimal 44×44px, dan dukungan
-  `prefers-reduced-motion` — sesuai `Neumorphism.md` dan `Motion.md`.
+  `prefers-reduced-motion` — sesuai `Glassmorphism.md` dan `Motion.md`.
 - **Kinerja yang wajar:** halaman daftar memakai pagination, bukan
   memuat semua baris sekaligus; query daftar dibatasi dan tidak
   menimbulkan pola N+1 yang jelas.
