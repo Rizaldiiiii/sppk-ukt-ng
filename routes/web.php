@@ -66,6 +66,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware('peran:mahasiswa')->group(function () {
         Route::get('/beranda', [HasilController::class, 'beranda'])->name('mahasiswa.beranda');
         Route::get('/hasil-saya/{hasil?}', [HasilController::class, 'index'])->name('mahasiswa.hasil');
+        Route::post('/hasil-saya/{hasil?}', [HasilController::class, 'simulasiWhatIf'])->name('mahasiswa.hasil.what-if');
+        Route::delete('/hasil-saya/{hasil?}/what-if', [HasilController::class, 'resetWhatIf'])->name('mahasiswa.hasil.what-if.reset');
 
         // Tahap 2 (KF-07, KF-08, KF-09) dengan penegakan Policy kepemilikan
         Route::get('/keberatan', [KeberatanController::class, 'index'])->name('mahasiswa.keberatan.index');
