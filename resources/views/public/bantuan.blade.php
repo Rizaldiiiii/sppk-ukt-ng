@@ -26,20 +26,37 @@
             </section>
         @endif
 
-        <x-empty-state
-            title="Pengiriman Pertanyaan Daring Belum Tersedia di Tahap Ini"
-            description="Fasilitas mengirim pertanyaan langsung kepada petugas dari dalam sistem beserta pelacakan jawabannya (KF-08) dijadwalkan pada pembangunan Tahap 2 (Pendukung), dan memerlukan login akun mahasiswa."
-        >
-            <x-slot:actions>
+        <section class="glass-card p-6 md:p-8 space-y-4">
+            <div class="flex flex-wrap items-center gap-2">
+                <span class="px-3 py-1 rounded-[8px] bg-sekunder-light text-sekunder font-heading font-bold text-[12px]">
+                    KF-08 • Jalur Bertanya Terlacak
+                </span>
+                <span class="text-[12px] text-ink-secondary font-medium">
+                    Tersedia untuk Mahasiswa Terautentikasi
+                </span>
+            </div>
+            <h2 class="text-[21px] font-heading font-bold text-ink">
+                Kirim Pertanyaan Langsung kepada Petugas UKT dari Dalam Sistem
+            </h2>
+            <p class="text-[14px] text-ink-secondary leading-relaxed max-w-3xl">
+                Mahasiswa Universitas Negeri Gorontalo dapat mengirimkan pertanyaan tertulis mengenai rincian nilai komponen, persyaratan dokumen pendukung, maupun alur peninjauan ulang UKT langsung melalui menu <strong>Pertanyaan Saya</strong> setelah masuk ke akun. Setiap pertanyaan memperoleh nomor tanda terima dan jawabannya dapat dipantau di dalam sistem.
+            </p>
+            <div class="flex flex-wrap gap-3 pt-1">
                 <x-button :href="route('publik.alur')" variant="secondary">
                     Lihat Alur Penentuan UKT
                 </x-button>
-                @guest
+                @auth
+                    @if(auth()->user()->isMahasiswa())
+                        <x-button :href="route('mahasiswa.pertanyaan.index')" variant="primary">
+                            Buka Halaman Pertanyaan Saya
+                        </x-button>
+                    @endif
+                @else
                     <x-button :href="route('login')" variant="primary">
-                        Masuk Akun Mahasiswa
+                        Masuk Akun Mahasiswa untuk Mengirim Pertanyaan
                     </x-button>
-                @endguest
-            </x-slot:actions>
-        </x-empty-state>
+                @endauth
+            </div>
+        </section>
     </div>
 </x-layouts.guest>

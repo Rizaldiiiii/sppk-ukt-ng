@@ -427,6 +427,14 @@ class DatabaseSeeder extends Seeder
                 'diperbarui_oleh' => $petugas->id,
                 'diperbarui_pada' => now(),
             ],
+            [
+                'slug' => 'petunjuk-pengisian',
+                'judul' => 'Petunjuk Pengisian Formulir Keberatan dan Pertanyaan (KF-09)',
+                'ringkasan' => 'Panduan per kolom yang tampil langsung di samping setiap isian formulir mahasiswa (apa yang harus diisi, format yang diharapkan, contoh pengisian, dan akibat bila keliru).',
+                'isi' => json_encode(KontenPublik::defaultPetunjukPengisian(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
+                'diperbarui_oleh' => $petugas->id,
+                'diperbarui_pada' => now(),
+            ],
         ];
 
         foreach ($daftarKontenPublik as $k) {

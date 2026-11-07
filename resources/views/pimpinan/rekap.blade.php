@@ -74,7 +74,7 @@
         </h2>
         @if($rekapKeberatanPerStatus === [])
             <p class="text-[14px] text-ink-secondary">
-                Belum ada pengajuan keberatan tercatat (fitur pengajuan keberatan daring KF-07 dijadwalkan pada Tahap 2).
+                Belum ada pengajuan keberatan yang tercatat pada sistem saat ini.
             </p>
         @else
             <div class="grid grid-cols-2 md:grid-cols-5 gap-4">

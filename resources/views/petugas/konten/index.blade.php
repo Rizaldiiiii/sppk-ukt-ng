@@ -33,7 +33,7 @@
                 :class="tab === 'halaman' ? 'bg-sekunder-light/90 text-sekunder border-b-2 border-sekunder font-bold shadow-glass-xs' : 'text-ink-secondary hover:bg-glass-hover font-semibold'"
                 class="px-5 py-2.5 min-h-[44px] rounded-[10px] font-heading text-[14px] transition-colors"
             >
-                Teks Alur, Prosedur &amp; Kontak (KF-02 / KF-06)
+                Teks Alur, Prosedur, Kontak &amp; Petunjuk (KF-02 / KF-06 / KF-09)
             </button>
         </div>
 

@@ -66,24 +66,33 @@ Route::middleware('auth')->group(function () {
         Route::get('/beranda', [HasilController::class, 'beranda'])->name('mahasiswa.beranda');
         Route::get('/hasil-saya/{hasil?}', [HasilController::class, 'index'])->name('mahasiswa.hasil');
 
-        // Tahap 2 Stubs (KF-07, KF-08, KF-09) dengan penegakan Policy kepemilikan
+        // Tahap 2 (KF-07, KF-08, KF-09) dengan penegakan Policy kepemilikan
         Route::get('/keberatan', [KeberatanController::class, 'index'])->name('mahasiswa.keberatan.index');
         Route::get('/keberatan/baru', [KeberatanController::class, 'create'])->name('mahasiswa.keberatan.create');
+        Route::post('/keberatan', [KeberatanController::class, 'store'])
+            ->middleware('throttle:20,1')
+            ->name('mahasiswa.keberatan.store');
         Route::get('/keberatan/{pengajuan}', [KeberatanController::class, 'show'])->name('mahasiswa.keberatan.show');
+        Route::post('/keberatan/{pengajuan}/perbaikan', [KeberatanController::class, 'perbaikan'])
+            ->middleware('throttle:20,1')
+            ->name('mahasiswa.keberatan.perbaikan');
 
         Route::get('/pertanyaan', [PertanyaanController::class, 'index'])->name('mahasiswa.pertanyaan.index');
+        Route::post('/pertanyaan', [PertanyaanController::class, 'store'])
+            ->middleware('throttle:20,1')
+            ->name('mahasiswa.pertanyaan.store');
         Route::get('/pertanyaan/{pertanyaan}', [PertanyaanController::class, 'show'])->name('mahasiswa.pertanyaan.show');
     });
 
     /*
     |--------------------------------------------------------------------------
-    | Rute Petugas UKT — Kelola Konten, Parameter, Hasil Resmi (+ Stub Tahap 2)
+    | Rute Petugas UKT — Kelola Konten, Parameter, Hasil Resmi & Tahap 2
     |--------------------------------------------------------------------------
     */
     Route::prefix('petugas')->name('petugas.')->middleware('peran:petugas')->group(function () {
         Route::get('/beranda', [BerandaPetugasController::class, 'index'])->name('beranda');
 
-        // Kelola Konten Publik, Faktor, dan Rentang Golongan (KF-02, KF-03, KF-06, KF-14)
+        // Kelola Konten Publik, Faktor, dan Rentang Golongan (KF-02, KF-03, KF-06, KF-09, KF-14)
         Route::get('/konten', [KontenController::class, 'index'])->name('konten.index');
         Route::put('/konten/{slug}', [KontenController::class, 'updateKonten'])->name('konten.update');
         Route::post('/faktor', [KontenController::class, 'storeFaktor'])->name('faktor.store');
@@ -100,11 +109,17 @@ Route::middleware('auth')->group(function () {
         Route::post('/hasil/resmi', [HasilPetugasController::class, 'storeResmi'])->name('hasil.store-resmi');
         Route::post('/hasil/simulasi', [HasilPetugasController::class, 'storeSimulasi'])->name('hasil.store-simulasi');
 
-        // Tahap 2 Stubs (KF-07, KF-08, KF-13) + endpoint transisi status untuk pengujian KF-15
+        // Tahap 2 (KF-07, KF-08, KF-13)
         Route::get('/keberatan', [KeberatanPetugasController::class, 'index'])->name('keberatan.index');
         Route::get('/keberatan/{pengajuan}', [KeberatanPetugasController::class, 'show'])->name('keberatan.show');
         Route::patch('/keberatan/{pengajuan}/status', [KeberatanPetugasController::class, 'ubahStatus'])->name('keberatan.ubah-status');
+
         Route::get('/pertanyaan', [PertanyaanPetugasController::class, 'index'])->name('pertanyaan.index');
+        Route::get('/pertanyaan/{pertanyaan}', [PertanyaanPetugasController::class, 'show'])->name('pertanyaan.show');
+        Route::patch('/pertanyaan/{pertanyaan}/jawab', [PertanyaanPetugasController::class, 'jawab'])->name('pertanyaan.jawab');
+        Route::patch('/pertanyaan/{pertanyaan}/tutup', [PertanyaanPetugasController::class, 'tutup'])->name('pertanyaan.tutup');
+        Route::patch('/pertanyaan/{pertanyaan}/buka-kembali', [PertanyaanPetugasController::class, 'bukaKembali'])->name('pertanyaan.buka-kembali');
+
         Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
     });
 
