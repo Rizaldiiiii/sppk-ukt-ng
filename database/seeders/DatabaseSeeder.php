@@ -435,6 +435,14 @@ class DatabaseSeeder extends Seeder
                 'diperbarui_oleh' => $petugas->id,
                 'diperbarui_pada' => now(),
             ],
+            [
+                'slug' => 'panduan',
+                'judul' => 'Alur Penentuan UKT, dari Data sampai Keputusan',
+                'ringkasan' => 'Ikuti jalannya dari atas ke bawah. Setiap tahap ada karakternya sendiri — kenali dari pakaiannya — supaya langsung kebayang siapa melakukan apa.',
+                'isi' => 'Panduan visual 5 tahapan proses penentuan dan keberatan UKT Universitas Negeri Gorontalo (KF-10), lengkap dengan versi teks alternatif aksesibel.',
+                'diperbarui_oleh' => $petugas->id,
+                'diperbarui_pada' => now(),
+            ],
         ];
 
         foreach ($daftarKontenPublik as $k) {

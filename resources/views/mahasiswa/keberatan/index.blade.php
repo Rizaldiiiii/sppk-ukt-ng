@@ -52,6 +52,7 @@
     @else
         <div class="space-y-4">
             @foreach($daftarKeberatan as $item)
+                @php $infoTenggat = $item->infoTenggat(); @endphp
                 <article class="glass-card p-6 space-y-4">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-divider/70 pb-4">
                         <div class="space-y-1">
@@ -60,6 +61,9 @@
                                     Tanda Terima #{{ $item->id }}
                                 </span>
                                 <x-badge-status :status="$item->status" :label="$item->status" />
+                                @if($infoTenggat['badge_label'])
+                                    <x-badge-status :status="$infoTenggat['badge_status']" :label="$infoTenggat['badge_label']" />
+                                @endif
                                 @if($item->hasil && $item->hasil->golongan)
                                     <span class="px-2.5 py-0.5 rounded-[8px] bg-white/85 border border-border-glass text-[12px] font-heading font-semibold text-sekunder">
                                         {{ $item->hasil->golongan->nama }} ({{ $item->hasil->formatNominal() }})
@@ -69,6 +73,7 @@
                             <div class="text-[12px] text-ink-secondary flex flex-wrap gap-x-4 gap-y-1">
                                 <span>Diajukan pada: <strong>{{ $item->diajukan_pada?->locale('id')->translatedFormat('d M Y H:i') ?? $item->created_at?->locale('id')->translatedFormat('d M Y H:i') }}</strong></span>
                                 <span>Perubahan status terakhir: <strong>{{ ($item->diputuskan_pada ?? $item->updated_at)?->locale('id')->translatedFormat('d M Y H:i') }}</strong></span>
+                                <span>Perkiraan waktu: <strong class="text-ink">{{ $infoTenggat['teks_perkiraan'] }}</strong></span>
                                 <span>Dokumen bukti: <strong>{{ $item->dokumen->count() }} berkas</strong></span>
                             </div>
                         </div>

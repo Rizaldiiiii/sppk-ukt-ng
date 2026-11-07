@@ -17,10 +17,10 @@
         @endforeach
     </div>
 
-    <!-- Filter Status & Pencarian -->
+    <!-- Filter Status, Filter Tenggat SLA & Pencarian -->
     <section class="glass-card p-6">
         <form method="GET" action="{{ route('petugas.keberatan.index') }}" class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-            <div class="md:col-span-4">
+            <div class="md:col-span-3">
                 <label for="filter_status" class="block text-[13px] font-heading font-semibold text-ink mb-1">
                     Filter Status Pengajuan
                 </label>
@@ -34,7 +34,21 @@
                 </select>
             </div>
 
-            <div class="md:col-span-5">
+            <div class="md:col-span-3">
+                <label for="filter_tenggat" class="block text-[13px] font-heading font-semibold text-ink mb-1">
+                    Filter Status Tenggat (KF-11)
+                </label>
+                <select id="filter_tenggat" name="status_tenggat" class="glass-input w-full px-4 py-2.5 text-[14px]">
+                    <option value="">Semua Tenggat</option>
+                    <option value="terlewat" @selected(($tenggatFilter ?? '') === 'terlewat')>Terlewat Batas Waktu</option>
+                    <option value="mendekati" @selected(($tenggatFilter ?? '') === 'mendekati')>Mendekati Batas Waktu</option>
+                    <option value="normal" @selected(($tenggatFilter ?? '') === 'normal')>Dalam Batas Waktu Normal</option>
+                    <option value="belum_ditetapkan" @selected(($tenggatFilter ?? '') === 'belum_ditetapkan')>Waktu Tunggu Belum Ditetapkan</option>
+                    <option value="selesai" @selected(($tenggatFilter ?? '') === 'selesai')>Selesai Diputuskan</option>
+                </select>
+            </div>
+
+            <div class="md:col-span-4">
                 <label for="filter_q" class="block text-[13px] font-heading font-semibold text-ink mb-1">
                     Cari Nama Mahasiswa / NIM / Isi Alasan
                 </label>
@@ -48,11 +62,11 @@
                 >
             </div>
 
-            <div class="md:col-span-3 flex gap-2">
+            <div class="md:col-span-2 flex gap-2">
                 <x-button type="submit" variant="primary" class="flex-1">
-                    Terapkan Filter
+                    Filter
                 </x-button>
-                @if($statusFilter !== '' || $kataKunci !== '')
+                @if($statusFilter !== '' || ($tenggatFilter ?? '') !== '' || $kataKunci !== '')
                     <x-button :href="route('petugas.keberatan.index')" variant="secondary">
                         Reset
                     </x-button>
@@ -76,13 +90,14 @@
                     <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Hasil Diajukan</th>
                     <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Ringkasan Alasan</th>
                     <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Berkas</th>
-                    <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Status</th>
+                    <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Status &amp; Tenggat (KF-11)</th>
                     <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Diajukan</th>
                     <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink text-right">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-divider">
                 @foreach($daftarKeberatan as $item)
+                    @php $infoTenggat = $item->infoTenggat(); @endphp
                     <tr class="hover:bg-surface-soft/80">
                         <td class="px-5 py-4 font-heading font-bold text-sekunder tabular-nums">
                             #{{ $item->id }}
@@ -107,8 +122,16 @@
                         <td class="px-5 py-4 text-[13px] tabular-nums text-ink">
                             {{ $item->dokumen->count() }} berkas
                         </td>
-                        <td class="px-5 py-4">
-                            <x-badge-status :status="$item->status" :label="$item->status" />
+                        <td class="px-5 py-4 space-y-1.5">
+                            <div class="flex flex-wrap items-center gap-1.5">
+                                <x-badge-status :status="$item->status" :label="$item->status" />
+                                @if($infoTenggat['badge_label'])
+                                    <x-badge-status :status="$infoTenggat['badge_status']" :label="$infoTenggat['badge_label']" />
+                                @endif
+                            </div>
+                            <div class="text-[12px] text-ink-secondary">
+                                {{ $infoTenggat['teks_perkiraan'] }}
+                            </div>
                         </td>
                         <td class="px-5 py-4 text-[12px] text-ink-secondary whitespace-nowrap">
                             {{ $item->diajukan_pada?->locale('id')->translatedFormat('d M Y H:i') ?? '-' }}

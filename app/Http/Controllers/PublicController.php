@@ -100,11 +100,39 @@ class PublicController extends Controller
     }
 
     /**
-     * Halaman panduan visual tahapan (/panduan) — KF-10 (ditunda ke Tahap 3, stub).
+     * Halaman panduan visual tahapan (/panduan) — KF-10 (Tahap 3).
+     * Menyediakan diagram SVG tahapan proses beserta versi teks aksesibel dan penanda kedaluwarsa bila alur berubah.
      */
     public function panduan(): View
     {
-        return view('public.panduan-stub');
+        $kontenPanduan = KontenPublik::where('slug', 'panduan')->first();
+        $kontenAlur = KontenPublik::where('slug', 'alur')->first();
+        $kontenProsedur = KontenPublik::where('slug', 'prosedur-keberatan')->first();
+
+        $apakahKedaluwarsa = false;
+        if ($kontenPanduan && $kontenPanduan->diperbarui_pada) {
+            if ($kontenAlur?->diperbarui_pada && $kontenAlur->diperbarui_pada->gt($kontenPanduan->diperbarui_pada)) {
+                $apakahKedaluwarsa = true;
+            }
+            if ($kontenProsedur?->diperbarui_pada && $kontenProsedur->diperbarui_pada->gt($kontenPanduan->diperbarui_pada)) {
+                $apakahKedaluwarsa = true;
+            }
+        }
+
+        if ($kontenAlur) {
+            $isiAlur = json_decode($kontenAlur->isi, true);
+            $tahapan = $isiAlur['tahapan'] ?? [];
+            if (is_array($tahapan) && count($tahapan) !== 5) {
+                $apakahKedaluwarsa = true;
+            }
+        }
+
+        return view('public.panduan', [
+            'kontenPanduan' => $kontenPanduan,
+            'kontenAlur' => $kontenAlur,
+            'kontenProsedur' => $kontenProsedur,
+            'apakahKedaluwarsa' => $apakahKedaluwarsa,
+        ]);
     }
 
     /**

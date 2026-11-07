@@ -21,6 +21,11 @@
                     <p class="text-[16px] text-ink-secondary leading-relaxed">
                         {{ $konten?->ringkasan ?? 'Panduan syarat, dokumen bukti, tahapan pemeriksaan, serta tujuan penerusan pengajuan keberatan UKT.' }}
                     </p>
+                    <div class="pt-1">
+                        <x-button :href="route('publik.panduan')" variant="secondary">
+                            Lihat Panduan Visual Tahapan (KF-10) →
+                        </x-button>
+                    </div>
                 </div>
 
                 <!-- CTA Pengajuan (Tertaut ke formulir bila login, atau ke login bila belum login — Kriteria KF-06) -->

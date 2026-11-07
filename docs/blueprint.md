@@ -6,7 +6,7 @@
 **Singkatan:** SPPK-UKT UNG — penyebutan singkat sistem ini
 **Produk:** SPPK-UKT UNG — Sistem Peninjauan dan Pengajuan Keberatan UKT Universitas Negeri Gorontalo (definisi lengkap di `PRD.md`)
 **Stack yang ditetapkan:** Laravel + Blade + Tailwind CSS + Alpine.js
-**Desain yang ditetapkan:** Light neumorphism, profesional, simple, tegas
+**Desain yang ditetapkan:** Light glassmorphism, profesional, simple, tegas
 (lihat `Glassmorphism.md` dan `Motion.md`)
 **Status dokumen:** Draf v1.0, pendamping `PRD.md`
 **Bahasa dokumen:** Bahasa Indonesia
@@ -158,8 +158,8 @@ tinggal di Service; aturan siapa boleh apa tinggal di Policy.
 - **Mobile (<768px):** sidebar menjadi drawer; tabel menjadi kartu
   (judul, status, 1–2 field kunci, menu aksi); filter masuk ke panel.
 - **Token visual** (nilai lengkap di `Glassmorphism.md`): primer
-  `#f8f8f7`, sekunder `#550b14`, highlight `#f5b301`, radius tombol/input
-  10px, kartu/modal 16px, permukaan kaca putih transparan + backdrop-blur 16px, font
+  `#f8f8f7`, sekunder `#550b14`, highlight `#F5B301`, radius tombol/input
+  10px, kartu/modal 16px, permukaan kaca putih transparan + backdrop-blur 16px kartu / 24px modal, tanpa bayangan ganda neumorphism, font
   Poppins untuk heading dan Inter untuk body.
 - **Motion** (nilai lengkap di `Motion.md`): hover 150ms, tekan tombol
   100ms, dropdown 150ms, modal 200ms, card hover 200ms, reveal 500–650ms,

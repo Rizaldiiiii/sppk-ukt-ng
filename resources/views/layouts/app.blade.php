@@ -14,6 +14,7 @@
             ['route' => 'petugas.parameter.index', 'pattern' => 'petugas.parameter.*', 'label' => 'Parameter Penilaian', 'icon' => 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4'],
             ['route' => 'petugas.konten.index', 'pattern' => 'petugas.konten.*', 'label' => 'Kelola Konten Publik', 'icon' => 'M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z'],
             ['route' => 'petugas.keberatan.index', 'pattern' => 'petugas.keberatan.*', 'label' => 'Peninjauan Keberatan', 'icon' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'],
+            ['route' => 'petugas.perkiraan-waktu.index', 'pattern' => 'petugas.perkiraan-waktu.*', 'label' => 'Perkiraan Waktu & SLA', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
             ['route' => 'petugas.pertanyaan.index', 'pattern' => 'petugas.pertanyaan.*', 'label' => 'Daftar Pertanyaan', 'icon' => 'M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z'],
             ['route' => 'petugas.riwayat.index', 'pattern' => 'petugas.riwayat.*', 'label' => 'Riwayat & Audit', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
         ],
@@ -166,6 +167,9 @@
                     </a>
                     <a href="{{ route('publik.prosedur-keberatan') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-full text-[13px] font-medium text-ink-secondary hover:bg-white/65 hover:text-ink transition-colors duration-150">
                         <span>Prosedur Keberatan</span>
+                    </a>
+                    <a href="{{ route('publik.panduan') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-full text-[13px] font-medium text-ink-secondary hover:bg-white/65 hover:text-ink transition-colors duration-150">
+                        <span>Panduan Visual (KF-10)</span>
                     </a>
                 </div>
             </nav>

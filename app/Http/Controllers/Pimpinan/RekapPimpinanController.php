@@ -68,12 +68,63 @@ class RekapPimpinanController extends Controller
         $versiAktif = VersiParameter::where('aktif', true)->latest('id')->first();
         $totalHasilTercatat = array_sum($rekapPerSumber);
 
+        // Panel Pemantauan SLA Keberatan (KF-11) — hanya kolom non-pribadi (tanpa mahasiswa_id, NIM, nama, alasan, atau data ekonomi)
+        $pengajuanAktifBerSla = PengajuanKeberatan::query()
+            ->select(['id', 'status', 'diajukan_pada', 'sla_hari_kerja', 'tenggat_waktu', 'diputuskan_pada', 'updated_at'])
+            ->whereNotIn('status', ['Disetujui', 'Ditolak'])
+            ->whereNotNull('tenggat_waktu')
+            ->orderBy('tenggat_waktu')
+            ->orderBy('id')
+            ->get();
+
+        $jumlahMendekatiTenggat = 0;
+        $jumlahMelewatiTenggat = 0;
+        $daftarPantauanSla = [];
+
+        foreach ($pengajuanAktifBerSla as $item) {
+            $info = $item->infoTenggat();
+            if ($info['kategori'] === 'terlewat') {
+                $jumlahMelewatiTenggat++;
+            } elseif ($info['kategori'] === 'mendekati') {
+                $jumlahMendekatiTenggat++;
+            }
+
+            if (in_array($info['kategori'], ['terlewat', 'mendekati'], true)) {
+                $daftarPantauanSla[] = [
+                    'id' => $item->id,
+                    'diajukan_pada' => $item->diajukan_pada,
+                    'tenggat_waktu' => $item->tenggat_waktu,
+                    'status' => $item->status,
+                    'kategori' => $info['kategori'],
+                    'hari_terlewat' => $info['hari_terlewat'],
+                    'sisa_hari' => $info['sisa_hari'],
+                    'badge_label' => $info['badge_label'],
+                    'badge_status' => $info['badge_status'],
+                    'perlu_tindak_lanjut_pimpinan' => $info['perlu_tindak_lanjut_pimpinan'],
+                ];
+            }
+        }
+
+        usort($daftarPantauanSla, function (array $a, array $b): int {
+            if ($a['kategori'] !== $b['kategori']) {
+                return $a['kategori'] === 'terlewat' ? -1 : 1;
+            }
+            if ($a['kategori'] === 'terlewat') {
+                return ($b['hari_terlewat'] ?? 0) <=> ($a['hari_terlewat'] ?? 0);
+            }
+
+            return ($a['sisa_hari'] ?? 99) <=> ($b['sisa_hari'] ?? 99);
+        });
+
         return view('pimpinan.rekap', [
             'rekapPerSumber' => $rekapPerSumber,
             'daftarGolongan' => $daftarGolongan,
             'rekapKeberatanPerStatus' => $rekapKeberatanPerStatus,
             'versiAktif' => $versiAktif,
             'totalHasilTercatat' => $totalHasilTercatat,
+            'jumlahMendekatiTenggat' => $jumlahMendekatiTenggat,
+            'jumlahMelewatiTenggat' => $jumlahMelewatiTenggat,
+            'daftarPantauanSla' => $daftarPantauanSla,
         ]);
     }
 

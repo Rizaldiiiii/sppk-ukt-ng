@@ -1,6 +1,9 @@
+@php
+    $infoTenggat = $pengajuan->infoTenggat();
+@endphp
 <x-layouts.app
     :title="'Detail Pengajuan Keberatan #' . $pengajuan->id"
-    subtitle="Pemantauan status pengajuan, catatan petugas, dokumen bukti, dan riwayat peninjauan (KF-07)"
+    subtitle="Pemantauan status pengajuan, catatan petugas, dokumen bukti, dan riwayat peninjauan (KF-07 & KF-11)"
 >
     <x-slot:headerActions>
         <x-button :href="route('mahasiswa.keberatan.index')" variant="secondary">
@@ -19,6 +22,9 @@
                         Nomor Tanda Terima #{{ $pengajuan->id }}
                     </span>
                     <x-badge-status :status="$pengajuan->status" :label="'Status: ' . $pengajuan->status" />
+                    @if($infoTenggat['badge_label'])
+                        <x-badge-status :status="$infoTenggat['badge_status']" :label="$infoTenggat['badge_label']" />
+                    @endif
                 </div>
                 <h2 class="text-[22px] font-heading font-extrabold text-ink">
                     Pengajuan Peninjauan Ulang UKT — {{ $pengajuan->mahasiswa?->user?->nama }}
@@ -57,12 +63,15 @@
                 </div>
             </div>
             <div class="p-4 rounded-[12px] bg-white/75 border border-border-glass">
-                <div class="text-ink-muted font-medium">Status Keputusan Akhir</div>
+                <div class="text-ink-muted font-medium">Perkiraan Waktu &amp; Tenggat (KF-11)</div>
                 <div class="font-heading font-bold text-ink text-[15px] mt-1">
-                    @if($pengajuan->diputuskan_pada)
-                        Diputuskan pada {{ $pengajuan->diputuskan_pada->locale('id')->translatedFormat('d M Y H:i') }}
+                    {{ $infoTenggat['teks_perkiraan'] }}
+                </div>
+                <div class="text-[12px] text-ink-secondary mt-0.5">
+                    @if($pengajuan->sla_hari_kerja)
+                        SLA terkunci saat diajukan: {{ $pengajuan->sla_hari_kerja }} hari kerja • Status: {{ $pengajuan->status }}
                     @else
-                        Sedang dalam alur peninjauan
+                        Status saat ini: {{ $pengajuan->status }}
                     @endif
                 </div>
             </div>

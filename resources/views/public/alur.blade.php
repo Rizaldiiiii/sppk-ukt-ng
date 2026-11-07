@@ -22,6 +22,11 @@
                         Terakhir diperbarui: {{ $konten->diperbarui_pada->locale('id')->translatedFormat('d M Y') }}
                     </p>
                 @endif
+                <div class="pt-2">
+                    <x-button :href="route('publik.panduan')" variant="secondary">
+                        Lihat Panduan Visual Tahapan (KF-10) →
+                    </x-button>
+                </div>
             </div>
         </section>
 

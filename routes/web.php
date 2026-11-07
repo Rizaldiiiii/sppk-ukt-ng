@@ -11,6 +11,7 @@ use App\Http\Controllers\Petugas\HasilPetugasController;
 use App\Http\Controllers\Petugas\KeberatanPetugasController;
 use App\Http\Controllers\Petugas\KontenController;
 use App\Http\Controllers\Petugas\ParameterController;
+use App\Http\Controllers\Petugas\PerkiraanWaktuController;
 use App\Http\Controllers\Petugas\PertanyaanPetugasController;
 use App\Http\Controllers\Petugas\RiwayatController;
 use App\Http\Controllers\Pimpinan\RekapPimpinanController;
@@ -121,6 +122,10 @@ Route::middleware('auth')->group(function () {
         Route::patch('/pertanyaan/{pertanyaan}/buka-kembali', [PertanyaanPetugasController::class, 'bukaKembali'])->name('pertanyaan.buka-kembali');
 
         Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
+
+        // Tahap 3 (KF-11): Kelola Perkiraan Waktu Tunggu & SLA
+        Route::get('/perkiraan-waktu', [PerkiraanWaktuController::class, 'index'])->name('perkiraan-waktu.index');
+        Route::put('/perkiraan-waktu/{jenis}', [PerkiraanWaktuController::class, 'update'])->name('perkiraan-waktu.update');
     });
 
     /*

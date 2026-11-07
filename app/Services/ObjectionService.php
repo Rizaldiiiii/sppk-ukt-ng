@@ -37,6 +37,7 @@ class ObjectionService
     public function __construct(
         private readonly AuditService $auditService,
         private readonly NotificationService $notificationService,
+        private readonly SlaService $slaService,
     ) {}
 
     /**
@@ -84,13 +85,21 @@ class ObjectionService
                 $berkasUnggahan,
                 &$pathTersimpan
             ) {
+                $waktuDiajukan = now();
+                $slaHariKerja = $this->slaService->ambilHariKerjaAktif('keberatan');
+                $tenggatWaktu = $slaHariKerja !== null
+                    ? $this->slaService->hitungTenggatWaktu($waktuDiajukan, $slaHariKerja)->toDateString()
+                    : null;
+
                 $pengajuan = PengajuanKeberatan::create([
                     'mahasiswa_id' => $mahasiswa->id,
                     'hasil_id' => $hasilId,
                     'alasan' => trim($alasan),
                     'status' => self::STATUS_DIAJUKAN,
                     'catatan_petugas' => null,
-                    'diajukan_pada' => now(),
+                    'diajukan_pada' => $waktuDiajukan,
+                    'sla_hari_kerja' => $slaHariKerja,
+                    'tenggat_waktu' => $tenggatWaktu,
                 ]);
 
                 $daftarNamaBerkas = $this->simpanBerkasKeberatan(
@@ -110,6 +119,8 @@ class ObjectionService
                         'mahasiswa_id' => $mahasiswa->id,
                         'hasil_id' => $hasilId,
                         'status' => self::STATUS_DIAJUKAN,
+                        'sla_hari_kerja' => $slaHariKerja,
+                        'tenggat_waktu' => $tenggatWaktu,
                         'jumlah_dokumen' => count($daftarNamaBerkas),
                         'dokumen' => $daftarNamaBerkas,
                     ]

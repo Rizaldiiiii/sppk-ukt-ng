@@ -1,6 +1,9 @@
+@php
+    $infoTenggat = $pengajuan->infoTenggat();
+@endphp
 <x-layouts.app
     :title="'Peninjauan Keberatan UKT #' . $pengajuan->id"
-    subtitle="Periksa alasan keberatan, dokumen bukti privat, dan perbarui status peninjauan (KF-07 & KF-15)"
+    subtitle="Periksa alasan keberatan, dokumen bukti privat, dan perbarui status peninjauan (KF-07, KF-11 & KF-15)"
 >
     <x-slot:headerActions>
         <x-button :href="route('petugas.keberatan.index')" variant="secondary">
@@ -19,6 +22,9 @@
                         Pengajuan #{{ $pengajuan->id }}
                     </span>
                     <x-badge-status :status="$pengajuan->status" :label="$pengajuan->status" />
+                    @if($infoTenggat['badge_label'])
+                        <x-badge-status :status="$infoTenggat['badge_status']" :label="$infoTenggat['badge_label']" />
+                    @endif
                     @if($apakahTerminal)
                         <span class="px-2.5 py-0.5 rounded-[8px] bg-surface-soft border border-divider text-[11px] font-heading font-bold text-ink-secondary">
                             Status Keputusan Final (Terminal)
@@ -35,6 +41,7 @@
 
             <div class="text-[13px] text-ink-secondary md:text-right space-y-1">
                 <div>Diajukan pada: <strong class="text-ink">{{ $pengajuan->diajukan_pada?->locale('id')->translatedFormat('d M Y H:i') ?? '-' }}</strong></div>
+                <div>Perkiraan &amp; Tenggat: <strong class="text-ink">{{ $infoTenggat['teks_perkiraan'] }}</strong></div>
                 <div>Perubahan terakhir: <strong class="text-ink">{{ ($pengajuan->diputuskan_pada ?? $pengajuan->updated_at)?->locale('id')->translatedFormat('d M Y H:i') }}</strong></div>
                 @if($pengajuan->pemutus)
                     <div>Diputuskan oleh: <strong class="text-ink">{{ $pengajuan->pemutus->nama }}</strong></div>

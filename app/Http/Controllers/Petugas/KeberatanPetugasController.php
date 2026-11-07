@@ -20,19 +20,44 @@ class KeberatanPetugasController extends Controller
     ) {}
 
     /**
-     * Daftar peninjauan pengajuan keberatan dengan filter status, pencarian, dan pagination (KF-07).
+     * Daftar peninjauan pengajuan keberatan dengan urutan prioritas tenggat terlewat di atas,
+     * filter status pengajuan, filter status tenggat SLA, pencarian, dan pagination (KF-07 & KF-11).
      */
     public function index(Request $request): View
     {
         $statusFilter = trim((string) $request->query('status', ''));
+        $tenggatFilter = trim((string) $request->query('status_tenggat', ''));
         $kataKunci = trim((string) $request->query('q', ''));
+        $hariIni = now()->toDateString();
 
         $query = PengajuanKeberatan::with(['mahasiswa.user', 'hasil.golongan', 'dokumen', 'pemutus'])
+            ->orderByRaw(
+                "CASE
+                    WHEN status NOT IN ('Disetujui', 'Ditolak') AND tenggat_waktu IS NOT NULL AND tenggat_waktu < ? THEN 0
+                    WHEN status NOT IN ('Disetujui', 'Ditolak') AND tenggat_waktu IS NOT NULL THEN 1
+                    WHEN status NOT IN ('Disetujui', 'Ditolak') THEN 2
+                    ELSE 3
+                END ASC",
+                [$hariIni]
+            )
+            ->orderByRaw('CASE WHEN tenggat_waktu IS NULL THEN 1 ELSE 0 END ASC')
+            ->orderBy('tenggat_waktu')
             ->latest('diajukan_pada')
             ->latest('id');
 
         if ($statusFilter !== '' && in_array($statusFilter, ObjectionService::daftarStatus(), true)) {
             $query->where('status', $statusFilter);
+        }
+
+        if ($tenggatFilter !== '' && in_array($tenggatFilter, ['terlewat', 'mendekati', 'normal', 'belum_ditetapkan', 'selesai'], true)) {
+            $matchingIds = PengajuanKeberatan::query()
+                ->select(['id', 'status', 'diajukan_pada', 'sla_hari_kerja', 'tenggat_waktu', 'diputuskan_pada', 'updated_at'])
+                ->get()
+                ->filter(fn (PengajuanKeberatan $p) => $p->infoTenggat()['kategori'] === $tenggatFilter)
+                ->pluck('id')
+                ->all();
+
+            $query->whereIn('id', $matchingIds ?: [0]);
         }
 
         if ($kataKunci !== '') {
@@ -61,6 +86,7 @@ class KeberatanPetugasController extends Controller
             'daftarKeberatan' => $daftarKeberatan,
             'daftarStatus' => ObjectionService::daftarStatus(),
             'statusFilter' => $statusFilter,
+            'tenggatFilter' => $tenggatFilter,
             'kataKunci' => $kataKunci,
             'ringkasanStatus' => $ringkasanStatus,
         ]);
