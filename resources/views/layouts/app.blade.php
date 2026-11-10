@@ -69,13 +69,13 @@
         class="fixed inset-0 z-40 bg-ink/35 backdrop-blur-[4px] xl:hidden"
     ></div>
 
-    <!-- Sidebar Kiri (Desktop-first >=1280px penuh, <1280px drawer — Glassmorphism.md §5.5) -->
+    <!-- Sidebar Kiri (Desktop-first >=1280px fixed penuh setinggi layar, <1280px drawer — Glassmorphism.md §5.5) -->
     <aside
         aria-label="Navigasi Utama Sistem"
         :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full xl:translate-x-0'"
-        class="fixed xl:static inset-y-0 left-0 z-50 w-72 shrink-0 glass-sidebar flex flex-col justify-between transition-transform duration-200 ease-out"
+        class="fixed top-0 bottom-0 inset-y-0 left-0 z-50 w-72 shrink-0 glass-sidebar flex flex-col justify-between transition-transform duration-200 ease-out"
     >
-        <div>
+        <div class="flex-1 min-h-0 overflow-y-auto">
             <!-- Brand Header: Logo UNG + Universitas Negeri Gorontalo di atas permukaan terang (Glassmorphism.md §5.10) -->
             <div class="p-5 border-b border-white/85 flex items-center justify-between gap-3 bg-primer/95">
                 <a href="{{ route('publik.beranda') }}" class="flex items-center gap-3">
@@ -176,7 +176,7 @@
         </div>
 
         <!-- Tombol Keluar -->
-        <div class="p-4 border-t border-divider/80">
+        <div class="p-4 border-t border-divider/80 shrink-0">
             <form method="POST" action="{{ route('logout') }}" data-prevent-double-submit>
                 @csrf
                 <button
@@ -189,8 +189,8 @@
         </div>
     </aside>
 
-    <!-- Area Konten Utama -->
-    <div class="flex-1 flex flex-col min-w-0 relative z-10">
+    <!-- Area Konten Utama (offset kiri xl:ml-72 sebesar lebar sidenav w-72 di desktop) -->
+    <div class="flex-1 flex flex-col min-w-0 relative z-10 xl:ml-72">
         <!-- Header Halaman Sticky -->
         <header class="sticky top-0 z-30 glass-header px-4 md:px-6 xl:px-8 py-4 flex items-center justify-between gap-4">
             <div class="flex items-center gap-3">
