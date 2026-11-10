@@ -178,7 +178,7 @@ tidak ada di daftar ini tidak dibuat sampai ada fungsi yang memakainya
 | --- | --- | --- |
 | `/` | Beranda publik | Ringkasan: apa itu sistem ini, tautan ke alur, faktor, rentang, prosedur |
 | `/alur` | Alur penentuan UKT | KF-02 umum: tahapan pengisian sampai penetapan |
-| `/faktor` | Daftar faktor penentu | KF-03 umum: nama, penjelasan singkat, status konfirmasi |
+| `/faktor` | Daftar faktor penentu | KF-03 umum: nama, penjelasan singkat, pengaruh umum (status konfirmasi sumber tidak lagi ditampilkan di halaman publik ini) |
 | `/golongan` | Rentang nominal tiap golongan | KF-14: semua golongan, sumber, tanggal pembaruan |
 | `/prosedur-keberatan` | Prosedur keberatan | KF-06: syarat, dokumen, tahapan, tautan ke formulir |
 | `/panduan` | Panduan visual tahapan | KF-10 (Tahap 3): diagram/video + alternatif teks |
@@ -309,7 +309,7 @@ data sensitif (lihat Bagian 8).
 | --- | --- | --- |
 | `konten_publik` | `id`, `slug` (`alur`, `faktor`, `prosedur-keberatan`, `panduan`, `kontak`), `judul`, `isi`, `diperbarui_oleh`, `diperbarui_pada` | Satu baris per halaman publik; perubahan tercatat di audit |
 | `golongan_ukt` | `id`, `kode`, `nama`, `nominal_min`, `nominal_max`, `sumber`, `berlaku_mulai`, `berlaku_sampai` | Rentang KF-14; `sumber` dan tanggal wajib diisi |
-| `faktor_penilaian` | `id`, `kode`, `nama`, `penjelasan_singkat`, `status_konfirmasi` (`terkonfirmasi`, `menunggu_konfirmasi`), `urutan`, `aktif` | Daftar KF-03; faktor yang belum terkonfirmasi ditandai, bukan disembunyikan diam-diam |
+| `faktor_penilaian` | `id`, `kode`, `nama`, `penjelasan_singkat`, `status_konfirmasi` (`terkonfirmasi`, `menunggu_konfirmasi`), `urutan`, `aktif` | Daftar KF-03; `status_konfirmasi` disimpan dan ditampilkan di halaman kelola konten petugas, tidak lagi ditampilkan di halaman publik `/faktor` |
 
 **Hasil dan mesin penilaian**
 

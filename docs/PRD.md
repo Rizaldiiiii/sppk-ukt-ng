@@ -350,9 +350,9 @@ antarfungsi yang ditulis eksplisit.
 - **Kriteria penerimaan:**
   - Daftar publik memuat semua faktor yang dipakai model penjelasan,
     lengkap dengan penjelasan singkat tiap faktor.
-  - Bila suatu faktor belum dikonfirmasi sumber resminya, daftar itu
-    menandai statusnya ("menunggu konfirmasi resmi") dan tidak
-    menyajikannya sebagai ketentuan resmi kampus.
+  - Status konfirmasi sumber tiap faktor (`status_konfirmasi`) tetap
+    disimpan dan dikelola oleh petugas di halaman kelola konten, namun
+    tidak lagi ditampilkan di halaman publik Faktor (`/faktor`).
   - Perubahan daftar oleh petugas tercatat di riwayat (KF-13) dan
     langsung tercermin di halaman publik setelah disimpan.
 
@@ -756,7 +756,7 @@ menebak.
 
 | # | Keputusan / risiko | Dampak bila tidak ditutup | Siapa yang menutupnya |
 |---|---|---|---|
-| 1 | Formula, variabel, bobot, dan ambang resmi kampus belum diketahui | KF-05 hanya bisa berjalan sebagai simulasi berlabel; KF-01 dan KF-03 harus menandai statusnya | Kampus (sumber resmi) |
+| 1 | Formula, variabel, bobot, dan ambang resmi kampus belum diketahui | KF-05 hanya bisa berjalan sebagai simulasi berlabel; KF-01 menandai statusnya (di footer halaman hasil untuk prototipe seeder) dan status konfirmasi sumber KF-03 dikelola di sisi petugas (tidak lagi ditampilkan di halaman publik Faktor) | Kampus (sumber resmi) |
 | 2 | Kewenangan petugas dan pimpinan atas data mahasiswa belum diverifikasi | Akses pimpinan atas rincian perorangan tetap nonaktif; hanya rekap yang aktif | Kampus (konfirmasi tertulis) |
 | 3 | Sumber hasil penetapan resmi (entri manual petugas vs impor sistem kampus) belum ditetapkan | Alur input hasil dan format datanya belum bisa dikunci | Pemilik produk bersama kampus |
 | 4 | Kontak petugas dibuka publik atau hanya setelah login | Mempengaruhi halaman bantuan dan halaman publik Tahap 1 | Pemilik produk |

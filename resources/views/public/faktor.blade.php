@@ -25,10 +25,6 @@
                 <h2 id="heading-daftar-faktor" class="text-[26px] font-heading font-bold text-ink">
                     Komponen Variabel yang Diperhitungkan ({{ $daftarFaktor->count() }} Faktor)
                 </h2>
-                <div class="flex flex-wrap items-center gap-2 text-[12px]">
-                    <x-badge-status status="terkonfirmasi" label="Terkonfirmasi resmi" />
-                    <x-badge-status status="menunggu_konfirmasi" label="Menunggu konfirmasi resmi" />
-                </div>
             </div>
 
             <!-- Tabel Desktop (>=768px) -->
@@ -40,7 +36,6 @@
                             <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink">Nama Faktor / Variabel</th>
                             <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink">Penjelasan Singkat</th>
                             <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink">Pengaruh Umum terhadap Hasil</th>
-                            <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink">Status Sumber</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-divider">
@@ -63,12 +58,6 @@
                                 <td class="px-6 py-5 text-[14px] text-ink-secondary leading-relaxed align-top">
                                     {{ $faktor->pengaruh_umum ?? 'Mempengaruhi nilai komponen penilaian sesuai rentang masukan yang tercatat.' }}
                                 </td>
-                                <td class="px-6 py-5 align-top whitespace-nowrap">
-                                    <x-badge-status
-                                        :status="$faktor->status_konfirmasi"
-                                        :label="$faktor->labelStatusKonfirmasi()"
-                                    />
-                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -83,10 +72,6 @@
                             <h3 class="font-heading font-bold text-[16px] text-ink">
                                 {{ $faktor->urutan }}. {{ $faktor->nama }}
                             </h3>
-                            <x-badge-status
-                                :status="$faktor->status_konfirmasi"
-                                :label="$faktor->labelStatusKonfirmasi()"
-                            />
                         </div>
                         <p class="text-[14px] text-ink leading-relaxed">
                             {{ $faktor->penjelasan_singkat }}

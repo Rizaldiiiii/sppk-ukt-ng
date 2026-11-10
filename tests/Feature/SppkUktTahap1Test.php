@@ -50,11 +50,11 @@ class SppkUktTahap1Test extends TestCase
             $response->assertDontSee('531412002');
         }
 
-        // KF-03: Daftar faktor menampilkan status konfirmasi resmi & menunggu konfirmasi
+        // KF-03: Daftar faktor menampilkan 5 faktor tanpa kolom/badge status konfirmasi sumber di halaman publik
         $this->get('/faktor')
             ->assertSee('Penghasilan Gabungan Orang Tua / Wali')
-            ->assertSee('Terkonfirmasi resmi')
-            ->assertSee('Menunggu konfirmasi resmi');
+            ->assertDontSee('Status Sumber')
+            ->assertDontSee('Terkonfirmasi resmi');
 
         // KF-14: Halaman golongan menampilkan semua golongan beserta sumbernya
         $this->get('/golongan')
