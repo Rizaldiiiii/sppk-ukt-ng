@@ -29,7 +29,6 @@ class StoreFaktorPenilaianRequest extends FormRequest
             'penjelasan_singkat' => ['required', 'string', 'max:2000'],
             'pengaruh_umum' => ['nullable', 'string', 'max:2000'],
             'satuan' => ['nullable', 'string', 'max:40'],
-            'status_konfirmasi' => ['required', Rule::in(['terkonfirmasi', 'menunggu_konfirmasi'])],
             'urutan' => ['required', 'integer', 'min:1', 'max:999'],
             'aktif' => ['nullable', 'boolean'],
         ];
@@ -42,8 +41,6 @@ class StoreFaktorPenilaianRequest extends FormRequest
             'kode.unique' => 'Kode faktor tersebut sudah terdaftar.',
             'nama.required' => 'Nama faktor penilaian wajib diisi.',
             'penjelasan_singkat.required' => 'Penjelasan singkat faktor wajib diisi.',
-            'status_konfirmasi.required' => 'Status konfirmasi resmi wajib dipilih.',
-            'status_konfirmasi.in' => 'Status konfirmasi hanya boleh "terkonfirmasi" atau "menunggu_konfirmasi".',
         ];
     }
 }

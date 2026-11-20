@@ -62,13 +62,6 @@
                         <textarea id="faktor_pengaruh" name="pengaruh_umum" rows="2" class="glass-input w-full px-4 py-2.5 text-[14px]"></textarea>
                     </div>
                     <div>
-                        <label for="faktor_status" class="block text-[14px] font-medium text-ink mb-1">Status Konfirmasi Sumber Resmi</label>
-                        <select id="faktor_status" name="status_konfirmasi" class="glass-input w-full px-4 py-2.5 text-[14px]">
-                            <option value="menunggu_konfirmasi">Menunggu konfirmasi resmi</option>
-                            <option value="terkonfirmasi">Terkonfirmasi resmi</option>
-                        </select>
-                    </div>
-                    <div>
                         <label for="faktor_urutan" class="block text-[14px] font-medium text-ink mb-1">Urutan Tampil</label>
                         <input id="faktor_urutan" name="urutan" type="number" value="6" min="1" required class="glass-input w-full px-4 py-2.5 text-[14px]">
                     </div>
@@ -90,29 +83,21 @@
                             <span class="font-heading font-bold text-[16px] text-ink">
                                 #{{ $faktor->urutan }} — {{ $faktor->nama }} ({{ $faktor->kode }})
                             </span>
-                            <x-badge-status :status="$faktor->status_konfirmasi" :label="$faktor->labelStatusKonfirmasi()" />
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-[13px] font-medium text-ink mb-1">Nama Faktor</label>
                                 <input name="nama" type="text" value="{{ $faktor->nama }}" required class="glass-input w-full px-3.5 py-2 text-[14px]">
                             </div>
                             <div>
-                                <label class="block text-[13px] font-medium text-ink mb-1">Status Konfirmasi</label>
-                                <select name="status_konfirmasi" class="glass-input w-full px-3.5 py-2 text-[14px]">
-                                    <option value="terkonfirmasi" @selected($faktor->status_konfirmasi === 'terkonfirmasi')>Terkonfirmasi resmi</option>
-                                    <option value="menunggu_konfirmasi" @selected($faktor->status_konfirmasi === 'menunggu_konfirmasi')>Menunggu konfirmasi resmi</option>
-                                </select>
-                            </div>
-                            <div>
                                 <label class="block text-[13px] font-medium text-ink mb-1">Urutan</label>
                                 <input name="urutan" type="number" value="{{ $faktor->urutan }}" required class="glass-input w-full px-3.5 py-2 text-[14px]">
                             </div>
-                            <div class="md:col-span-3">
+                            <div class="md:col-span-2">
                                 <label class="block text-[13px] font-medium text-ink mb-1">Penjelasan Singkat</label>
                                 <textarea name="penjelasan_singkat" rows="2" required class="glass-input w-full px-3.5 py-2 text-[14px]">{{ $faktor->penjelasan_singkat }}</textarea>
                             </div>
-                            <div class="md:col-span-3">
+                            <div class="md:col-span-2">
                                 <label class="block text-[13px] font-medium text-ink mb-1">Pengaruh Umum</label>
                                 <textarea name="pengaruh_umum" rows="2" class="glass-input w-full px-3.5 py-2 text-[14px]">{{ $faktor->pengaruh_umum }}</textarea>
                             </div>

@@ -32,17 +32,5 @@ class FaktorPenilaian extends Model
     {
         return $this->hasMany(ParameterPenilaian::class, 'faktor_id');
     }
-
-    public function isTerkonfirmasi(): bool
-    {
-        return $this->status_konfirmasi === 'terkonfirmasi';
-    }
-
-    public function labelStatusKonfirmasi(): string
-    {
-        return $this->isTerkonfirmasi()
-            ? 'Terkonfirmasi resmi'
-            : 'Menunggu konfirmasi resmi';
-    }
 }
 

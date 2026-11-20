@@ -54,7 +54,8 @@ class SppkUktTahap1Test extends TestCase
         $this->get('/faktor')
             ->assertSee('Penghasilan Gabungan Orang Tua / Wali')
             ->assertDontSee('Status Sumber')
-            ->assertDontSee('Terkonfirmasi resmi');
+            ->assertDontSee('Terkonfirmasi resmi')
+            ->assertDontSee('Menunggu konfirmasi resmi');
 
         // KF-14: Halaman golongan menampilkan semua golongan tanpa kolom sumber & tanggal berlaku di halaman publik
         $this->get('/golongan')

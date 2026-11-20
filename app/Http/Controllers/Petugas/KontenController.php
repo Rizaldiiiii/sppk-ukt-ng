@@ -158,7 +158,7 @@ class KontenController extends Controller
                 subjekTipe: FaktorPenilaian::class,
                 subjekId: $faktor->id,
                 nilaiSebelum: null,
-                nilaiSesudah: $faktor->only(['kode', 'nama', 'status_konfirmasi', 'urutan', 'aktif'])
+                nilaiSesudah: $faktor->only(['kode', 'nama', 'urutan', 'aktif'])
             );
         });
 
@@ -170,7 +170,7 @@ class KontenController extends Controller
         Gate::authorize('manage', KontenPublik::class);
 
         DB::transaction(function () use ($request, $faktor) {
-            $sebelum = $faktor->only(['nama', 'penjelasan_singkat', 'pengaruh_umum', 'status_konfirmasi', 'urutan', 'aktif']);
+            $sebelum = $faktor->only(['nama', 'penjelasan_singkat', 'pengaruh_umum', 'urutan', 'aktif']);
             $data = $request->validated();
             $data['aktif'] = $request->boolean('aktif', true);
 
@@ -188,7 +188,7 @@ class KontenController extends Controller
                 subjekTipe: FaktorPenilaian::class,
                 subjekId: $faktor->id,
                 nilaiSebelum: $sebelum,
-                nilaiSesudah: $faktor->only(['nama', 'penjelasan_singkat', 'pengaruh_umum', 'status_konfirmasi', 'urutan', 'aktif'])
+                nilaiSesudah: $faktor->only(['nama', 'penjelasan_singkat', 'pengaruh_umum', 'urutan', 'aktif'])
             );
         });
 

@@ -424,6 +424,39 @@ class SppkUktTahap2Test extends TestCase
         $this->assertSame('Contoh pertanyaan terstruktur baru.', $petunjukTersimpan['pertanyaan_isi']['contoh']);
         // Kolom lain (mis. keberatan_hasil) tetap utuh
         $this->assertSame('Hasil UKT yang Diajukan Keberatan', $petunjukTersimpan['keberatan_hasil']['judul']);
+
+        // 6. Halaman kelola konten petugas tidak lagi menampilkan status konfirmasi sumber faktor
+        $this->actingAs($petugas)
+            ->get('/petugas/konten')
+            ->assertStatus(200)
+            ->assertDontSee('Terkonfirmasi resmi')
+            ->assertDontSee('Menunggu konfirmasi resmi')
+            ->assertDontSee('Status Konfirmasi');
+
+        // 7. Tambah dan edit faktor penilaian tanpa field status_konfirmasi tetap berhasil
+        $this->actingAs($petugas)
+            ->post('/petugas/faktor', [
+                'kode' => 'tagihan_air_rumah',
+                'nama' => 'Tagihan Air Rumah Tangga',
+                'penjelasan_singkat' => 'Rata-rata biaya pemakaian air bersih bulanan keluarga.',
+                'pengaruh_umum' => 'Indikator tambahan konsumsi utilitas rumah tangga.',
+                'urutan' => 6,
+            ])
+            ->assertRedirect();
+
+        $faktorBaru = \App\Models\FaktorPenilaian::where('kode', 'tagihan_air_rumah')->firstOrFail();
+        $this->assertSame('Tagihan Air Rumah Tangga', $faktorBaru->nama);
+
+        $this->actingAs($petugas)
+            ->put('/petugas/faktor/' . $faktorBaru->id, [
+                'nama' => 'Tagihan Air Bersih Rumah Tangga',
+                'penjelasan_singkat' => 'Rata-rata biaya pemakaian air bersih PDAM bulanan keluarga.',
+                'pengaruh_umum' => 'Indikator tambahan konsumsi utilitas rumah tangga per bulan.',
+                'urutan' => 6,
+            ])
+            ->assertRedirect();
+
+        $this->assertSame('Tagihan Air Bersih Rumah Tangga', $faktorBaru->fresh()->nama);
     }
 
     public function test_kf13_riwayat_audit_petugas_dan_pimpinan_serta_penolakan_akses_mahasiswa(): void

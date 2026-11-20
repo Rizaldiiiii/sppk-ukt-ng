@@ -387,7 +387,7 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'faktor',
                 'judul' => 'Daftar Faktor dan Variabel Penentuan UKT',
                 'ringkasan' => 'Penentuan UKT tidak hanya melihat penghasilan orang tua semata, melainkan menggabungkan beberapa indikator beban tanggungan dan kondisi rumah tangga secara menyeluruh.',
-                'isi' => 'Halaman ini menampilkan seluruh faktor penilaian yang digunakan dalam model penjelasan SPPK-UKT UNG. Faktor yang belum memiliki konfirmasi tertulis dari regulasi terbuka kampus ditandai secara jujur dengan status "Menunggu konfirmasi resmi" agar mahasiswa mendapatkan informasi yang transparan.',
+                'isi' => 'Halaman ini menampilkan seluruh faktor penilaian yang digunakan dalam model penjelasan SPPK-UKT UNG beserta penjelasan singkat dan pengaruh umumnya terhadap hasil penilaian agar mahasiswa mendapatkan informasi yang transparan.',
                 'diperbarui_oleh' => $petugas->id,
                 'diperbarui_pada' => now(),
             ],
