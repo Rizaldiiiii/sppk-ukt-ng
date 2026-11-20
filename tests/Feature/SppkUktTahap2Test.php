@@ -292,7 +292,7 @@ class SppkUktTahap2Test extends TestCase
             ->put('/petugas/konten/petunjuk-pengisian', [
                 'judul' => 'Petunjuk Pengisian Formulir Keberatan dan Pertanyaan (KF-09)',
                 'ringkasan' => 'Panduan per kolom yang telah diperbarui oleh petugas.',
-                'isi' => json_encode($petunjukBaru, JSON_UNESCAPED_UNICODE),
+                'petunjuk' => $petunjukBaru,
             ])
             ->assertRedirect();
 
@@ -300,6 +300,130 @@ class SppkUktTahap2Test extends TestCase
             ->get('/keberatan/baru')
             ->assertStatus(200)
             ->assertSee('Contoh baru dari petugas: Lampirkan SK Pensiun Nomor 123/2026.');
+    }
+
+    public function test_editor_terstruktur_konten_publik_alur_prosedur_dan_petunjuk(): void
+    {
+        $petugas = User::where('email', 'petugas@ung.ac.id')->firstOrFail();
+
+        // Pastikan tampilan awal halaman publik /alur dan /prosedur-keberatan tercatat
+        $kontenAlurAwal = \App\Models\KontenPublik::where('slug', 'alur')->firstOrFail();
+        $kontenProsedurAwal = \App\Models\KontenPublik::where('slug', 'prosedur-keberatan')->firstOrFail();
+        $htmlAlurAwal = $this->get('/alur')->assertStatus(200)->getContent();
+        $htmlProsedurAwal = $this->get('/prosedur-keberatan')->assertStatus(200)->getContent();
+
+        // 1. Simpan ulang /alur dan /prosedur-keberatan dengan data terstruktur yang tidak diubah -> halaman publik tampil persis sama
+        $decodedAlurAwal = json_decode($kontenAlurAwal->isi, true);
+        $this->actingAs($petugas)
+            ->put('/petugas/konten/alur', [
+                'judul' => $kontenAlurAwal->judul,
+                'ringkasan' => $kontenAlurAwal->ringkasan,
+                'tahapan' => $decodedAlurAwal['tahapan'],
+            ])
+            ->assertRedirect();
+
+        $decodedProsedurAwal = json_decode($kontenProsedurAwal->isi, true);
+        $this->actingAs($petugas)
+            ->put('/petugas/konten/prosedur-keberatan', [
+                'judul' => $kontenProsedurAwal->judul,
+                'ringkasan' => $kontenProsedurAwal->ringkasan,
+                'tujuan_pengajuan' => $decodedProsedurAwal['tujuan_pengajuan'],
+                'siapa_boleh_mengajukan' => $decodedProsedurAwal['siapa_boleh_mengajukan'],
+                'dokumen_diperlukan' => $decodedProsedurAwal['dokumen_diperlukan'],
+                'tahapan_peninjauan' => $decodedProsedurAwal['tahapan_peninjauan'],
+            ])
+            ->assertRedirect();
+
+        $this->assertSame($kontenAlurAwal->isi, $kontenAlurAwal->fresh()->isi);
+        $this->assertSame($kontenProsedurAwal->isi, $kontenProsedurAwal->fresh()->isi);
+
+        $this->get('/alur')
+            ->assertStatus(200)
+            ->assertSee('Pengisian Data Sosial-Ekonomi & Unggah Bukti')
+            ->assertSee('Peninjauan Ulang / Pengajuan Keberatan (Bila Hasil Dirasa Tidak Sesuai)');
+
+        $this->get('/prosedur-keberatan')
+            ->assertStatus(200)
+            ->assertSee($decodedProsedurAwal['tujuan_pengajuan']);
+
+        // 2. Edit tahapan alur lewat payload terstruktur + tambah tahapan baru & hapus tahapan (nomor diurutkan ulang otomatis)
+        $tahapanEdit = $decodedAlurAwal['tahapan'];
+        unset($tahapanEdit[1]); // Hapus tahapan ke-2
+        $tahapanEdit[] = [
+            'judul' => 'Tahap Tambahan: Evaluasi Berkala Semester',
+            'deskripsi' => 'Mahasiswa dapat memantau pembaruan status evaluasi setiap awal semester.',
+            'hubungan_data' => 'Data pembaruan kondisi keluarga ditautkan ke riwayat hasil.',
+        ];
+
+        $this->actingAs($petugas)
+            ->put('/petugas/konten/alur', [
+                'judul' => $kontenAlurAwal->judul,
+                'ringkasan' => $kontenAlurAwal->ringkasan,
+                'tahapan' => array_values($tahapanEdit),
+            ])
+            ->assertRedirect();
+
+        $alurBaru = json_decode($kontenAlurAwal->fresh()->isi, true);
+        $this->assertCount(5, $alurBaru['tahapan']);
+        $this->assertSame([1, 2, 3, 4, 5], array_column($alurBaru['tahapan'], 'nomor'));
+        $this->assertSame('Tahap Tambahan: Evaluasi Berkala Semester', $alurBaru['tahapan'][4]['judul']);
+
+        $this->get('/alur')
+            ->assertStatus(200)
+            ->assertSee('Tahap Tambahan: Evaluasi Berkala Semester')
+            ->assertDontSee('Pemeriksaan Kelengkapan & Verifikasi Dokumen oleh Petugas');
+
+        // 3. Tolak hapus tahapan terakhir (tahapan kosong / < 1 tahapan)
+        $this->actingAs($petugas)
+            ->from('/petugas/konten')
+            ->put('/petugas/konten/alur', [
+                'judul' => $kontenAlurAwal->judul,
+                'ringkasan' => $kontenAlurAwal->ringkasan,
+                'tahapan' => [],
+            ])
+            ->assertRedirect('/petugas/konten')
+            ->assertSessionHasErrors('tahapan');
+
+        // 4. Tolak simpan bila judul tahapan kosong
+        $this->actingAs($petugas)
+            ->from('/petugas/konten')
+            ->put('/petugas/konten/alur', [
+                'judul' => $kontenAlurAwal->judul,
+                'ringkasan' => $kontenAlurAwal->ringkasan,
+                'tahapan' => [
+                    [
+                        'judul' => '',
+                        'deskripsi' => 'Deskripsi tanpa judul tahapan.',
+                        'hubungan_data' => 'Hubungan data.',
+                    ],
+                ],
+            ])
+            ->assertRedirect('/petugas/konten')
+            ->assertSessionHasErrors('tahapan.0.judul');
+
+        // 5. Edit satu kolom petunjuk-pengisian lewat payload terstruktur -> kolom lain tetap utuh
+        $kontenPetunjuk = \App\Models\KontenPublik::where('slug', 'petunjuk-pengisian')->firstOrFail();
+        $this->actingAs($petugas)
+            ->put('/petugas/konten/petunjuk-pengisian', [
+                'judul' => $kontenPetunjuk->judul,
+                'ringkasan' => $kontenPetunjuk->ringkasan,
+                'petunjuk' => [
+                    'pertanyaan_isi' => [
+                        'judul' => 'Pertanyaan kepada Petugas UKT (Diperbarui)',
+                        'apa_diisi' => 'Isikan pertanyaan ringkas dan jelas.',
+                        'format' => 'Minimal 10 karakter.',
+                        'contoh' => 'Contoh pertanyaan terstruktur baru.',
+                        'akibat' => 'Pertanyaan kosong ditolak.',
+                    ],
+                ],
+            ])
+            ->assertRedirect();
+
+        $petunjukTersimpan = \App\Models\KontenPublik::petunjukPengisian();
+        $this->assertSame('Pertanyaan kepada Petugas UKT (Diperbarui)', $petunjukTersimpan['pertanyaan_isi']['judul']);
+        $this->assertSame('Contoh pertanyaan terstruktur baru.', $petunjukTersimpan['pertanyaan_isi']['contoh']);
+        // Kolom lain (mis. keberatan_hasil) tetap utuh
+        $this->assertSame('Hasil UKT yang Diajukan Keberatan', $petunjukTersimpan['keberatan_hasil']['judul']);
     }
 
     public function test_kf13_riwayat_audit_petugas_dan_pimpinan_serta_penolakan_akses_mahasiswa(): void

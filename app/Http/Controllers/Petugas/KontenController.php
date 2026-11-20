@@ -42,8 +42,9 @@ class KontenController extends Controller
         Gate::authorize('manage', KontenPublik::class);
 
         $konten = KontenPublik::where('slug', $slug)->firstOrFail();
+        $isiTersusun = $this->susunIsiKonten($request, $konten);
 
-        DB::transaction(function () use ($request, $konten) {
+        DB::transaction(function () use ($request, $konten, $isiTersusun) {
             $sebelum = [
                 'judul' => $konten->judul,
                 'ringkasan' => $konten->ringkasan,
@@ -53,7 +54,7 @@ class KontenController extends Controller
             $updated = KontenPublik::whereKey($konten->id)->update([
                 'judul' => $request->validated('judul'),
                 'ringkasan' => $request->validated('ringkasan'),
-                'isi' => $request->validated('isi'),
+                'isi' => $isiTersusun,
                 'diperbarui_oleh' => $request->user()->id,
                 'diperbarui_pada' => now(),
             ]);
@@ -79,6 +80,66 @@ class KontenController extends Controller
         Cache::forget('konten_publik_'.$slug);
 
         return back()->with('toast_success', 'Konten publik "'.$konten->judul.'" berhasil diperbarui.');
+    }
+
+    private function susunIsiKonten(UpdateKontenPublikRequest $request, KontenPublik $konten): string
+    {
+        $validated = $request->validated();
+
+        if ($konten->slug === 'alur' && isset($validated['tahapan']) && is_array($validated['tahapan'])) {
+            $tahapan = [];
+            foreach (array_values($validated['tahapan']) as $idx => $item) {
+                $tahapan[] = [
+                    'nomor' => $idx + 1,
+                    'judul' => trim((string) ($item['judul'] ?? '')),
+                    'deskripsi' => trim((string) ($item['deskripsi'] ?? '')),
+                    'hubungan_data' => trim((string) ($item['hubungan_data'] ?? '')),
+                ];
+            }
+
+            return (string) json_encode(['tahapan' => $tahapan], JSON_UNESCAPED_UNICODE);
+        }
+
+        if (
+            $konten->slug === 'prosedur-keberatan'
+            && isset($validated['tujuan_pengajuan'], $validated['siapa_boleh_mengajukan'], $validated['dokumen_diperlukan'], $validated['tahapan_peninjauan'])
+        ) {
+            return (string) json_encode([
+                'siapa_boleh_mengajukan' => array_values(array_map(static fn ($v) => trim((string) $v), $validated['siapa_boleh_mengajukan'])),
+                'dokumen_diperlukan' => array_values(array_map(static fn ($v) => trim((string) $v), $validated['dokumen_diperlukan'])),
+                'tujuan_pengajuan' => trim((string) $validated['tujuan_pengajuan']),
+                'tahapan_peninjauan' => array_values(array_map(static fn ($v) => trim((string) $v), $validated['tahapan_peninjauan'])),
+            ], JSON_UNESCAPED_UNICODE);
+        }
+
+        if ($konten->slug === 'petunjuk-pengisian' && isset($validated['petunjuk']) && is_array($validated['petunjuk'])) {
+            $defaults = KontenPublik::defaultPetunjukPengisian();
+            $existing = json_decode((string) $konten->isi, true);
+            $tersusun = [];
+
+            foreach ($defaults as $key => $defaultKolom) {
+                $sumberAwal = (is_array($existing) && isset($existing[$key]) && is_array($existing[$key]))
+                    ? array_merge($defaultKolom, array_intersect_key($existing[$key], $defaultKolom))
+                    : $defaultKolom;
+
+                if (isset($validated['petunjuk'][$key]) && is_array($validated['petunjuk'][$key])) {
+                    $inputKolom = $validated['petunjuk'][$key];
+                    $tersusun[$key] = [
+                        'judul' => trim((string) ($inputKolom['judul'] ?? $sumberAwal['judul'])),
+                        'apa_diisi' => trim((string) ($inputKolom['apa_diisi'] ?? $sumberAwal['apa_diisi'])),
+                        'format' => trim((string) ($inputKolom['format'] ?? $sumberAwal['format'])),
+                        'contoh' => trim((string) ($inputKolom['contoh'] ?? $sumberAwal['contoh'])),
+                        'akibat' => trim((string) ($inputKolom['akibat'] ?? $sumberAwal['akibat'])),
+                    ];
+                } else {
+                    $tersusun[$key] = $sumberAwal;
+                }
+            }
+
+            return (string) json_encode($tersusun, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        }
+
+        return (string) ($validated['isi'] ?? $konten->isi);
     }
 
     public function storeFaktor(StoreFaktorPenilaianRequest $request): RedirectResponse
