@@ -29,7 +29,7 @@
         <section class="glass-card p-6 md:p-8 space-y-4">
             <div class="flex flex-wrap items-center gap-2">
                 <span class="px-3 py-1 rounded-[8px] bg-sekunder-light text-sekunder font-heading font-bold text-[12px]">
-                    KF-08 • Jalur Bertanya Terlacak
+                    Jalur Bertanya Terlacak
                 </span>
                 <span class="text-[12px] text-ink-secondary font-medium">
                     Tersedia untuk Mahasiswa Terautentikasi

@@ -111,8 +111,8 @@
                             <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink w-64">Komponen &amp; Penjelasan</th>
                             <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink w-48">Masukan yang Dipakai</th>
                             <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink text-right w-36">Nilai Komponen</th>
-                            <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink">Langkah Perhitungan (KF-02 / KF-05)</th>
-                            <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink">Kalimat Alasan Hasil (KF-04)</th>
+                            <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink">Langkah Perhitungan</th>
+                            <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink">Kalimat Alasan Hasil</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-divider">
@@ -482,10 +482,10 @@
                         </div>
                         <div class="flex flex-wrap items-center gap-3 shrink-0">
                             <x-button :href="route('mahasiswa.pertanyaan.index')" variant="secondary">
-                                Bertanya ke Petugas (KF-08)
+                                Bertanya ke Petugas
                             </x-button>
                             <x-button :href="route('mahasiswa.keberatan.create')" variant="primary">
-                                Ajukan Keberatan (KF-07)
+                                Ajukan Keberatan
                             </x-button>
                         </div>
                     </div>

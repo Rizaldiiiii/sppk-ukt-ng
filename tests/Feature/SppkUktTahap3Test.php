@@ -31,7 +31,8 @@ class SppkUktTahap3Test extends TestCase
         $response = $this->get('/panduan');
 
         $response->assertStatus(200)
-            ->assertSee('KF-10')
+            ->assertSee('Panduan Visual')
+            ->assertDontSee('KF-10')
             ->assertSee('Alur Penentuan UKT, dari Data sampai Keputusan')
             ->assertSee('Mahasiswa — toga')
             ->assertSee('Petugas — lanyard + kartu ID')
@@ -72,7 +73,7 @@ class SppkUktTahap3Test extends TestCase
             ->assertStatus(200)
             ->assertDontSee('Halaman: /faktor')
             ->assertDontSee('Simpan Perubahan /faktor')
-            ->assertSee('Halaman: /panduan (Panduan Visual KF-10)')
+            ->assertSee('Halaman: /panduan (Panduan Visual)')
             ->assertSee('menggunakan diagram bawaan')
             ->assertSee('Unggah Visual');
 

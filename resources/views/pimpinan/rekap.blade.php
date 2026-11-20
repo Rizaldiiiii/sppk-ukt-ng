@@ -94,7 +94,7 @@
 
         <div class="space-y-1.5 pt-1">
             <span class="inline-block px-3 py-1 rounded-[8px] bg-sekunder-light text-sekunder font-heading font-bold text-[12px]">
-                KF-11 • Pemantauan Ketercapaian Waktu Layanan (SLA)
+                Pemantauan Ketercapaian Waktu Layanan (SLA)
             </span>
             <h2 id="heading-sla-pimpinan" class="text-[21px] font-heading font-bold text-ink">
                 Panel Pemantauan Tenggat Waktu Peninjauan Keberatan

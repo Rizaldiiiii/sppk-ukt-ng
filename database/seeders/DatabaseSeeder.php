@@ -429,7 +429,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'slug' => 'petunjuk-pengisian',
-                'judul' => 'Petunjuk Pengisian Formulir Keberatan dan Pertanyaan (KF-09)',
+                'judul' => 'Petunjuk Pengisian Formulir Keberatan dan Pertanyaan',
                 'ringkasan' => 'Panduan per kolom yang tampil langsung di samping setiap isian formulir mahasiswa (apa yang harus diisi, format yang diharapkan, contoh pengisian, dan akibat bila keliru).',
                 'isi' => json_encode(KontenPublik::defaultPetunjukPengisian(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
                 'diperbarui_oleh' => $petugas->id,
@@ -439,7 +439,7 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'panduan',
                 'judul' => 'Alur Penentuan UKT, dari Data sampai Keputusan',
                 'ringkasan' => 'Ikuti jalannya dari atas ke bawah. Setiap tahap ada karakternya sendiri — kenali dari pakaiannya — supaya langsung kebayang siapa melakukan apa.',
-                'isi' => 'Panduan visual 5 tahapan proses penentuan dan keberatan UKT Universitas Negeri Gorontalo (KF-10), lengkap dengan versi teks alternatif aksesibel.',
+                'isi' => 'Panduan visual 5 tahapan proses penentuan dan keberatan UKT Universitas Negeri Gorontalo, lengkap dengan versi teks alternatif aksesibel.',
                 'diperbarui_oleh' => $petugas->id,
                 'diperbarui_pada' => now(),
             ],

@@ -169,7 +169,7 @@
                         <span>Prosedur Keberatan</span>
                     </a>
                     <a href="{{ route('publik.panduan') }}" class="flex items-center gap-3 px-4 py-2.5 min-h-[44px] rounded-full text-[13px] font-medium text-ink-secondary hover:bg-white/65 hover:text-ink transition-colors duration-150">
-                        <span>Panduan Visual (KF-10)</span>
+                        <span>Panduan Visual</span>
                     </a>
                 </div>
             </nav>

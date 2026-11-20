@@ -1,6 +1,6 @@
 <x-layouts.app
     title="Pertanyaan kepada Petugas UKT"
-    subtitle="Kirim pertanyaan dari dalam sistem dan pantau jawaban resmi dari Petugas UKT (KF-08 & KF-09)"
+    subtitle="Kirim pertanyaan dari dalam sistem dan pantau jawaban resmi dari Petugas UKT"
 >
     @if($errors->any())
         <section role="alert" class="glass-card p-6 border-l-4 border-l-error bg-error-bg/90 space-y-2">
@@ -31,7 +31,7 @@
 
         <div class="space-y-1.5 border-b border-divider/80 pb-4">
             <span class="inline-block px-3 py-1 rounded-[8px] bg-sekunder-light text-sekunder font-heading font-bold text-[12px]">
-                KF-08 &amp; KF-09 • Jalur Bertanya Terlacak
+                Jalur Bertanya Terlacak
             </span>
             <h2 class="text-[20px] font-heading font-bold text-ink">
                 Kirim Pertanyaan Baru kepada Petugas UKT

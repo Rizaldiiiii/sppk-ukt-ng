@@ -9,7 +9,7 @@
                     Formulir Pencatatan Hasil &amp; Rincian Komponen
                 </h2>
                 <p class="text-[13px] text-ink-secondary">
-                    Setiap hasil yang disimpan langsung membuat rincian komponen melalui RuleEngine dan mengirim pemberitahuan (KF-15).
+                    Setiap hasil yang disimpan langsung membuat rincian komponen melalui RuleEngine dan mengirim pemberitahuan.
                 </p>
             </div>
             <div class="flex gap-2">

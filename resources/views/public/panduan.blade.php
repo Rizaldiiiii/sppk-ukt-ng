@@ -1,7 +1,7 @@
 @php
     $tahapanAlur = $kontenAlur ? (json_decode($kontenAlur->isi, true)['tahapan'] ?? []) : [];
 @endphp
-<x-layouts.guest title="Panduan Visual — Alur Penentuan UKT (KF-10)" :showScrollProgress="true">
+<x-layouts.guest title="Panduan Visual — Alur Penentuan UKT" :showScrollProgress="true">
     <style>
         .kf10-wrap {
             max-width: 920px;
@@ -276,7 +276,7 @@
                         </span>
                     </div>
                     <p class="text-[13px] text-ink-secondary">
-                        Terdapat pembaruan pada halaman penjelasan tertulis (KF-02 / KF-06) setelah panduan visual ini terakhir disinkronkan. Acuan utama tetap berada pada halaman penjelasan tertulis.
+                        Terdapat pembaruan pada halaman penjelasan tertulis setelah panduan visual ini terakhir disinkronkan. Acuan utama tetap berada pada halaman penjelasan tertulis.
                     </p>
                 </div>
                 <div class="flex gap-2 shrink-0">
@@ -288,7 +288,7 @@
         @endif
 
         <header class="text-center mb-2">
-            <span class="kf10-badge">KF-10 &middot; Panduan Visual</span>
+            <span class="kf10-badge">Panduan Visual</span>
             <h1 class="font-heading font-extrabold text-[26px] sm:text-[32px] md:text-[36px] text-sekunder leading-tight">
                 {{ $kontenPanduan?->judul ?? 'Alur Penentuan UKT, dari Data sampai Keputusan' }}
             </h1>
@@ -318,10 +318,10 @@
                     </div>
                     <div class="flex flex-wrap items-center justify-center gap-3 pt-1">
                         <x-button :href="route('publik.alur')" variant="secondary">
-                            Baca Penjelasan Alur Tertulis (KF-02)
+                            Baca Penjelasan Alur Tertulis
                         </x-button>
                         <x-button :href="route('publik.prosedur-keberatan')" variant="primary">
-                            Pelajari Prosedur Keberatan (KF-06)
+                            Pelajari Prosedur Keberatan
                         </x-button>
                     </div>
                 </div>
@@ -548,10 +548,10 @@
                 </div>
                 <div class="flex flex-wrap items-center justify-center gap-3 pt-1">
                     <x-button :href="route('publik.alur')" variant="secondary">
-                        Baca Penjelasan Alur Tertulis (KF-02)
+                        Baca Penjelasan Alur Tertulis
                     </x-button>
                     <x-button :href="route('publik.prosedur-keberatan')" variant="primary">
-                        Pelajari Prosedur Keberatan (KF-06)
+                        Pelajari Prosedur Keberatan
                     </x-button>
                 </div>
             </div>
@@ -568,7 +568,7 @@
                 <li><b>Keberatan, bila Hasil Tidak Sesuai</b> — Aktor: Mahasiswa + Petugas. Mahasiswa menyerahkan surat keberatan, petugas meninjau; statusnya Diajukan &rarr; Dalam Peninjauan &rarr; Perlu Perbaikan &rarr; Disetujui / Ditolak.</li>
             </ol>
             <p class="kf10-note">
-                Diagram ini pelengkap penjelasan tertulis dan tabel (<a href="{{ route('publik.alur') }}" class="font-semibold text-sekunder underline">KF-02</a> dan <a href="{{ route('publik.prosedur-keberatan') }}" class="font-semibold text-sekunder underline">KF-06</a>), bukan penggantinya. Tahapannya sama dengan halaman Alur dan Prosedur Keberatan. Bila alur berubah dan diagram belum diperbarui, diagram diberi label kedaluwarsa.
+                Diagram ini pelengkap penjelasan tertulis dan tabel (<a href="{{ route('publik.alur') }}" class="font-semibold text-sekunder underline">Alur</a> dan <a href="{{ route('publik.prosedur-keberatan') }}" class="font-semibold text-sekunder underline">Prosedur Keberatan</a>), bukan penggantinya. Tahapannya sama dengan halaman Alur dan Prosedur Keberatan. Bila alur berubah dan diagram belum diperbarui, diagram diberi label kedaluwarsa.
             </p>
         </section>
     </div>

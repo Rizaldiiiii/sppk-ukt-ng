@@ -3,7 +3,7 @@
 @endphp
 <x-layouts.app
     :title="'Peninjauan Keberatan UKT #' . $pengajuan->id"
-    subtitle="Periksa alasan keberatan, dokumen bukti privat, dan perbarui status peninjauan (KF-07, KF-11 & KF-15)"
+    subtitle="Periksa alasan keberatan, dokumen bukti privat, dan perbarui status peninjauan"
 >
     <x-slot:headerActions>
         <x-button :href="route('petugas.keberatan.index')" variant="secondary">
@@ -121,7 +121,7 @@
     <section class="glass-card p-6 md:p-8 space-y-5">
         <div class="space-y-1">
             <h3 class="text-[19px] font-heading font-bold text-ink">
-                Keputusan &amp; Perubahan Status Peninjauan (KF-07 &amp; KF-15)
+                Keputusan &amp; Perubahan Status Peninjauan
             </h3>
             <p class="text-[13px] text-ink-secondary leading-relaxed">
                 Perubahan status dan catatan di bawah ini akan otomatis dicatat di <code>audit_logs</code> dan memicu pemberitahuan sistem serta antrean email kepada mahasiswa. Status <strong>Disetujui</strong> dan <strong>Ditolak</strong> bersifat final (terminal).

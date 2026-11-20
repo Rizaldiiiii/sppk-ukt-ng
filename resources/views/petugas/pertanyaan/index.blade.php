@@ -1,6 +1,6 @@
 <x-layouts.app
     title="Daftar Pertanyaan Mahasiswa"
-    subtitle="Kelola pertanyaan mahasiswa, berikan jawaban resmi, atau tutup pertanyaan yang telah tuntas (KF-08)"
+    subtitle="Kelola pertanyaan mahasiswa, berikan jawaban resmi, atau tutup pertanyaan yang telah tuntas"
 >
     <!-- Ringkasan Jumlah per Status -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">

@@ -4,7 +4,7 @@
 @endphp
 <x-layouts.app
     title="Notifikasi Sistem Saya"
-    subtitle="Pemberitahuan perubahan hasil dan status peninjauan UKT (KF-15)"
+    subtitle="Pemberitahuan perubahan hasil dan status peninjauan UKT"
 >
     <x-slot:headerActions>
         @if($jumlahNotifikasi > 0)

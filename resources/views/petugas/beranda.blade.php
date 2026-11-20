@@ -19,7 +19,7 @@
         </div>
 
         <div class="glass-card glass-card-light p-6 space-y-2" data-reveal="up" style="--reveal-delay: 160ms">
-            <div class="text-[13px] font-medium text-ink-secondary">Versi Parameter Aktif (KF-05)</div>
+            <div class="text-[13px] font-medium text-ink-secondary">Versi Parameter Aktif</div>
             <div class="text-[21px] font-heading font-extrabold text-ink">
                 {{ $versiAktif?->versi ?? 'Belum ada' }}
             </div>
@@ -45,7 +45,7 @@
                     Entri &amp; Kelola Hasil UKT
                 </h2>
                 <p class="text-[14px] text-ink-secondary leading-relaxed">
-                    Masukkan penetapan resmi kampus beserta rincian komponennya atau jalankan perhitungan simulasi untuk mahasiswa. Setiap perubahan memicu pemberitahuan KF-15.
+                    Masukkan penetapan resmi kampus beserta rincian komponennya atau jalankan perhitungan simulasi untuk mahasiswa. Setiap perubahan memicu pemberitahuan.
                 </p>
             </div>
             <x-button :href="route('petugas.hasil.index')" variant="primary">
@@ -56,7 +56,7 @@
         <div class="glass-card p-6 flex flex-col justify-between space-y-4">
             <div class="space-y-2">
                 <h2 class="text-[21px] font-heading font-bold text-ink">
-                    Parameter Penilaian Berversi (KF-05)
+                    Parameter Penilaian Berversi
                 </h2>
                 <p class="text-[14px] text-ink-secondary leading-relaxed">
                     Perbarui bobot dan aturan komponen melalui penerbitan versi baru tanpa mengubah kode program dan tanpa mengubah hasil perhitungan lama.
@@ -70,7 +70,7 @@
         <div class="glass-card p-6 flex flex-col justify-between space-y-4">
             <div class="space-y-2">
                 <h2 class="text-[21px] font-heading font-bold text-ink">
-                    Kelola Konten Publik (KF-02/03/06/14)
+                    Kelola Konten Publik
                 </h2>
                 <p class="text-[14px] text-ink-secondary leading-relaxed">
                     Perbarui penjelasan alur proses, daftar faktor penentu beserta status konfirmasinya, rentang nominal golongan UKT, dan prosedur keberatan.
@@ -87,7 +87,7 @@
         <section class="glass-card p-6 border-l-4 border-l-warning space-y-3">
             <div class="flex items-center justify-between">
                 <h2 class="text-[18px] font-heading font-bold text-warning">
-                    Catatan Kegagalan Antrean Email Pemberitahuan (KF-15)
+                    Catatan Kegagalan Antrean Email Pemberitahuan
                 </h2>
                 <x-badge-status status="warning" :label="$kegagalanEmail->count() . ' Kegagalan Tercatat'" />
             </div>

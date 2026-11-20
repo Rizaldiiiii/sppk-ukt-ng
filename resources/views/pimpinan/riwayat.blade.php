@@ -12,7 +12,7 @@
 @endphp
 <x-layouts.app
     title="Riwayat Audit & Perubahan Sistem — Pimpinan / Auditor"
-    subtitle="Penelusuran riwayat akses dan perubahan data tanpa menampilkan identitas maupun nilai ekonomi perorangan mahasiswa (KF-13 & PRD Bagian 3.3)"
+    subtitle="Penelusuran riwayat akses dan perubahan data tanpa menampilkan identitas maupun nilai ekonomi perorangan mahasiswa (PRD Bagian 3.3)"
 >
     <!-- Peringatan Batas Kewenangan Pimpinan & Toggle Mode Ringkas / Detail -->
     <section class="glass-card-raised glass-card-glow p-6 border-l-4 border-l-sekunder space-y-4">
@@ -20,7 +20,7 @@
             <div class="space-y-1.5">
                 <div class="flex flex-wrap items-center gap-2">
                     <h2 class="text-[16px] font-heading font-bold text-ink">
-                        Jejak Audit Hanya-Baca dengan Perlindungan Privasi Mahasiswa (KF-13)
+                        Jejak Audit Hanya-Baca dengan Perlindungan Privasi Mahasiswa
                     </h2>
                     <span class="px-3 py-1 rounded-[8px] bg-sekunder-light text-sekunder font-heading font-bold text-[12px]">
                         Append-Only • Data Pribadi Disamarkan

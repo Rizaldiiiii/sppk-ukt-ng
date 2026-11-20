@@ -87,7 +87,7 @@
             </div>
 
             <div class="glass-card glass-card-light p-6 xl:p-7 flex flex-col justify-between space-y-3 h-full" data-reveal="up" style="--reveal-delay: 160ms">
-                <div class="text-[13px] font-medium text-ink-secondary">Pemberitahuan Sistem (KF-15)</div>
+                <div class="text-[13px] font-medium text-ink-secondary">Pemberitahuan Sistem</div>
                 <div class="text-[28px] xl:text-[32px] font-heading font-extrabold text-ink tabular-nums">
                     {{ $jumlahNotifikasiBelumDibaca }} Belum Dibaca
                 </div>

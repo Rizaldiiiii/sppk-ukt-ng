@@ -1,6 +1,6 @@
 <x-layouts.app
     title="Peninjauan Pengajuan Keberatan UKT"
-    subtitle="Daftar kerja petugas untuk meninjau pengajuan keberatan mahasiswa, memeriksa berkas privat, dan memperbarui status keputusan (KF-07)"
+    subtitle="Daftar kerja petugas untuk meninjau pengajuan keberatan mahasiswa, memeriksa berkas privat, dan memperbarui status keputusan"
 >
     <!-- Ringkasan Jumlah per Status -->
     <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -36,7 +36,7 @@
 
             <div class="md:col-span-3">
                 <label for="filter_tenggat" class="block text-[13px] font-heading font-semibold text-ink mb-1">
-                    Filter Status Tenggat (KF-11)
+                    Filter Status Tenggat
                 </label>
                 <select id="filter_tenggat" name="status_tenggat" class="glass-input w-full px-4 py-2.5 text-[14px]">
                     <option value="">Semua Tenggat</option>
@@ -90,7 +90,7 @@
                     <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Hasil Diajukan</th>
                     <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Ringkasan Alasan</th>
                     <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Berkas</th>
-                    <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Status &amp; Tenggat (KF-11)</th>
+                    <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Status &amp; Tenggat</th>
                     <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Diajukan</th>
                     <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink text-right">Aksi</th>
                 </tr>

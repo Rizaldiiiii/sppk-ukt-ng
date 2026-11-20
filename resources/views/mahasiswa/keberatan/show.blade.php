@@ -3,7 +3,7 @@
 @endphp
 <x-layouts.app
     :title="'Detail Pengajuan Keberatan #' . $pengajuan->id"
-    subtitle="Pemantauan status pengajuan, catatan petugas, dokumen bukti, dan riwayat peninjauan (KF-07 & KF-11)"
+    subtitle="Pemantauan status pengajuan, catatan petugas, dokumen bukti, dan riwayat peninjauan"
 >
     <x-slot:headerActions>
         <x-button :href="route('mahasiswa.keberatan.index')" variant="secondary">
@@ -63,7 +63,7 @@
                 </div>
             </div>
             <div class="p-4 rounded-[12px] bg-white/75 border border-border-glass">
-                <div class="text-ink-muted font-medium">Perkiraan Waktu &amp; Tenggat (KF-11)</div>
+                <div class="text-ink-muted font-medium">Perkiraan Waktu &amp; Tenggat</div>
                 <div class="font-heading font-bold text-ink text-[15px] mt-1">
                     {{ $infoTenggat['teks_perkiraan'] }}
                 </div>

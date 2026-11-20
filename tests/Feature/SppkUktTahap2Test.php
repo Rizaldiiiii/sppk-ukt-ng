@@ -38,7 +38,8 @@ class SppkUktTahap2Test extends TestCase
         $this->actingAs($budi)
             ->get('/keberatan/baru')
             ->assertStatus(200)
-            ->assertSee('Petunjuk Pengisian (KF-09)')
+            ->assertSee('Petunjuk Pengisian:')
+            ->assertDontSee('KF-09')
             ->assertSee('Apa yang harus diisi:')
             ->assertSee('Format yang diharapkan:')
             ->assertSee('Contoh pengisian:')
@@ -290,7 +291,7 @@ class SppkUktTahap2Test extends TestCase
 
         $this->actingAs($petugas)
             ->put('/petugas/konten/petunjuk-pengisian', [
-                'judul' => 'Petunjuk Pengisian Formulir Keberatan dan Pertanyaan (KF-09)',
+                'judul' => 'Petunjuk Pengisian Formulir Keberatan dan Pertanyaan',
                 'ringkasan' => 'Panduan per kolom yang telah diperbarui oleh petugas.',
                 'petunjuk' => $petunjukBaru,
             ])

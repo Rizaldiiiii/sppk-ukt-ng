@@ -1,6 +1,6 @@
 <x-layouts.app
-    title="Kelola Parameter Penilaian Berversi (KF-05)"
-    subtitle="Perubahan parameter selalu menerbitkan versi baru agar hasil perhitungan lama tetap dapat ditelusuri (KN-04 & KN-06)"
+    title="Kelola Parameter Penilaian Berversi"
+    subtitle="Perubahan parameter selalu menerbitkan versi baru agar hasil perhitungan lama tetap dapat ditelusuri"
 >
     <!-- Versi Parameter yang Sedang Aktif -->
     @if($versiAktif)

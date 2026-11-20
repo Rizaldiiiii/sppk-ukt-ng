@@ -1,6 +1,6 @@
 <x-layouts.app
     :title="'Detail Pertanyaan #' . $pertanyaan->id"
-    subtitle="Rincian pertanyaan dan jawaban resmi dari Petugas UKT (KF-08)"
+    subtitle="Rincian pertanyaan dan jawaban resmi dari Petugas UKT"
 >
     <x-slot:headerActions>
         <x-button :href="route('mahasiswa.pertanyaan.index')" variant="secondary">

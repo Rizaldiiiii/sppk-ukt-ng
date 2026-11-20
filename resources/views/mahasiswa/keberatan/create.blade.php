@@ -1,6 +1,6 @@
 <x-layouts.app
     title="Formulir Pengajuan Keberatan UKT"
-    subtitle="Isi alasan keberatan secara faktual dengan mengikuti petunjuk pengisian di samping setiap kolom (KF-07 & KF-09)"
+    subtitle="Isi alasan keberatan secara faktual dengan mengikuti petunjuk pengisian di samping setiap kolom"
 >
     <x-slot:headerActions>
         <x-button :href="route('mahasiswa.keberatan.index')" variant="secondary">
@@ -37,7 +37,7 @@
 
         <div class="space-y-2 border-b border-divider/80 pb-4">
             <span class="inline-block px-3 py-1 rounded-[8px] bg-sekunder-light text-sekunder font-heading font-bold text-[12px]">
-                KF-07 &amp; KF-09 • Formulir Terpandu
+                Formulir Terpandu
             </span>
             <h2 class="text-[21px] font-heading font-bold text-ink">
                 Data Pengajuan Peninjauan Ulang UKT — {{ $mahasiswa->user->nama }} (NIM {{ $mahasiswa->nim }})

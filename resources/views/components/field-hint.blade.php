@@ -10,7 +10,7 @@
     >
         <div class="flex items-center gap-2 font-heading font-bold text-sekunder text-[13px]">
             <span class="w-5 h-5 rounded-full bg-sekunder-light text-sekunder inline-flex items-center justify-center text-[11px] font-extrabold shrink-0" aria-hidden="true">i</span>
-            <span>Petunjuk Pengisian (KF-09): {{ $hint['judul'] ?? 'Panduan Kolom' }}</span>
+            <span>Petunjuk Pengisian: {{ $hint['judul'] ?? 'Panduan Kolom' }}</span>
         </div>
 
         <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-[12px]">

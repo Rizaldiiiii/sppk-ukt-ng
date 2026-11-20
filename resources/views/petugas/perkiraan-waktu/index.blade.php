@@ -1,5 +1,5 @@
 <x-layouts.app
-    title="Kelola Perkiraan Waktu Tunggu &amp; SLA (KF-11)"
+    title="Kelola Perkiraan Waktu Tunggu &amp; SLA"
     subtitle="Tetapkan perkiraan waktu tunggu resmi menggunakan pilihan hari kerja terstandar untuk perhitungan tenggat otomatis"
 >
     <!-- Penjelasan Aturan SLA KF-11 -->
@@ -7,7 +7,7 @@
         <div class="accent-bar absolute top-0 inset-x-0" aria-hidden="true"></div>
         <div class="flex flex-wrap items-center gap-2 pt-1">
             <span class="px-3 py-1 rounded-[8px] bg-sekunder-light text-sekunder font-heading font-bold text-[12px]">
-                KF-11 • Standar Waktu Layanan (SLA)
+                Standar Waktu Layanan (SLA)
             </span>
         </div>
         <h2 class="text-[20px] font-heading font-bold text-ink">

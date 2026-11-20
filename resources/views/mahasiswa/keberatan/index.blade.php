@@ -1,6 +1,6 @@
 <x-layouts.app
     title="Pengajuan Keberatan UKT Saya"
-    subtitle="Pantau status pengajuan peninjauan ulang UKT Anda beserta catatan dari petugas (KF-07)"
+    subtitle="Pantau status pengajuan peninjauan ulang UKT Anda beserta catatan dari petugas"
 >
     <x-slot:headerActions>
         <x-button :href="route('mahasiswa.keberatan.create')" variant="primary">
@@ -14,7 +14,7 @@
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pt-1">
             <div class="space-y-1.5 max-w-3xl">
                 <span class="inline-block px-3 py-1 rounded-[8px] bg-sekunder-light text-sekunder font-heading font-bold text-[12px]">
-                    KF-07 • Pengajuan Keberatan Daring &amp; Pemantauan Status
+                    Pengajuan Keberatan Daring &amp; Pemantauan Status
                 </span>
                 <h2 class="text-[20px] font-heading font-bold text-ink">
                     Tahapan Status Pengajuan Peninjauan Ulang UKT

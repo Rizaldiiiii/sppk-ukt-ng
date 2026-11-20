@@ -1,6 +1,6 @@
 <x-layouts.app
     title="Kelola Konten Publik, Faktor, dan Rentang Golongan"
-    subtitle="Pembaruan langsung tercermin di halaman publik tanpa login dan tercatat di riwayat (KF-02, KF-03, KF-06, KF-14)"
+    subtitle="Pembaruan langsung tercermin di halaman publik tanpa login dan tercatat di riwayat"
 >
     <div x-data="{ tab: 'faktor' }" class="space-y-6">
         <!-- Navigasi Tab (Glassmorphism.md §5.9) -->
@@ -13,7 +13,7 @@
                 :class="tab === 'faktor' ? 'bg-sekunder-light/90 text-sekunder border-b-2 border-sekunder font-bold shadow-glass-xs' : 'text-ink-secondary hover:bg-glass-hover font-semibold'"
                 class="px-5 py-2.5 min-h-[44px] rounded-[10px] font-heading text-[14px] transition-colors"
             >
-                Daftar Faktor Penilaian (KF-03)
+                Daftar Faktor Penilaian
             </button>
             <button
                 type="button"
@@ -23,7 +23,7 @@
                 :class="tab === 'golongan' ? 'bg-sekunder-light/90 text-sekunder border-b-2 border-sekunder font-bold shadow-glass-xs' : 'text-ink-secondary hover:bg-glass-hover font-semibold'"
                 class="px-5 py-2.5 min-h-[44px] rounded-[10px] font-heading text-[14px] transition-colors"
             >
-                Rentang Nominal Golongan (KF-14)
+                Rentang Nominal Golongan
             </button>
             <button
                 type="button"
@@ -33,7 +33,7 @@
                 :class="tab === 'halaman' ? 'bg-sekunder-light/90 text-sekunder border-b-2 border-sekunder font-bold shadow-glass-xs' : 'text-ink-secondary hover:bg-glass-hover font-semibold'"
                 class="px-5 py-2.5 min-h-[44px] rounded-[10px] font-heading text-[14px] transition-colors"
             >
-                Teks Alur, Prosedur, Kontak &amp; Petunjuk (KF-02 / KF-06 / KF-09)
+                Teks Alur, Prosedur, Kontak &amp; Petunjuk
             </button>
         </div>
 
@@ -799,7 +799,7 @@
                             @if($jsonValidPetunjuk)
                                 <div class="space-y-4">
                                     <div class="text-[13px] text-ink-secondary">
-                                        Kelima kunci kolom di bawah ini terikat langsung ke formulir keberatan dan pertanyaan mahasiswa (KF-09).
+                                        Kelima kunci kolom di bawah ini terikat langsung ke formulir keberatan dan pertanyaan mahasiswa.
                                     </div>
                                     @foreach($petunjukAwal as $kodeKolom => $itemKolom)
                                         <div class="p-4 rounded-[12px] bg-white/85 border border-border-glass space-y-3">
@@ -988,7 +988,7 @@
                     <div class="flex flex-wrap items-center justify-between gap-3 border-b border-divider/80 pb-4">
                         <div>
                             <h3 class="text-[18px] font-heading font-bold text-ink">
-                                Halaman: /{{ $kontenPanduan->slug }} (Panduan Visual KF-10)
+                                Halaman: /{{ $kontenPanduan->slug }} (Panduan Visual)
                             </h3>
                             <span class="text-[12px] text-ink-muted">
                                 Diperbarui: {{ $kontenPanduan->diperbarui_pada?->locale('id')->translatedFormat('d M Y H:i') ?? '-' }}
@@ -1020,10 +1020,10 @@
                     <div class="pt-4 border-t border-divider/80 space-y-4">
                         <div class="space-y-1">
                             <h4 class="text-[15px] font-heading font-bold text-ink">
-                                Visual Diagram Tahapan Proses (KF-10)
+                                Visual Diagram Tahapan Proses
                             </h4>
                             <p class="text-[13px] text-ink-secondary">
-                                Catatan: Visual yang diunggah harus menggambarkan 5 tahapan proses penentuan dan keberatan UKT yang sama dengan penjelasan tertulis pada halaman Alur (KF-02) dan Prosedur Keberatan (KF-06).
+                                Catatan: Visual yang diunggah harus menggambarkan 5 tahapan proses penentuan dan keberatan UKT yang sama dengan penjelasan tertulis pada halaman Alur dan Prosedur Keberatan.
                             </p>
                         </div>
 

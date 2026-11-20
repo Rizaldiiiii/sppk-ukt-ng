@@ -12,7 +12,7 @@
 @endphp
 <x-layouts.app
     title="Riwayat Akses dan Perubahan Data (Audit Log)"
-    subtitle="Penelusuran hanya-baca atas seluruh aktivitas perubahan data, status, parameter, dan penolakan akses pada sistem (KF-13)"
+    subtitle="Penelusuran hanya-baca atas seluruh aktivitas perubahan data, status, parameter, dan penolakan akses pada sistem"
 >
     <!-- Pemberitahuan Append-Only & Toggle Mode Ringkas / Detail (Blueprint §7.7 & KF-13) -->
     <section class="glass-card glass-card-glow p-6 relative overflow-hidden space-y-4">
@@ -21,7 +21,7 @@
             <div class="space-y-1.5">
                 <div class="flex flex-wrap items-center gap-2">
                     <h2 class="text-[18px] font-heading font-bold text-ink">
-                        Catatan Audit Hanya-Tambah (Append-Only) — KF-13
+                        Catatan Audit Hanya-Tambah (Append-Only)
                     </h2>
                     <span class="px-3 py-1 rounded-[8px] bg-sekunder-light text-sekunder font-heading font-bold text-[12px]">
                         Tidak Dapat Diubah / Dihapus dari Antarmuka
