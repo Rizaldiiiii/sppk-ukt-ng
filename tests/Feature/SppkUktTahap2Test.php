@@ -664,7 +664,17 @@ class SppkUktTahap2Test extends TestCase
             $resDetail->assertSee('uji_' . $aksiDetail);
         }
 
-        // Badge kategori: tidak mengandung simbol ✓/✕/●/ℹ/! dan tidak memakai kelas hijau/merah/maroon/pink (bg-success-bg, bg-error-bg, text-success, text-error, 550b14, sekunder, F5E8E9)
+        // Badge kategori: memakai palet 7 warna referensi, tidak mengandung simbol ✓/✕/●/ℹ/!, dan tidak memakai kelas warna lama (bg-success-bg, bg-error-bg, text-success, text-error, 550b14, sekunder, F5E8E9, bg-sekunder-light, bg-sekunder)
+        $ekspektasiHexKategori = [
+            AuditLog::KATEGORI_KEBERATAN => ['#4100F5', '#FFFFFF'],
+            AuditLog::KATEGORI_PERTANYAAN => ['#9BF0E1', '#191414'],
+            AuditLog::KATEGORI_KONTEN_PARAMETER => ['#CDF564', '#191414'],
+            AuditLog::KATEGORI_HASIL => ['#FF4632', '#191414'],
+            AuditLog::KATEGORI_AKUN => ['#191414', '#FFFFFF'],
+            AuditLog::KATEGORI_KEAMANAN => ['#F023A5', '#191414'],
+            AuditLog::KATEGORI_SISTEM => ['#9BF0E1', '#FDEA2E', '#FF4632', '#191414', '#4100F5', '#8DA2D9', '#FFFFFF'],
+        ];
+
         foreach (AuditLog::DAFTAR_KATEGORI as $kat) {
             $kelasWarna = AuditLog::kelasWarnaKategori($kat);
             $this->assertStringNotContainsString('bg-success-bg', $kelasWarna);
@@ -674,6 +684,12 @@ class SppkUktTahap2Test extends TestCase
             $this->assertStringNotContainsString('550b14', $kelasWarna);
             $this->assertStringNotContainsString('sekunder', $kelasWarna);
             $this->assertStringNotContainsString('F5E8E9', $kelasWarna);
+            $this->assertStringNotContainsString('bg-sekunder-light', $kelasWarna);
+            $this->assertStringNotContainsString('bg-sekunder', $kelasWarna);
+
+            foreach ($ekspektasiHexKategori[$kat] as $hexWajib) {
+                $this->assertStringContainsString($hexWajib, $kelasWarna);
+            }
         }
 
         $htmlDetail = $resDetail->getContent();
@@ -688,6 +704,8 @@ class SppkUktTahap2Test extends TestCase
             $this->assertStringNotContainsString('550b14', $fullTag);
             $this->assertStringNotContainsString('sekunder', $fullTag);
             $this->assertStringNotContainsString('F5E8E9', $fullTag);
+            $this->assertStringNotContainsString('bg-sekunder-light', $fullTag);
+            $this->assertStringNotContainsString('bg-sekunder', $fullTag);
             foreach (['✓', '✕', '●', 'ℹ', '!'] as $simbolTerlarang) {
                 $this->assertStringNotContainsString($simbolTerlarang, $isiBadge);
             }
