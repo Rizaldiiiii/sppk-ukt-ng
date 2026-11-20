@@ -522,7 +522,9 @@ antarfungsi yang ditulis eksplisit.
   yang kecil ini menempatkannya di Tahap 3. Fungsi ini dipilih karena
   melengkapi, bukan karena menjadi andalan: penjelasan tertulis dan
   tabel tetap menjadi jalur utama.
-- **Pengguna:** Publik dan mahasiswa.
+- **Pengguna:** Publik dan mahasiswa; petugas dapat mengelola judul,
+  ringkasan, serta mengunggah berkas gambar diagram visual (`.png`/`.svg`)
+  atau mengembalikannya ke diagram bawaan.
 - **Tahap:** 3 (lanjutan).
 - **Kriteria penerimaan:**
   - Panduan visual memuat tahapan yang sama dengan KF-02 dan KF-06;

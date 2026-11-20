@@ -182,10 +182,12 @@
             </div>
         </section>
 
-        <!-- TAB 3: Halaman Konten Publik (Alur, Prosedur, Kontak, Petunjuk, Faktor, Panduan) -->
+        <!-- TAB 3: Halaman Konten Publik (Alur, Prosedur, Kontak, Petunjuk, Panduan Visual) -->
         <section x-cloak x-show="tab === 'halaman'" class="space-y-6">
             @foreach($daftarKonten as $konten)
-                @if($konten->slug === 'alur')
+                @if(in_array($konten->slug, ['faktor', 'panduan'], true))
+                    @continue
+                @elseif($konten->slug === 'alur')
                     @php
                         $decodedAlur = is_string($konten->isi) ? json_decode($konten->isi, true) : null;
                         $jsonValidAlur = is_array($decodedAlur)
@@ -988,38 +990,124 @@
                             </div>
                         </form>
                     </div>
+                @endif
+            @endforeach
 
-                @else
-                    {{-- Slug faktor dan panduan TIDAK diubah, tetap seperti sekarang --}}
-                    <form method="POST" action="{{ route('petugas.konten.update', $konten->slug) }}" class="glass-card p-6 space-y-4" data-prevent-double-submit>
-                        @csrf
-                        @method('PUT')
-                        <div class="flex items-center justify-between">
+            @php
+                $kontenPanduan = $daftarKonten->firstWhere('slug', 'panduan');
+            @endphp
+            @if($kontenPanduan)
+                <div class="glass-card p-6 space-y-6">
+                    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-divider/80 pb-4">
+                        <div>
                             <h3 class="text-[18px] font-heading font-bold text-ink">
-                                Halaman: /{{ $konten->slug }}
+                                Halaman: /{{ $kontenPanduan->slug }} (Panduan Visual KF-10)
                             </h3>
                             <span class="text-[12px] text-ink-muted">
-                                Diperbarui: {{ $konten->diperbarui_pada?->locale('id')->translatedFormat('d M Y H:i') ?? '-' }}
+                                Diperbarui: {{ $kontenPanduan->diperbarui_pada?->locale('id')->translatedFormat('d M Y H:i') ?? '-' }}
                             </span>
                         </div>
+                        <span class="px-2.5 py-1 rounded-[8px] text-[12px] font-heading font-bold {{ $kontenPanduan->visual_path ? 'bg-sekunder-light text-sekunder' : 'bg-surface-soft text-ink-secondary' }}">
+                            {{ $kontenPanduan->visual_path ? 'Visual Kustom Aktif' : 'Diagram Bawaan Aktif' }}
+                        </span>
+                    </div>
+
+                    <!-- Form Judul & Ringkasan Halaman Panduan (Route PUT yang sudah ada) -->
+                    <form method="POST" action="{{ route('petugas.konten.update', $kontenPanduan->slug) }}" class="space-y-4" data-prevent-double-submit>
+                        @csrf
+                        @method('PUT')
                         <div>
                             <label class="block text-[13px] font-medium text-ink mb-1">Judul Halaman</label>
-                            <input name="judul" type="text" value="{{ $konten->judul }}" required class="glass-input w-full px-4 py-2.5 text-[14px]">
+                            <input name="judul" type="text" value="{{ $kontenPanduan->judul }}" required class="glass-input w-full px-4 py-2.5 text-[14px]">
                         </div>
                         <div>
                             <label class="block text-[13px] font-medium text-ink mb-1">Ringkasan</label>
-                            <input name="ringkasan" type="text" value="{{ $konten->ringkasan }}" class="glass-input w-full px-4 py-2.5 text-[14px]">
-                        </div>
-                        <div>
-                            <label class="block text-[13px] font-medium text-ink mb-1">Isi Halaman</label>
-                            <textarea name="isi" rows="5" required class="glass-input w-full px-4 py-2.5 text-[13px] font-mono">{{ $konten->isi }}</textarea>
+                            <input name="ringkasan" type="text" value="{{ $kontenPanduan->ringkasan }}" class="glass-input w-full px-4 py-2.5 text-[14px]">
                         </div>
                         <div class="flex justify-end">
-                            <x-button type="submit" variant="primary">Simpan Perubahan /{{ $konten->slug }}</x-button>
+                            <x-button type="submit" variant="primary">Simpan Perubahan /{{ $kontenPanduan->slug }}</x-button>
                         </div>
                     </form>
-                @endif
-            @endforeach
+
+                    <!-- Editor Visual Panduan (KF-10) -->
+                    <div class="pt-4 border-t border-divider/80 space-y-4">
+                        <div class="space-y-1">
+                            <h4 class="text-[15px] font-heading font-bold text-ink">
+                                Visual Diagram Tahapan Proses (KF-10)
+                            </h4>
+                            <p class="text-[13px] text-ink-secondary">
+                                Catatan: Visual yang diunggah harus menggambarkan 5 tahapan proses penentuan dan keberatan UKT yang sama dengan penjelasan tertulis pada halaman Alur (KF-02) dan Prosedur Keberatan (KF-06).
+                            </p>
+                        </div>
+
+                        <!-- (a) Pratinjau Visual Saat Ini -->
+                        <div class="p-4 rounded-[12px] bg-white/80 border border-border-glass space-y-3">
+                            <div class="text-[12px] font-heading font-semibold uppercase tracking-wider text-ink-muted">
+                                Pratinjau Visual Saat Ini
+                            </div>
+                            @if($kontenPanduan->visual_path)
+                                <div class="space-y-2">
+                                    <img
+                                        src="{{ asset('storage/'.$kontenPanduan->visual_path) }}"
+                                        alt="Pratinjau diagram tahapan proses penentuan dan keberatan UKT"
+                                        class="max-h-80 w-auto rounded-[10px] border border-border-glass bg-white p-2"
+                                    >
+                                    <div class="text-[12px] text-ink-secondary">
+                                        Berkas aktif: <code>{{ $kontenPanduan->visual_path }}</code>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="text-[13px] text-ink-secondary">
+                                    Saat ini halaman publik <code>/panduan</code> <strong>menggunakan diagram bawaan</strong> (5 tahapan ilustrasi SVG bawaan sistem).
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- (b) Form Unggah Visual Baru (.png / .svg, maks 2 MB) & (c) Kembalikan ke Diagram Bawaan -->
+                        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                            <form
+                                method="POST"
+                                action="{{ route('petugas.konten.panduan.visual.upload') }}"
+                                enctype="multipart/form-data"
+                                class="flex-1 flex flex-col sm:flex-row sm:items-end gap-3"
+                                data-prevent-double-submit
+                            >
+                                @csrf
+                                <div class="flex-1">
+                                    <label for="input_visual_panduan" class="block text-[13px] font-medium text-ink mb-1">
+                                        Pilih Berkas Visual (.png atau .svg, maks. 2 MB)
+                                    </label>
+                                    <input
+                                        id="input_visual_panduan"
+                                        name="visual"
+                                        type="file"
+                                        accept=".png,.svg,image/png,image/svg+xml"
+                                        required
+                                        class="glass-input w-full px-3.5 py-2 text-[13px]"
+                                    >
+                                </div>
+                                <x-button type="submit" variant="primary" class="shrink-0">
+                                    Unggah Visual
+                                </x-button>
+                            </form>
+
+                            @if($kontenPanduan->visual_path)
+                                <form
+                                    method="POST"
+                                    action="{{ route('petugas.konten.panduan.visual.destroy') }}"
+                                    onsubmit="return confirm('Kembalikan halaman panduan ke diagram bawaan dan hapus berkas visual kustom saat ini?')"
+                                >
+                                    @csrf
+                                    @method('DELETE')
+                                    <x-button type="submit" variant="secondary" class="shrink-0">
+                                        Kembalikan ke Diagram Bawaan
+                                    </x-button>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endif
         </section>
     </div>
 </x-layouts.app>

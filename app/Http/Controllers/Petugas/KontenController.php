@@ -11,9 +11,12 @@ use App\Models\GolonganUkt;
 use App\Models\KontenPublik;
 use App\Services\AuditService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class KontenController extends Controller
@@ -80,6 +83,89 @@ class KontenController extends Controller
         Cache::forget('konten_publik_'.$slug);
 
         return back()->with('toast_success', 'Konten publik "'.$konten->judul.'" berhasil diperbarui.');
+    }
+
+    public function uploadVisualPanduan(Request $request): RedirectResponse
+    {
+        Gate::authorize('manage', KontenPublik::class);
+
+        $request->validate(
+            [
+                'visual' => ['required', 'file', 'mimes:png,svg', 'max:2048'],
+            ],
+            [
+                'visual.required' => 'Berkas visual panduan wajib dipilih.',
+                'visual.file' => 'Berkas visual panduan tidak valid.',
+                'visual.mimes' => 'Format berkas visual panduan harus berupa PNG atau SVG.',
+                'visual.max' => 'Ukuran berkas visual panduan maksimal 2 MB (2.048 KB).',
+            ]
+        );
+
+        $konten = KontenPublik::where('slug', 'panduan')->firstOrFail();
+        $visualLama = $konten->visual_path;
+
+        $file = $request->file('visual');
+        $ext = strtolower($file->getClientOriginalExtension() ?: ($file->extension() ?: 'png'));
+        $namaFile = Str::uuid()->toString().'.'.$ext;
+        $pathBaru = $file->storeAs('panduan-visual', $namaFile, 'public');
+
+        DB::transaction(function () use ($request, $konten, $visualLama, $pathBaru) {
+            KontenPublik::whereKey($konten->id)->update([
+                'visual_path' => $pathBaru,
+                'diperbarui_oleh' => $request->user()->id,
+                'diperbarui_pada' => now(),
+            ]);
+
+            $this->auditService->catat(
+                pelaku: $request->user(),
+                aksi: 'ubah_visual_panduan',
+                subjekTipe: KontenPublik::class,
+                subjekId: $konten->id,
+                nilaiSebelum: ['visual_path' => $visualLama],
+                nilaiSesudah: ['visual_path' => $pathBaru]
+            );
+        });
+
+        if ($visualLama && $visualLama !== $pathBaru && Storage::disk('public')->exists($visualLama)) {
+            Storage::disk('public')->delete($visualLama);
+        }
+
+        Cache::forget('konten_publik_panduan');
+
+        return back()->with('toast_success', 'Visual panduan tahapan berhasil diunggah dan diperbarui.');
+    }
+
+    public function hapusVisualPanduan(Request $request): RedirectResponse
+    {
+        Gate::authorize('manage', KontenPublik::class);
+
+        $konten = KontenPublik::where('slug', 'panduan')->firstOrFail();
+        $visualLama = $konten->visual_path;
+
+        DB::transaction(function () use ($request, $konten, $visualLama) {
+            KontenPublik::whereKey($konten->id)->update([
+                'visual_path' => null,
+                'diperbarui_oleh' => $request->user()->id,
+                'diperbarui_pada' => now(),
+            ]);
+
+            $this->auditService->catat(
+                pelaku: $request->user(),
+                aksi: 'ubah_visual_panduan',
+                subjekTipe: KontenPublik::class,
+                subjekId: $konten->id,
+                nilaiSebelum: ['visual_path' => $visualLama],
+                nilaiSesudah: ['visual_path' => null]
+            );
+        });
+
+        if ($visualLama && Storage::disk('public')->exists($visualLama)) {
+            Storage::disk('public')->delete($visualLama);
+        }
+
+        Cache::forget('konten_publik_panduan');
+
+        return back()->with('toast_success', 'Visual panduan berhasil dikembalikan ke diagram bawaan.');
     }
 
     private function susunIsiKonten(UpdateKontenPublikRequest $request, KontenPublik $konten): string

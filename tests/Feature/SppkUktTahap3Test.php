@@ -10,8 +10,10 @@ use App\Models\User;
 use App\Services\ObjectionService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class SppkUktTahap3Test extends TestCase
@@ -54,6 +56,107 @@ class SppkUktTahap3Test extends TestCase
         $this->get('/panduan')
             ->assertStatus(200)
             ->assertSee('Label Kedaluwarsa');
+    }
+
+    public function test_kf10_kelola_visual_panduan_upload_png_svg_tolak_pdf_ganti_hapus_file_lama_dan_otorisasi(): void
+    {
+        Storage::fake('public');
+
+        $petugas = User::where('email', 'petugas@ung.ac.id')->firstOrFail();
+        $budi = User::where('email', 'budi.pratama@student.ung.ac.id')->firstOrFail();
+        $pimpinan = User::where('email', 'pimpinan@ung.ac.id')->firstOrFail();
+
+        // 1. Tab halaman di /petugas/konten tidak lagi menampilkan kartu /faktor dan menampilkan editor visual /panduan
+        $this->actingAs($petugas)
+            ->get('/petugas/konten')
+            ->assertStatus(200)
+            ->assertDontSee('Halaman: /faktor')
+            ->assertDontSee('Simpan Perubahan /faktor')
+            ->assertSee('Halaman: /panduan (Panduan Visual KF-10)')
+            ->assertSee('menggunakan diagram bawaan')
+            ->assertSee('Unggah Visual');
+
+        // 2. Role selain petugas (mahasiswa & pimpinan) ditolak 403 saat mencoba mengunggah atau menghapus visual panduan
+        $filePngDummy = UploadedFile::fake()->image('panduan-uji.png', 600, 400);
+        $this->actingAs($budi)
+            ->post('/petugas/konten/panduan/visual', ['visual' => $filePngDummy])
+            ->assertStatus(403);
+        $this->actingAs($pimpinan)
+            ->post('/petugas/konten/panduan/visual', ['visual' => $filePngDummy])
+            ->assertStatus(403);
+        $this->actingAs($budi)
+            ->delete('/petugas/konten/panduan/visual')
+            ->assertStatus(403);
+
+        // 3. Upload berkas PDF ditolak validasi
+        $filePdf = UploadedFile::fake()->create('dokumen.pdf', 120, 'application/pdf');
+        $this->actingAs($petugas)
+            ->from('/petugas/konten')
+            ->post('/petugas/konten/panduan/visual', ['visual' => $filePdf])
+            ->assertRedirect('/petugas/konten')
+            ->assertSessionHasErrors('visual');
+
+        // 4. Upload PNG berhasil -> tersimpan di disk public folder panduan-visual/ dengan nama UUID.png
+        $filePng = UploadedFile::fake()->image('diagram-alur-baru.png', 800, 600);
+        $this->actingAs($petugas)
+            ->post('/petugas/konten/panduan/visual', ['visual' => $filePng])
+            ->assertRedirect();
+
+        $kontenPanduan = KontenPublik::where('slug', 'panduan')->firstOrFail();
+        $pathPng = $kontenPanduan->visual_path;
+        $this->assertNotNull($pathPng);
+        $this->assertStringStartsWith('panduan-visual/', $pathPng);
+        $this->assertStringEndsWith('.png', $pathPng);
+        Storage::disk('public')->assertExists($pathPng);
+
+        $this->assertDatabaseHas('audit_logs', [
+            'pelaku_id' => $petugas->id,
+            'aksi' => 'ubah_visual_panduan',
+            'subjek_tipe' => KontenPublik::class,
+            'subjek_id' => (string) $kontenPanduan->id,
+        ]);
+
+        // Halaman publik /panduan menampilkan <img> visual yang diunggah + versi teks alternatif tetap ada
+        $this->get('/panduan')
+            ->assertStatus(200)
+            ->assertSee('storage/'.$pathPng, false)
+            ->assertSee('alt="Diagram tahapan proses penentuan dan keberatan UKT"', false)
+            ->assertSee('Versi teks (alternatif dari diagram di atas)');
+
+        // 5. Ganti visual dengan SVG -> berhasil, file PNG lama otomatis dihapus, dan SVG ditampilkan lewat <img> (bukan inline)
+        $svgContent = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#550b14"/></svg>';
+        $fileSvg = UploadedFile::fake()->createWithContent('diagram-alur-kustom.svg', $svgContent);
+
+        $this->actingAs($petugas)
+            ->post('/petugas/konten/panduan/visual', ['visual' => $fileSvg])
+            ->assertRedirect();
+
+        $pathSvg = $kontenPanduan->fresh()->visual_path;
+        $this->assertNotNull($pathSvg);
+        $this->assertNotSame($pathPng, $pathSvg);
+        $this->assertStringStartsWith('panduan-visual/', $pathSvg);
+        $this->assertStringEndsWith('.svg', $pathSvg);
+
+        Storage::disk('public')->assertMissing($pathPng);
+        Storage::disk('public')->assertExists($pathSvg);
+
+        $this->get('/panduan')
+            ->assertStatus(200)
+            ->assertSee('storage/'.$pathSvg, false)
+            ->assertSee('alt="Diagram tahapan proses penentuan dan keberatan UKT"', false);
+
+        // 6. Kembalikan ke diagram bawaan -> menghapus file SVG lama, visual_path kembali null, dan diagram bawaan tampil lagi
+        $this->actingAs($petugas)
+            ->delete('/petugas/konten/panduan/visual')
+            ->assertRedirect();
+
+        $this->assertNull($kontenPanduan->fresh()->visual_path);
+        Storage::disk('public')->assertMissing($pathSvg);
+
+        $this->get('/panduan')
+            ->assertStatus(200)
+            ->assertSee('kf10-road-wrap', false)
+            ->assertSee('Isi Data &amp; Unggah Bukti', false);
     }
 
     public function test_kf11_kelola_perkiraan_waktu_hanya_menerima_dropdown_resmi_dan_satu_baris_aktif_per_jenis(): void

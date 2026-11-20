@@ -305,6 +305,28 @@
             </div>
         </header>
 
+        @if(!empty($kontenPanduan?->visual_path))
+            <div class="glass-card p-6 md:p-8 space-y-6 text-center">
+                <img
+                    src="{{ asset('storage/'.$kontenPanduan->visual_path) }}"
+                    alt="Diagram tahapan proses penentuan dan keberatan UKT"
+                    class="max-w-full h-auto mx-auto rounded-[12px]"
+                >
+                <div class="kf10-finish space-y-4">
+                    <div>
+                        <span class="flag">Selesai — kamu bisa memantau statusnya di sistem</span>
+                    </div>
+                    <div class="flex flex-wrap items-center justify-center gap-3 pt-1">
+                        <x-button :href="route('publik.alur')" variant="secondary">
+                            Baca Penjelasan Alur Tertulis (KF-02)
+                        </x-button>
+                        <x-button :href="route('publik.prosedur-keberatan')" variant="primary">
+                            Pelajari Prosedur Keberatan (KF-06)
+                        </x-button>
+                    </div>
+                </div>
+            </div>
+        @else
         <div class="kf10-road-wrap">
             <svg class="kf10-road" viewBox="0 0 920 1480" preserveAspectRatio="none" aria-hidden="true">
                 <path
@@ -534,6 +556,7 @@
                 </div>
             </div>
         </div>
+        @endif
 
         <section class="kf10-text-alt" aria-label="Versi teks dari diagram alur">
             <h2>Versi teks (alternatif dari diagram di atas)</h2>

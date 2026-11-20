@@ -15,6 +15,7 @@ class KontenPublik extends Model
         'judul',
         'ringkasan',
         'isi',
+        'visual_path',
         'diperbarui_oleh',
         'diperbarui_pada',
     ];

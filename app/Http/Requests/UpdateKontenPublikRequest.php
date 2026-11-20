@@ -68,6 +68,12 @@ class UpdateKontenPublikRequest extends FormRequest
             return $rules;
         }
 
+        if ($slug === 'panduan') {
+            $rules['isi'] = ['nullable', 'string', 'max:50000'];
+
+            return $rules;
+        }
+
         $rules['isi'] = ['required', 'string', 'max:50000'];
 
         return $rules;

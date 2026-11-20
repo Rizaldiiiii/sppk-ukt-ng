@@ -96,8 +96,10 @@ Route::middleware('auth')->group(function () {
     Route::prefix('petugas')->name('petugas.')->middleware('peran:petugas')->group(function () {
         Route::get('/beranda', [BerandaPetugasController::class, 'index'])->name('beranda');
 
-        // Kelola Konten Publik, Faktor, dan Rentang Golongan (KF-02, KF-03, KF-06, KF-09, KF-14)
+        // Kelola Konten Publik, Faktor, dan Rentang Golongan (KF-02, KF-03, KF-06, KF-09, KF-10, KF-14)
         Route::get('/konten', [KontenController::class, 'index'])->name('konten.index');
+        Route::post('/konten/panduan/visual', [KontenController::class, 'uploadVisualPanduan'])->name('konten.panduan.visual.upload');
+        Route::delete('/konten/panduan/visual', [KontenController::class, 'hapusVisualPanduan'])->name('konten.panduan.visual.destroy');
         Route::put('/konten/{slug}', [KontenController::class, 'updateKonten'])->name('konten.update');
         Route::post('/faktor', [KontenController::class, 'storeFaktor'])->name('faktor.store');
         Route::put('/faktor/{faktor}', [KontenController::class, 'updateFaktor'])->name('faktor.update');

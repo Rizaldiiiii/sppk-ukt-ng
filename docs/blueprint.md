@@ -307,7 +307,7 @@ data sensitif (lihat Bagian 8).
 
 | Tabel | Kolom kunci | Relasi / catatan |
 | --- | --- | --- |
-| `konten_publik` | `id`, `slug` (`alur`, `faktor`, `prosedur-keberatan`, `panduan`, `kontak`), `judul`, `isi`, `diperbarui_oleh`, `diperbarui_pada` | Satu baris per halaman publik; perubahan tercatat di audit |
+| `konten_publik` | `id`, `slug` (`alur`, `faktor`, `prosedur-keberatan`, `panduan`, `kontak`, `petunjuk-pengisian`), `judul`, `ringkasan`, `isi`, `visual_path`, `diperbarui_oleh`, `diperbarui_pada` | Satu baris per halaman publik; `visual_path` menyimpan berkas gambar visual kustom `.png`/`.svg` untuk `/panduan` (KF-10); perubahan tercatat di audit |
 | `golongan_ukt` | `id`, `kode`, `nama`, `nominal_min`, `nominal_max`, `sumber`, `berlaku_mulai`, `berlaku_sampai` | Rentang KF-14; `sumber` dan tanggal wajib diisi |
 | `faktor_penilaian` | `id`, `kode`, `nama`, `penjelasan_singkat`, `status_konfirmasi` (`terkonfirmasi`, `menunggu_konfirmasi`), `urutan`, `aktif` | Daftar KF-03; `status_konfirmasi` hanya tersimpan di database dan tidak lagi ditampilkan di halaman mana pun (baik publik maupun kelola petugas) |
 
@@ -441,8 +441,11 @@ data, notifikasi, dan audit.
    sebelum–sesudah, dan cache halaman publik (bila dipakai) dihapus
    supaya perubahan langsung terlihat.
 5. KF-10 (Tahap 3) menambahkan halaman `/panduan` dengan panduan visual
-   yang isinya harus sama dengan alur KF-02/KF-06; bila alur berubah
-   dan panduan belum diperbarui, panduan diberi label kedaluwarsa.
+   (diagram SVG bawaan atau gambar `.png`/`.svg` yang diunggah petugas
+   lewat `/petugas/konten` dan ditampilkan melalui `<img>`, serta dapat
+   dikembalikan ke diagram bawaan) yang isinya harus sama dengan alur
+   KF-02/KF-06; bila alur berubah dan panduan belum diperbarui, panduan
+   diberi label kedaluwarsa.
 
 ### 7.2 Mahasiswa melihat hasil dan rinciannya (KF-01, KF-04, KF-05)
 
