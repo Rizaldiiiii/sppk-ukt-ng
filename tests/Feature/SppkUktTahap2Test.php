@@ -493,5 +493,101 @@ class SppkUktTahap2Test extends TestCase
             ->assertDontSee('531412001')
             ->assertDontSee('531412002');
     }
+
+    public function test_kf13_label_aksi_kategori_dan_filter_kategori_di_riwayat_petugas(): void
+    {
+        // 1. Uji labelAksi() dan kategori() untuk seluruh 20 aksi utama (+ 3 aksi tambahan di kode) dan fallback aksi tak dikenal
+        $ekspektasiAksi = [
+            'ajukan_keberatan' => ['Mengajukan keberatan', AuditLog::KATEGORI_KEBERATAN],
+            'ubah_status_keberatan' => ['Mengubah status keberatan', AuditLog::KATEGORI_KEBERATAN],
+            'lengkapi_perbaikan_keberatan' => ['Melengkapi perbaikan keberatan', AuditLog::KATEGORI_KEBERATAN],
+            'akses_dokumen_keberatan' => ['Mengakses dokumen keberatan', AuditLog::KATEGORI_KEBERATAN],
+            'buat_pertanyaan' => ['Mengirim pertanyaan', AuditLog::KATEGORI_PERTANYAAN],
+            'jawab_pertanyaan' => ['Menjawab pertanyaan', AuditLog::KATEGORI_PERTANYAAN],
+            'tutup_pertanyaan' => ['Menutup pertanyaan', AuditLog::KATEGORI_PERTANYAAN],
+            'buka_kembali_pertanyaan' => ['Membuka kembali pertanyaan', AuditLog::KATEGORI_PERTANYAAN],
+            'ubah_konten_publik' => ['Mengubah konten publik', AuditLog::KATEGORI_KONTEN_PARAMETER],
+            'tambah_faktor_penilaian' => ['Menambah faktor penilaian', AuditLog::KATEGORI_KONTEN_PARAMETER],
+            'ubah_faktor_penilaian' => ['Mengubah faktor penilaian', AuditLog::KATEGORI_KONTEN_PARAMETER],
+            'tambah_golongan_ukt' => ['Menambah golongan UKT', AuditLog::KATEGORI_KONTEN_PARAMETER],
+            'ubah_golongan_ukt' => ['Mengubah golongan UKT', AuditLog::KATEGORI_KONTEN_PARAMETER],
+            'buat_versi_parameter_baru' => ['Membuat versi parameter penilaian baru', AuditLog::KATEGORI_KONTEN_PARAMETER],
+            'ubah_perkiraan_waktu' => ['Mengubah perkiraan waktu tunggu', AuditLog::KATEGORI_KONTEN_PARAMETER],
+            'ubah_visual_panduan' => ['Mengubah visual panduan tahapan', AuditLog::KATEGORI_KONTEN_PARAMETER],
+            'entri_hasil_resmi' => ['Menyimpan hasil penetapan resmi', AuditLog::KATEGORI_KONTEN_PARAMETER],
+            'buat_hasil_simulasi' => ['Membuat hasil simulasi penilaian', AuditLog::KATEGORI_KONTEN_PARAMETER],
+            'ubah_kata_sandi' => ['Mengubah kata sandi', AuditLog::KATEGORI_AKUN],
+            'penolakan_akses' => ['Penolakan akses', AuditLog::KATEGORI_KEAMANAN],
+            'peringatan_mendekati_tenggat_sla' => ['Peringatan mendekati tenggat SLA', AuditLog::KATEGORI_SISTEM],
+            'peringatan_terlewat_tenggat_sla' => ['Peringatan melewati tenggat SLA', AuditLog::KATEGORI_SISTEM],
+            'email_notifikasi_gagal' => ['Email notifikasi gagal terkirim', AuditLog::KATEGORI_SISTEM],
+        ];
+
+        foreach ($ekspektasiAksi as $kodeAksi => [$labelHarapan, $kategoriHarapan]) {
+            $log = new AuditLog(['aksi' => $kodeAksi]);
+            $this->assertSame($labelHarapan, $log->labelAksi(), "Label untuk {$kodeAksi} tidak sesuai.");
+            $this->assertNotEmpty($log->labelAksi());
+            $this->assertSame($kategoriHarapan, $log->kategori(), "Kategori untuk {$kodeAksi} tidak sesuai.");
+        }
+
+        // Fallback aksi tak dikenal: underscore diubah menjadi spasi berjudul, tidak pernah kosong, dan masuk kategori Sistem
+        $logTakDikenal = new AuditLog(['aksi' => 'aksi_uji_tak_dikenal']);
+        $this->assertSame('Aksi Uji Tak Dikenal', $logTakDikenal->labelAksi());
+        $this->assertSame(AuditLog::KATEGORI_SISTEM, $logTakDikenal->kategori());
+
+        $logKosong = new AuditLog(['aksi' => '']);
+        $this->assertNotEmpty($logKosong->labelAksi());
+        $this->assertSame(AuditLog::KATEGORI_SISTEM, $logKosong->kategori());
+
+        // 2. Uji halaman /petugas/riwayat memuat label manusia ("Mengubah status keberatan"), filter kategori, dan nilai sebelum->sesudah
+        $petugas = User::where('email', 'petugas@ung.ac.id')->firstOrFail();
+        $budi = User::where('email', 'budi.pratama@student.ung.ac.id')->firstOrFail();
+
+        AuditLog::create([
+            'pelaku_id' => $petugas->id,
+            'aksi' => 'ubah_status_keberatan',
+            'subjek_tipe' => PengajuanKeberatan::class,
+            'subjek_id' => '1',
+            'nilai_sebelum' => ['status' => 'Diajukan'],
+            'nilai_sesudah' => ['status' => 'Dalam Peninjauan'],
+            'dibuat_pada' => now(),
+        ]);
+
+        AuditLog::create([
+            'pelaku_id' => $budi->id,
+            'aksi' => 'buat_pertanyaan',
+            'subjek_tipe' => Pertanyaan::class,
+            'subjek_id' => '1',
+            'nilai_sebelum' => null,
+            'nilai_sesudah' => ['status' => 'baru'],
+            'dibuat_pada' => now(),
+        ]);
+
+        $this->actingAs($petugas)
+            ->get('/petugas/riwayat')
+            ->assertStatus(200)
+            ->assertSee('Filter Kategori')
+            ->assertSee('Mengubah status keberatan')
+            ->assertSee('Mengirim pertanyaan')
+            ->assertSee('Pengajuan Keberatan')
+            ->assertSee('Lihat JSON mentah');
+
+        // 3. Filter kategori hanya menampilkan baris dari kategori yang dipilih
+        $this->actingAs($petugas)
+            ->get('/petugas/riwayat?kategori=' . urlencode(AuditLog::KATEGORI_KEBERATAN))
+            ->assertStatus(200)
+            ->assertSee('ubah_status_keberatan')
+            ->assertDontSee('<td>buat_pertanyaan</td>', false);
+
+        $responseFilterPertanyaan = $this->actingAs($petugas)
+            ->get('/petugas/riwayat?kategori=' . urlencode(AuditLog::KATEGORI_PERTANYAAN));
+
+        $responseFilterPertanyaan->assertStatus(200);
+        $logsPertanyaan = $responseFilterPertanyaan->viewData('daftarLog');
+        $this->assertGreaterThan(0, $logsPertanyaan->count());
+        foreach ($logsPertanyaan as $itemLog) {
+            $this->assertSame(AuditLog::KATEGORI_PERTANYAAN, $itemLog->kategori());
+        }
+    }
 }
 

@@ -17,6 +17,7 @@ class RiwayatController extends Controller
     public function index(Request $request): View
     {
         $aksiFilter = trim((string) $request->query('aksi', ''));
+        $kategoriFilter = trim((string) $request->query('kategori', ''));
         $subjekFilter = trim((string) $request->query('subjek_tipe', ''));
         $kataKunci = trim((string) $request->query('q', ''));
 
@@ -34,12 +35,22 @@ class RiwayatController extends Controller
             ->pluck('subjek_tipe')
             ->toArray();
 
+        $daftarKategori = AuditLog::DAFTAR_KATEGORI;
+
         $query = AuditLog::with('pelaku')
             ->latest('dibuat_pada')
             ->latest('id');
 
         if ($aksiFilter !== '' && in_array($aksiFilter, $daftarAksi, true)) {
             $query->where('aksi', $aksiFilter);
+        }
+
+        if ($kategoriFilter !== '' && in_array($kategoriFilter, $daftarKategori, true)) {
+            if ($kategoriFilter === AuditLog::KATEGORI_SISTEM) {
+                $query->whereNotIn('aksi', AuditLog::aksiSelainSistem());
+            } else {
+                $query->whereIn('aksi', AuditLog::aksiUntukKategori($kategoriFilter));
+            }
         }
 
         if ($subjekFilter !== '' && in_array($subjekFilter, $daftarSubjekTipe, true)) {
@@ -72,8 +83,10 @@ class RiwayatController extends Controller
         return view('petugas.riwayat.index', [
             'daftarLog' => $daftarLog,
             'daftarAksi' => $daftarAksi,
+            'daftarKategori' => $daftarKategori,
             'daftarSubjekTipe' => $daftarSubjekTipe,
             'aksiFilter' => $aksiFilter,
+            'kategoriFilter' => $kategoriFilter,
             'subjekFilter' => $subjekFilter,
             'kataKunci' => $kataKunci,
             'ringkasanAksi' => $ringkasanAksi,
