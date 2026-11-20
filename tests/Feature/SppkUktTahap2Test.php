@@ -626,6 +626,24 @@ class SppkUktTahap2Test extends TestCase
         }
 
         // Mode ringkas (default): hanya menampilkan perubahan data, TIDAK menampilkan 5 aksi akses/sistem
+        AuditLog::create([
+            'pelaku_id' => $budi->id,
+            'aksi' => 'ajukan_keberatan',
+            'subjek_tipe' => PengajuanKeberatan::class,
+            'subjek_id' => '100',
+            'nilai_sebelum' => null,
+            'nilai_sesudah' => ['status' => 'Diajukan'],
+            'dibuat_pada' => now(),
+        ]);
+
+        // Uji formatNilaiRingkas untuk null, string kosong, array kosong, dan null di dalam array memakai "(kosong)"
+        $this->assertSame('(kosong)', AuditLog::LABEL_NILAI_KOSONG);
+        $this->assertSame('(kosong)', AuditLog::formatNilaiRingkas(null));
+        $this->assertSame('(kosong)', AuditLog::formatNilaiRingkas(''));
+        $this->assertSame('(kosong)', AuditLog::formatNilaiRingkas([]));
+        $this->assertSame('(kosong), berkas.pdf', AuditLog::formatNilaiRingkas([null, 'berkas.pdf']));
+        $this->assertSame('catatan: (kosong)', AuditLog::formatNilaiRingkas(['catatan' => null]));
+
         $resRingkas = $this->actingAs($petugas)->get('/petugas/riwayat');
         $resRingkas->assertStatus(200);
         foreach ($logDetailSaja as $aksiDetail) {
@@ -633,6 +651,11 @@ class SppkUktTahap2Test extends TestCase
         }
         $resRingkas->assertSee('Mengubah status keberatan');
         $resRingkas->assertSee('Menyimpan hasil penetapan resmi');
+        $resRingkas->assertSee('(kosong)');
+        $resRingkas->assertSee('Diajukan');
+        $resRingkas->assertDontSee('— &rarr;', false);
+        $resRingkas->assertDontSee('— →');
+        $this->assertMatchesRegularExpression('/\(kosong\)\s*<\/span>\s*<span[^>]*>&rarr;<\/span>\s*<span[^>]*>Diajukan/s', $resRingkas->getContent());
 
         // Mode detail (?mode=detail): menampilkan semuanya termasuk 5 aksi akses/sistem
         $resDetail = $this->actingAs($petugas)->get('/petugas/riwayat?mode=detail');
@@ -641,13 +664,16 @@ class SppkUktTahap2Test extends TestCase
             $resDetail->assertSee('uji_' . $aksiDetail);
         }
 
-        // Badge kategori: tidak mengandung simbol ✓/✕/●/ℹ/! dan tidak memakai kelas hijau/merah (bg-success-bg, bg-error-bg, text-success, text-error)
+        // Badge kategori: tidak mengandung simbol ✓/✕/●/ℹ/! dan tidak memakai kelas hijau/merah/maroon/pink (bg-success-bg, bg-error-bg, text-success, text-error, 550b14, sekunder, F5E8E9)
         foreach (AuditLog::DAFTAR_KATEGORI as $kat) {
             $kelasWarna = AuditLog::kelasWarnaKategori($kat);
             $this->assertStringNotContainsString('bg-success-bg', $kelasWarna);
             $this->assertStringNotContainsString('bg-error-bg', $kelasWarna);
             $this->assertStringNotContainsString('text-success', $kelasWarna);
             $this->assertStringNotContainsString('text-error', $kelasWarna);
+            $this->assertStringNotContainsString('550b14', $kelasWarna);
+            $this->assertStringNotContainsString('sekunder', $kelasWarna);
+            $this->assertStringNotContainsString('F5E8E9', $kelasWarna);
         }
 
         $htmlDetail = $resDetail->getContent();
@@ -659,6 +685,9 @@ class SppkUktTahap2Test extends TestCase
             $this->assertStringNotContainsString('bg-error-bg', $fullTag);
             $this->assertStringNotContainsString('text-success', $fullTag);
             $this->assertStringNotContainsString('text-error', $fullTag);
+            $this->assertStringNotContainsString('550b14', $fullTag);
+            $this->assertStringNotContainsString('sekunder', $fullTag);
+            $this->assertStringNotContainsString('F5E8E9', $fullTag);
             foreach (['✓', '✕', '●', 'ℹ', '!'] as $simbolTerlarang) {
                 $this->assertStringNotContainsString($simbolTerlarang, $isiBadge);
             }

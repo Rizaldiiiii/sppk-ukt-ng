@@ -200,7 +200,7 @@
                         </td>
                         <td class="px-4 py-3.5 text-[12px]">
                             <div class="font-heading font-semibold text-ink">{{ $log->labelSubjekTipe() }}</div>
-                            <div class="text-ink-muted font-mono">ID: {{ $log->subjek_id ?? '—' }}</div>
+                            <div class="text-ink-muted font-mono">ID: {{ $log->subjek_id ?? \App\Models\AuditLog::LABEL_NILAI_KOSONG }}</div>
                         </td>
                         <td class="px-4 py-3.5 text-[12px] max-w-md">
                             @if($perubahanTerbaca !== [])
@@ -222,16 +222,16 @@
                                     <div class="mt-1.5 grid grid-cols-1 gap-2">
                                         <div>
                                             <div class="text-[10px] font-semibold uppercase text-ink-muted">Sebelum:</div>
-                                            <pre class="p-2 rounded-[8px] bg-white/80 border border-border-glass text-[11px] font-mono text-ink-secondary whitespace-pre-wrap break-words">{{ !empty($log->nilai_sebelum) ? json_encode($log->nilai_sebelum, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : '—' }}</pre>
+                                            <pre class="p-2 rounded-[8px] bg-white/80 border border-border-glass text-[11px] font-mono text-ink-secondary whitespace-pre-wrap break-words">{{ !empty($log->nilai_sebelum) ? json_encode($log->nilai_sebelum, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : \App\Models\AuditLog::LABEL_NILAI_KOSONG }}</pre>
                                         </div>
                                         <div>
                                             <div class="text-[10px] font-semibold uppercase text-ink-muted">Sesudah:</div>
-                                            <pre class="p-2 rounded-[8px] bg-white/80 border border-border-glass text-[11px] font-mono text-ink whitespace-pre-wrap break-words">{{ !empty($log->nilai_sesudah) ? json_encode($log->nilai_sesudah, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : '—' }}</pre>
+                                            <pre class="p-2 rounded-[8px] bg-white/80 border border-border-glass text-[11px] font-mono text-ink whitespace-pre-wrap break-words">{{ !empty($log->nilai_sesudah) ? json_encode($log->nilai_sesudah, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : \App\Models\AuditLog::LABEL_NILAI_KOSONG }}</pre>
                                         </div>
                                     </div>
                                 </details>
                             @else
-                                <span class="text-ink-muted">&mdash;</span>
+                                <span class="text-ink-muted">{{ \App\Models\AuditLog::LABEL_NILAI_KOSONG }}</span>
                             @endif
                         </td>
                     </tr>

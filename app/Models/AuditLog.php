@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 
 class AuditLog extends Model
 {
+    public const LABEL_NILAI_KOSONG = '(kosong)';
+
     public const MODE_RINGKAS = 'ringkas';
     public const MODE_DETAIL = 'detail';
 
@@ -66,17 +68,17 @@ class AuditLog extends Model
     ];
 
     /**
-     * Pemetaan warna badge per kategori dari palet tema netral (tanpa hijau/success dan tanpa merah/error).
+     * Pemetaan warna badge per kategori dari palet tema netral (bervariasi; tanpa keluarga hijau dan tanpa keluarga merah termasuk maroon/pink).
      *
      * @var array<string, string>
      */
     public const PETA_WARNA_KATEGORI = [
-        self::KATEGORI_KEBERATAN => 'bg-sekunder-light text-sekunder border border-[#550b14]/20',
-        self::KATEGORI_PERTANYAAN => 'bg-info-bg text-info border border-[#BFDBFE]',
-        self::KATEGORI_HASIL => 'bg-highlight-light text-highlight-dark border border-[#F5B301]/40',
+        self::KATEGORI_KEBERATAN => 'bg-[#DBEAFE] text-[#1E40AF] border border-[#93C5FD]',
+        self::KATEGORI_PERTANYAAN => 'bg-[#EDE9FE] text-[#6D28D9] border border-[#C4B5FD]',
+        self::KATEGORI_HASIL => 'bg-[#172554] text-white border border-[#172554]',
         self::KATEGORI_KONTEN_PARAMETER => 'bg-warning-bg text-warning border border-[#FDE68A]',
         self::KATEGORI_AKUN => 'bg-[#F1F5F9] text-[#334155] border border-[#CBD5E1]',
-        self::KATEGORI_KEAMANAN => 'bg-sekunder text-white border border-sekunder',
+        self::KATEGORI_KEAMANAN => 'bg-[#E0E7FF] text-[#3730A3] border border-[#A5B4FC]',
         self::KATEGORI_SISTEM => 'bg-surface-soft text-ink-secondary border border-divider',
     ];
 
@@ -465,7 +467,7 @@ class AuditLog extends Model
     public static function formatNilaiRingkas(mixed $nilai): string
     {
         if ($nilai === null || $nilai === '') {
-            return '—';
+            return self::LABEL_NILAI_KOSONG;
         }
 
         if (is_bool($nilai)) {
@@ -474,7 +476,7 @@ class AuditLog extends Model
 
         if (is_array($nilai)) {
             if ($nilai === []) {
-                return '—';
+                return self::LABEL_NILAI_KOSONG;
             }
 
             $semuaSkalar = ! array_is_list($nilai)
@@ -482,13 +484,18 @@ class AuditLog extends Model
                 : array_reduce($nilai, static fn (bool $carry, mixed $item) => $carry && (is_scalar($item) || $item === null), true);
 
             if ($semuaSkalar) {
-                $teks = implode(', ', array_map(static fn ($v) => (string) $v, $nilai));
+                $teks = implode(', ', array_map(
+                    static fn ($v) => ($v === null || $v === '')
+                        ? self::LABEL_NILAI_KOSONG
+                        : (is_bool($v) ? ($v ? 'Ya' : 'Tidak') : (string) $v),
+                    $nilai
+                ));
             } else {
                 $bagian = [];
                 foreach ($nilai as $k => $v) {
                     $vStr = is_array($v)
                         ? json_encode($v, JSON_UNESCAPED_UNICODE)
-                        : (is_bool($v) ? ($v ? 'Ya' : 'Tidak') : (string) ($v ?? '—'));
+                        : (is_bool($v) ? ($v ? 'Ya' : 'Tidak') : (($v === null || $v === '') ? self::LABEL_NILAI_KOSONG : (string) $v));
                     $bagian[] = is_int($k) ? $vStr : ($k . ': ' . $vStr);
                 }
                 $teks = implode('; ', $bagian);
@@ -529,8 +536,8 @@ class AuditLog extends Model
             $daftar[] = [
                 'kunci' => $kunciStr,
                 'label' => self::labelUntukKunci($kunciStr),
-                'sebelum' => array_key_exists($kunci, $sebelum) ? self::formatNilaiRingkas($sebelum[$kunci]) : '—',
-                'sesudah' => array_key_exists($kunci, $sesudah) ? self::formatNilaiRingkas($sesudah[$kunci]) : '—',
+                'sebelum' => array_key_exists($kunci, $sebelum) ? self::formatNilaiRingkas($sebelum[$kunci]) : self::LABEL_NILAI_KOSONG,
+                'sesudah' => array_key_exists($kunci, $sesudah) ? self::formatNilaiRingkas($sesudah[$kunci]) : self::LABEL_NILAI_KOSONG,
             ];
         }
 
