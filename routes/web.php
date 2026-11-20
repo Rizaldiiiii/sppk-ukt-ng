@@ -53,6 +53,7 @@ Route::middleware('auth')->group(function () {
     // Pemberitahuan di Sistem (KF-15)
     Route::get('/notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi.index');
     Route::post('/notifikasi/baca-semua', [NotifikasiController::class, 'tandaiSemuaDibaca'])->name('notifikasi.baca-semua');
+    Route::delete('/notifikasi/hapus-semua', [NotifikasiController::class, 'hapusSemua'])->name('notifikasi.hapus-semua');
     Route::post('/notifikasi/{id}/baca', [NotifikasiController::class, 'tandaiDibaca'])->name('notifikasi.baca');
 
     // Dokumen Keberatan Privat lewat Controller Berotorisasi (Blueprint §9 & §15)

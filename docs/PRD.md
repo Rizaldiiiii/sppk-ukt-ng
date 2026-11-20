@@ -646,6 +646,8 @@ antarfungsi yang ditulis eksplisit.
     oleh petugas.
   - Email tidak memuat data ekonomi atau dokumen mahasiswa; detail
     lengkap hanya bisa dibuka setelah login di sistem.
+  - Pengguna dapat menghapus notifikasinya sendiri setelah semuanya
+    ditandai dibaca.
   - WhatsApp tidak dijanjikan di versi ini; bila nanti ditambahkan,
     ia adalah saluran tambahan, bukan pengganti email / notifikasi.
 

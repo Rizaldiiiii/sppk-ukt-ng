@@ -1,15 +1,46 @@
+@php
+    $jumlahNotifikasi = $notifikasi->total();
+    $jumlahBelumDibaca = auth()->user()->unreadNotifications()->count();
+@endphp
 <x-layouts.app
     title="Notifikasi Sistem Saya"
     subtitle="Pemberitahuan perubahan hasil dan status peninjauan UKT (KF-15)"
 >
     <x-slot:headerActions>
-        @if(auth()->user()->unreadNotifications()->count() > 0)
-            <form method="POST" action="{{ route('notifikasi.baca-semua') }}" data-prevent-double-submit>
-                @csrf
-                <x-button type="submit" variant="secondary">
-                    Tandai Semua Dibaca
-                </x-button>
-            </form>
+        @if($jumlahNotifikasi > 0)
+            <div class="flex flex-wrap items-center justify-end gap-2.5">
+                @if($jumlahBelumDibaca > 0)
+                    <form method="POST" action="{{ route('notifikasi.baca-semua') }}" data-prevent-double-submit>
+                        @csrf
+                        <x-button type="submit" variant="secondary">
+                            Tandai Semua Dibaca
+                        </x-button>
+                    </form>
+                @endif
+
+                <div class="flex flex-col items-end gap-1">
+                    <form
+                        method="POST"
+                        action="{{ route('notifikasi.hapus-semua') }}"
+                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus semua notifikasi Anda? Tindakan ini tidak dapat dibatalkan.')"
+                    >
+                        @csrf
+                        @method('DELETE')
+                        <x-button
+                            type="submit"
+                            variant="danger"
+                            :disabled="$jumlahBelumDibaca > 0"
+                        >
+                            Hapus Semua Notifikasi
+                        </x-button>
+                    </form>
+                    @if($jumlahBelumDibaca > 0)
+                        <span class="text-[11px] text-ink-secondary">
+                            Tombol ini aktif setelah semua notifikasi ditandai dibaca.
+                        </span>
+                    @endif
+                </div>
+            </div>
         @endif
     </x-slot:headerActions>
 

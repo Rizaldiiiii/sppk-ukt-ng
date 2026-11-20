@@ -287,6 +287,60 @@ class SppkUktTahap1Test extends TestCase
         ]);
     }
 
+    public function test_kf15_hapus_semua_notifikasi_hanya_aktif_setelah_semua_dibaca_dan_terisolasi_per_pengguna(): void
+    {
+        $budi = User::where('email', 'budi.pratama@student.ung.ac.id')->firstOrFail();
+        $ayu = User::where('email', 'ayu.lestari@student.ung.ac.id')->firstOrFail();
+
+        // Pastikan Budi dan Ayu masing-masing memiliki notifikasi belum dibaca dari seeder
+        $jumlahAwalBudi = $budi->notifications()->count();
+        $jumlahAwalAyu = $ayu->notifications()->count();
+        $this->assertGreaterThan(0, $jumlahAwalBudi);
+        $this->assertGreaterThan(0, $budi->unreadNotifications()->count());
+        $this->assertGreaterThan(0, $jumlahAwalAyu);
+
+        // (a) Pengguna yang masih punya notifikasi belum dibaca tidak bisa menghapus
+        $this->actingAs($budi)
+            ->from('/notifikasi')
+            ->delete('/notifikasi/hapus-semua')
+            ->assertRedirect('/notifikasi')
+            ->assertSessionHas('toast_error', 'Masih ada notifikasi yang belum dibaca. Tandai semua sebagai dibaca dulu sebelum menghapus.');
+
+        $this->assertSame($jumlahAwalBudi, $budi->notifications()->count());
+
+        // Halaman /notifikasi menampilkan tombol Hapus Semua Notifikasi dalam keadaan disabled beserta keterangannya
+        $this->actingAs($budi)
+            ->get('/notifikasi')
+            ->assertStatus(200)
+            ->assertSee('Hapus Semua Notifikasi')
+            ->assertSee('Tombol ini aktif setelah semua notifikasi ditandai dibaca.');
+
+        // (b) Tandai semua sebagai dibaca, lalu hapus semua notifikasi milik Budi
+        $this->actingAs($budi)
+            ->post('/notifikasi/baca-semua')
+            ->assertRedirect();
+
+        $this->assertSame(0, $budi->unreadNotifications()->count());
+
+        $this->actingAs($budi)
+            ->from('/notifikasi')
+            ->delete('/notifikasi/hapus-semua')
+            ->assertRedirect('/notifikasi')
+            ->assertSessionHas('toast_success');
+
+        $this->assertSame(0, $budi->notifications()->count());
+
+        // Setelah dihapus, halaman /notifikasi menampilkan empty state "Belum Ada Pemberitahuan"
+        $this->actingAs($budi)
+            ->get('/notifikasi')
+            ->assertStatus(200)
+            ->assertSee('Belum Ada Pemberitahuan')
+            ->assertDontSee('Hapus Semua Notifikasi');
+
+        // (c) Menghapus notifikasi Budi tidak ikut menghapus notifikasi milik pengguna lain (Ayu)
+        $this->assertSame($jumlahAwalAyu, $ayu->notifications()->count());
+    }
+
     public function test_dokumen_keberatan_hanya_bisa_dibuka_lewat_controller_berotorisasi(): void
     {
         Storage::fake('local');

@@ -42,5 +42,20 @@ class NotifikasiController extends Controller
 
         return back()->with('toast_success', 'Semua notifikasi telah ditandai sebagai dibaca.');
     }
+
+    public function hapusSemua(Request $request): RedirectResponse
+    {
+        if ($request->user()->unreadNotifications()->exists()) {
+            return back()
+                ->with('toast_error', 'Masih ada notifikasi yang belum dibaca. Tandai semua sebagai dibaca dulu sebelum menghapus.')
+                ->withErrors([
+                    'notifikasi' => 'Masih ada notifikasi yang belum dibaca. Tandai semua sebagai dibaca dulu sebelum menghapus.',
+                ]);
+        }
+
+        $request->user()->notifications()->delete();
+
+        return back()->with('toast_success', 'Semua notifikasi telah berhasil dihapus.');
+    }
 }
 
