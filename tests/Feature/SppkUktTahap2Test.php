@@ -763,5 +763,93 @@ class SppkUktTahap2Test extends TestCase
             ->assertSee('mode=detail&amp;kategori=Keberatan&amp;q=Diajukan', false)
             ->assertSee('href="' . route('petugas.riwayat.index') . '"', false);
     }
+
+    public function test_kf13_riwayat_pimpinan_dua_mode_badge_kategori_dan_penyamaran_ketat(): void
+    {
+        $pimpinan = User::where('email', 'pimpinan@ung.ac.id')->firstOrFail();
+        $petugas = User::where('email', 'petugas@ung.ac.id')->firstOrFail();
+        $budi = User::where('email', 'budi.pratama@student.ung.ac.id')->firstOrFail();
+
+        // Buat log perubahan data (mode ringkas) yang memuat nama mahasiswa, NIM 9 digit, nama berkas, dan angka ekonomi
+        AuditLog::create([
+            'pelaku_id' => $budi->id,
+            'aksi' => 'ajukan_keberatan',
+            'subjek_tipe' => PengajuanKeberatan::class,
+            'subjek_id' => '77',
+            'nilai_sebelum' => [
+                'nama' => 'Budi Pratama',
+                'nim' => '531412001',
+                'nominal' => 2500000,
+                'penghasilan_gabungan' => 4500000,
+            ],
+            'nilai_sesudah' => [
+                'status' => 'Diajukan',
+                'nama_asli' => 'slip_gaji_rahasia_budi.pdf',
+                'dokumen' => ['kk_budi_531412001.pdf'],
+                'alasan' => 'Penghasilan turun drastis untuk NIM 531412001',
+                'catatan_bebas' => 'Teks berisi NIM 531412001 yang harus ikut disamarkan',
+            ],
+            'dibuat_pada' => now(),
+        ]);
+
+        // Buat log akses/sistem (mode detail saja) yang juga memuat data sensitif mahasiswa
+        AuditLog::create([
+            'pelaku_id' => $budi->id,
+            'aksi' => 'akses_dokumen_keberatan',
+            'subjek_tipe' => \App\Models\DokumenKeberatan::class,
+            'subjek_id' => '88',
+            'nilai_sebelum' => null,
+            'nilai_sesudah' => [
+                'pengajuan_id' => 77,
+                'nama_asli' => 'sk_tidak_mampu_budi.pdf',
+                'nim' => '531412001',
+            ],
+            'dibuat_pada' => now(),
+        ]);
+
+        // 1. Mode Ringkas (bawaan) di /pimpinan/riwayat: menampilkan ajukan_keberatan, menyembunyikan akses_dokumen_keberatan, dan menyamarkan seluruh data pribadi
+        $resRingkas = $this->actingAs($pimpinan)->get('/pimpinan/riwayat');
+        $resRingkas->assertStatus(200)
+            ->assertSee('Mode Ringkas (Perubahan)')
+            ->assertSee('Mode Detail (Semua Log)')
+            ->assertSee('Mengajukan keberatan')
+            ->assertSee('data-badge-kategori="Keberatan"', false)
+            ->assertSee('bg-[#4100F5] text-[#FFFFFF]', false)
+            ->assertSee('Akun Mahasiswa (Identitas Disamarkan)')
+            ->assertSee('[Disamarkan untuk Privasi Mahasiswa]')
+            ->assertSee('(kosong)')
+            ->assertDontSee('akses_dokumen_keberatan')
+            ->assertDontSee('Budi Pratama')
+            ->assertDontSee('531412001')
+            ->assertDontSee('slip_gaji_rahasia_budi.pdf')
+            ->assertDontSee('kk_budi_531412001.pdf')
+            ->assertDontSee('2500000')
+            ->assertDontSee('4500000');
+
+        // 2. Mode Detail (?mode=detail) di /pimpinan/riwayat: menampilkan akses_dokumen_keberatan dan tetap menyamarkan seluruh data pribadi
+        $resDetail = $this->actingAs($pimpinan)->get('/pimpinan/riwayat?mode=detail');
+        $resDetail->assertStatus(200)
+            ->assertSee('Mengakses dokumen keberatan')
+            ->assertSee('akses_dokumen_keberatan')
+            ->assertSee('Akun Mahasiswa (Identitas Disamarkan)')
+            ->assertSee('[Disamarkan untuk Privasi Mahasiswa]')
+            ->assertDontSee('Budi Pratama')
+            ->assertDontSee('531412001')
+            ->assertDontSee('slip_gaji_rahasia_budi.pdf')
+            ->assertDontSee('sk_tidak_mampu_budi.pdf')
+            ->assertDontSee('2500000')
+            ->assertDontSee('4500000');
+
+        // 3. Pencarian di /pimpinan/riwayat tidak membocorkan data: mencari nama mahasiswa atau NIM tidak menampilkan barisnya
+        $resCariNama = $this->actingAs($pimpinan)->get('/pimpinan/riwayat?mode=detail&q=Budi');
+        $resCariNama->assertStatus(200)
+            ->assertSee('Tidak Ada Catatan Riwayat yang Cocok')
+            ->assertDontSee('ajukan_keberatan');
+
+        $resCariNim = $this->actingAs($pimpinan)->get('/pimpinan/riwayat?mode=detail&q=531412001');
+        $resCariNim->assertStatus(200)
+            ->assertSee('Tidak Ada Catatan Riwayat yang Cocok')
+            ->assertDontSee('ajukan_keberatan');
+    }
 }
 

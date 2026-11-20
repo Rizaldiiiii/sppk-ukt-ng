@@ -232,7 +232,9 @@ di tampilan.
 1. Kewenangan petugas dan pimpinan atas data mahasiswa belum
    diverifikasi dengan kampus. Sampai ada konfirmasi tertulis, akses
    pimpinan atas rincian perorangan dinonaktifkan; yang aktif hanya
-   rekap agregat tanpa data ekonomi perorangan.
+   rekap agregat tanpa data ekonomi perorangan (serta halaman riwayat
+   audit `/pimpinan/riwayat` dengan mode ringkas/detail yang menyamarkan
+   identitas mahasiswa, berkas dokumen, dan angka ekonomi perorangan).
 2. Apakah kontak petugas dibuka untuk publik atau hanya setelah login:
    10 responden (41,7%) memilih publik, sehingga statusnya opsional.
    Keputusan ini harus ditetapkan pemilik produk sebelum Tahap 1 selesai,
@@ -601,11 +603,13 @@ antarfungsi yang ditulis eksplisit.
     (bila ada kebijakan retensi) hanya lewat mekanisme yang tercatat.
   - Hasil perhitungan lama tetap bisa ditelusuri ke versi parameter
     yang memakainya, meski parameter sudah berubah.
-  - **Tampilan riwayat petugas (`/petugas/riwayat`):** menyediakan dua mode
-    tampilan pada rute yang sama (`mode=ringkas` sebagai bawaan yang hanya
-    menampilkan aksi perubahan data, serta `mode=detail` yang menampilkan
-    seluruh catatan termasuk akses dokumen, penolakan akses, peringatan
-    SLA, dan kegagalan email). Badge kategori ditampilkan sebagai label
+  - **Tampilan riwayat petugas (`/petugas/riwayat`) dan pimpinan (`/pimpinan/riwayat`):**
+    menyediakan dua mode tampilan pada rute masing-masing (`mode=ringkas`
+    sebagai bawaan yang hanya menampilkan aksi perubahan data, serta
+    `mode=detail` yang menampilkan seluruh catatan termasuk akses
+    dokumen, penolakan akses, peringatan SLA, dan kegagalan email; pada
+    `/pimpinan/riwayat` identitas mahasiswa, dokumen, dan nilai ekonomi
+    perorangan tetap disamarkan di kedua mode). Badge kategori ditampilkan sebagai label
     teks tanpa ikon/simbol status dengan palet 7 warna per kategori:
     Keberatan memakai Klein Blue (`#4100F5`, teks `#FFFFFF`), Pertanyaan
     memakai Aquamarine (`#9BF0E1`, teks `#191414`), Konten & Parameter

@@ -1,36 +1,79 @@
+@php
+    $modeAktif = $mode ?? \App\Models\AuditLog::MODE_RINGKAS;
+    $parameterFilterAktif = array_filter([
+        'kategori' => $kategoriFilter ?? '',
+        'aksi' => $aksiFilter ?? '',
+        'subjek_tipe' => $subjekFilter ?? '',
+        'q' => $kataKunci ?? '',
+    ], static fn ($val) => $val !== '');
+
+    $urlModeRingkas = route('pimpinan.riwayat', array_merge(['mode' => \App\Models\AuditLog::MODE_RINGKAS], $parameterFilterAktif));
+    $urlModeDetail = route('pimpinan.riwayat', array_merge(['mode' => \App\Models\AuditLog::MODE_DETAIL], $parameterFilterAktif));
+@endphp
 <x-layouts.app
     title="Riwayat Audit & Perubahan Sistem — Pimpinan / Auditor"
     subtitle="Penelusuran riwayat akses dan perubahan data tanpa menampilkan identitas maupun nilai ekonomi perorangan mahasiswa (KF-13 & PRD Bagian 3.3)"
 >
-    <!-- Peringatan Batas Kewenangan Pimpinan -->
-    <section class="glass-card-raised glass-card-glow p-6 border-l-4 border-l-sekunder space-y-1.5">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-            <h2 class="text-[16px] font-heading font-bold text-ink">
-                Jejak Audit Hanya-Baca dengan Perlindungan Privasi Mahasiswa (KF-13)
-            </h2>
-            <span class="px-3 py-1 rounded-[8px] bg-sekunder-light text-sekunder font-heading font-bold text-[12px]">
-                Append-Only • Data Pribadi Disamarkan
-            </span>
+    <!-- Peringatan Batas Kewenangan Pimpinan & Toggle Mode Ringkas / Detail -->
+    <section class="glass-card-raised glass-card-glow p-6 border-l-4 border-l-sekunder space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="space-y-1.5">
+                <div class="flex flex-wrap items-center gap-2">
+                    <h2 class="text-[16px] font-heading font-bold text-ink">
+                        Jejak Audit Hanya-Baca dengan Perlindungan Privasi Mahasiswa (KF-13)
+                    </h2>
+                    <span class="px-3 py-1 rounded-[8px] bg-sekunder-light text-sekunder font-heading font-bold text-[12px]">
+                        Append-Only • Data Pribadi Disamarkan
+                    </span>
+                </div>
+                <p class="text-[13px] text-ink-secondary leading-relaxed">
+                    @if($modeAktif === \App\Models\AuditLog::MODE_RINGKAS)
+                        <strong>Mode Ringkas (Bawaan):</strong> Hanya menampilkan riwayat perubahan data penting. Sesuai PRD Bagian 3.3, nama mahasiswa, NIM, dokumen bukti, dan angka ekonomi perorangan disamarkan secara otomatis.
+                    @else
+                        <strong>Mode Detail:</strong> Menampilkan seluruh catatan audit termasuk akses dokumen, penolakan akses, peringatan SLA, dan kegagalan email. Sesuai PRD Bagian 3.3, identitas dan angka ekonomi perorangan mahasiswa tetap disamarkan.
+                    @endif
+                </p>
+            </div>
+
+            <!-- Toggle Mode Ringkas / Detail (mempertahankan filter lain) -->
+            <div role="group" aria-label="Mode Tampilan Riwayat" class="inline-flex items-center p-1 rounded-[12px] bg-surface-soft border border-divider shrink-0 self-start md:self-auto">
+                <a
+                    href="{{ $urlModeRingkas }}"
+                    aria-current="{{ $modeAktif === \App\Models\AuditLog::MODE_RINGKAS ? 'page' : 'false' }}"
+                    class="px-4 py-2 rounded-[9px] font-heading text-[13px] transition-colors {{ $modeAktif === \App\Models\AuditLog::MODE_RINGKAS ? 'bg-sekunder text-white font-bold shadow-glass-xs' : 'text-ink-secondary hover:text-ink font-semibold' }}"
+                >
+                    Mode Ringkas (Perubahan)
+                </a>
+                <a
+                    href="{{ $urlModeDetail }}"
+                    aria-current="{{ $modeAktif === \App\Models\AuditLog::MODE_DETAIL ? 'page' : 'false' }}"
+                    class="px-4 py-2 rounded-[9px] font-heading text-[13px] transition-colors {{ $modeAktif === \App\Models\AuditLog::MODE_DETAIL ? 'bg-sekunder text-white font-bold shadow-glass-xs' : 'text-ink-secondary hover:text-ink font-semibold' }}"
+                >
+                    Mode Detail (Semua Log)
+                </a>
+            </div>
         </div>
-        <p class="text-[13px] text-ink-secondary leading-relaxed">
-            Halaman ini menampilkan catatan waktu, peran pelaku, jenis aksi, subjek perubahan, serta nilai sebelum dan sesudah untuk keperluan pengawasan Pimpinan/Auditor. Sesuai PRD Bagian 3.3, nama mahasiswa, NIM, dokumen bukti, dan angka ekonomi perorangan disamarkan secara otomatis.
-        </p>
     </section>
 
-    <!-- Ringkasan Jumlah per Aksi -->
+    <!-- Ringkasan Jumlah per Aksi (mengikuti mode aktif) -->
     @if(!empty($rekapAksiAudit))
         <section class="space-y-3">
             <h2 class="text-[18px] font-heading font-bold text-ink">
                 Ringkasan Aktivitas Tercatat per Jenis Aksi
             </h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                @foreach($rekapAksiAudit as $aksiNama => $jumlahAksi)
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                @foreach(array_slice($rekapAksiAudit, 0, 6, true) as $aksiNama => $jumlahAksi)
+                    @php
+                        $labelRingkasan = \App\Models\AuditLog::labelUntukAksi($aksiNama);
+                    @endphp
                     <a
-                        href="{{ route('pimpinan.riwayat', ['aksi' => $aksiNama, 'subjek_tipe' => $subjekFilter, 'q' => $kataKunci]) }}"
-                        class="glass-card glass-card-light p-4 space-y-1 transition-transform hover:-translate-y-0.5 {{ $aksiFilter === $aksiNama ? 'ring-2 ring-sekunder' : '' }}"
+                        href="{{ route('pimpinan.riwayat', ['mode' => $modeAktif, 'aksi' => $aksiNama, 'kategori' => $kategoriFilter ?? '', 'subjek_tipe' => $subjekFilter, 'q' => $kataKunci]) }}"
+                        class="glass-card glass-card-light p-3.5 space-y-1 transition-transform hover:-translate-y-0.5 {{ $aksiFilter === $aksiNama ? 'ring-2 ring-sekunder' : '' }}"
                     >
-                        <div class="text-[11px] font-mono text-ink-secondary truncate" title="{{ $aksiNama }}">{{ $aksiNama }}</div>
-                        <div class="text-[22px] font-heading font-extrabold text-ink tabular-nums">{{ $jumlahAksi }}</div>
+                        <div class="text-[12px] font-heading font-semibold text-ink truncate" title="{{ $labelRingkasan }} ({{ $aksiNama }})">
+                            {{ $labelRingkasan }}
+                        </div>
+                        <div class="text-[20px] font-heading font-extrabold text-sekunder tabular-nums">{{ $jumlahAksi }}</div>
                     </a>
                 @endforeach
             </div>
@@ -40,7 +83,22 @@
     <!-- Filter & Pencarian -->
     <section class="glass-card p-6">
         <form method="GET" action="{{ route('pimpinan.riwayat') }}" class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-            <div class="md:col-span-4">
+            <input type="hidden" name="mode" value="{{ $modeAktif }}">
+            <div class="md:col-span-3">
+                <label for="filter_kategori" class="block text-[13px] font-heading font-semibold text-ink mb-1">
+                    Filter Kategori
+                </label>
+                <select id="filter_kategori" name="kategori" class="glass-input w-full px-3.5 py-2.5 text-[13px]">
+                    <option value="">Semua Kategori</option>
+                    @foreach(($daftarKategori ?? \App\Models\AuditLog::DAFTAR_KATEGORI) as $katOpt)
+                        <option value="{{ $katOpt }}" @selected(($kategoriFilter ?? '') === $katOpt)>
+                            {{ $katOpt }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="md:col-span-3">
                 <label for="filter_aksi" class="block text-[13px] font-heading font-semibold text-ink mb-1">
                     Filter Jenis Aksi
                 </label>
@@ -48,13 +106,13 @@
                     <option value="">Semua Aksi</option>
                     @foreach($daftarAksi as $aksiOpt)
                         <option value="{{ $aksiOpt }}" @selected($aksiFilter === $aksiOpt)>
-                            {{ $aksiOpt }}
+                            {{ \App\Models\AuditLog::labelUntukAksi($aksiOpt) }}
                         </option>
                     @endforeach
                 </select>
             </div>
 
-            <div class="md:col-span-4">
+            <div class="md:col-span-2">
                 <label for="filter_subjek" class="block text-[13px] font-heading font-semibold text-ink mb-1">
                     Filter Tipe Subjek
                 </label>
@@ -62,36 +120,35 @@
                     <option value="">Semua Tipe Subjek</option>
                     @foreach($daftarSubjekTipe as $subjekOpt)
                         <option value="{{ $subjekOpt }}" @selected($subjekFilter === $subjekOpt)>
-                            {{ class_basename($subjekOpt) }} ({{ $subjekOpt }})
+                            {{ \App\Models\AuditLog::labelUntukSubjekTipe($subjekOpt) }}
                         </option>
                     @endforeach
                 </select>
             </div>
 
-            <div class="md:col-span-4 flex gap-2">
-                <div class="flex-1">
-                    <label for="filter_q" class="block text-[13px] font-heading font-semibold text-ink mb-1">
-                        Cari Aksi / Subjek / ID
-                    </label>
-                    <input
-                        id="filter_q"
-                        type="search"
-                        name="q"
-                        value="{{ $kataKunci }}"
-                        placeholder="Contoh: ubah_status, VersiParameter..."
-                        class="glass-input w-full px-3.5 py-2.5 text-[13px]"
-                    >
-                </div>
-                <div class="flex items-end gap-2">
-                    <x-button type="submit" variant="primary">
-                        Cari
+            <div class="md:col-span-2">
+                <label for="filter_q" class="block text-[13px] font-heading font-semibold text-ink mb-1">
+                    Cari Aksi / Subjek / ID
+                </label>
+                <input
+                    id="filter_q"
+                    type="search"
+                    name="q"
+                    value="{{ $kataKunci }}"
+                    placeholder="Contoh: ubah_status, VersiParameter..."
+                    class="glass-input w-full px-3.5 py-2.5 text-[13px]"
+                >
+            </div>
+
+            <div class="md:col-span-2 flex gap-2">
+                <x-button type="submit" variant="primary" class="flex-1">
+                    Cari
+                </x-button>
+                @if($aksiFilter !== '' || ($kategoriFilter ?? '') !== '' || $subjekFilter !== '' || $kataKunci !== '' || $modeAktif !== \App\Models\AuditLog::MODE_RINGKAS)
+                    <x-button :href="route('pimpinan.riwayat')" variant="secondary">
+                        Reset
                     </x-button>
-                    @if($aksiFilter !== '' || $subjekFilter !== '' || $kataKunci !== '')
-                        <x-button :href="route('pimpinan.riwayat')" variant="secondary">
-                            Reset
-                        </x-button>
-                    @endif
-                </div>
+                @endif
             </div>
         </form>
     </section>
@@ -108,14 +165,17 @@
                 <tr class="border-b border-divider bg-surface-soft/90">
                     <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Waktu</th>
                     <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Pelaku</th>
-                    <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Aksi</th>
+                    <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Aksi &amp; Kategori</th>
                     <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Subjek &amp; ID</th>
-                    <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Nilai Sebelum (Tersanitasi)</th>
-                    <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Nilai Sesudah (Tersanitasi)</th>
+                    <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Perubahan Data (Sebelum &rarr; Sesudah, Tersanitasi)</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-divider align-top">
                 @foreach($daftarLog as $log)
+                    @php
+                        $kategoriLog = $log->kategori();
+                        $perubahanTerbaca = $log->daftarPerubahanTerbaca($log->nilai_sebelum_aman, $log->nilai_sesudah_aman);
+                    @endphp
                     <tr class="hover:bg-surface-soft/80">
                         <td class="px-4 py-3.5 text-[12px] text-ink-secondary whitespace-nowrap tabular-nums">
                             {{ $log->dibuat_pada?->locale('id')->translatedFormat('d M Y H:i:s') ?? '-' }}
@@ -123,27 +183,54 @@
                         <td class="px-4 py-3.5 text-[13px] font-heading font-semibold text-ink">
                             {{ $log->label_pelaku_aman }}
                         </td>
-                        <td class="px-4 py-3.5">
-                            <span class="inline-block px-2.5 py-1 rounded-[6px] bg-sekunder-light/90 text-sekunder font-mono text-[12px] font-semibold">
+                        <td class="px-4 py-3.5 space-y-1.5">
+                            <div>
+                                <span
+                                    data-badge-kategori="{{ $kategoriLog }}"
+                                    class="inline-flex items-center px-2.5 py-0.5 rounded-[8px] text-[11px] font-heading font-semibold {{ $log->kelasBadgeKategori() }}"
+                                >{{ $kategoriLog }}</span>
+                            </div>
+                            <div class="font-heading font-bold text-[13px] text-ink leading-snug">
+                                {{ $log->labelAksi() }}
+                            </div>
+                            <div class="font-mono text-[11px] text-ink-muted">
                                 {{ $log->aksi }}
-                            </span>
+                            </div>
                         </td>
                         <td class="px-4 py-3.5 text-[12px]">
-                            <div class="font-heading font-semibold text-ink">{{ class_basename($log->subjek_tipe) }}</div>
-                            <div class="text-ink-muted font-mono">ID: {{ $log->subjek_id ?? '-' }}</div>
+                            <div class="font-heading font-semibold text-ink">{{ $log->labelSubjekTipe() }}</div>
+                            <div class="text-ink-muted font-mono">ID: {{ $log->subjek_id ?? \App\Models\AuditLog::LABEL_NILAI_KOSONG }}</div>
                         </td>
-                        <td class="px-4 py-3.5 text-[12px] max-w-xs">
-                            @if(!empty($log->nilai_sebelum_aman))
-                                <pre class="p-2.5 rounded-[8px] bg-white/80 border border-border-glass text-[11px] font-mono text-ink-secondary whitespace-pre-wrap break-words">{{ json_encode($log->nilai_sebelum_aman, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) }}</pre>
+                        <td class="px-4 py-3.5 text-[12px] max-w-md">
+                            @if($perubahanTerbaca !== [])
+                                <ul class="space-y-1 text-[12px] text-ink">
+                                    @foreach($perubahanTerbaca as $baris)
+                                        <li class="leading-relaxed break-words">
+                                            <strong class="font-heading font-semibold text-ink">{{ $baris['label'] }}:</strong>
+                                            <span class="text-ink-secondary">{{ $baris['sebelum'] }}</span>
+                                            <span class="text-sekunder font-bold px-0.5">&rarr;</span>
+                                            <span class="font-medium text-ink">{{ $baris['sesudah'] }}</span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+
+                                <details class="mt-2 text-[11px]">
+                                    <summary class="cursor-pointer font-heading font-semibold text-sekunder hover:underline select-none">
+                                        Lihat JSON mentah
+                                    </summary>
+                                    <div class="mt-1.5 grid grid-cols-1 gap-2">
+                                        <div>
+                                            <div class="text-[10px] font-semibold uppercase text-ink-muted">Sebelum:</div>
+                                            <pre class="p-2 rounded-[8px] bg-white/80 border border-border-glass text-[11px] font-mono text-ink-secondary whitespace-pre-wrap break-words">{{ !empty($log->nilai_sebelum_aman) ? json_encode($log->nilai_sebelum_aman, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : \App\Models\AuditLog::LABEL_NILAI_KOSONG }}</pre>
+                                        </div>
+                                        <div>
+                                            <div class="text-[10px] font-semibold uppercase text-ink-muted">Sesudah:</div>
+                                            <pre class="p-2 rounded-[8px] bg-white/80 border border-border-glass text-[11px] font-mono text-ink whitespace-pre-wrap break-words">{{ !empty($log->nilai_sesudah_aman) ? json_encode($log->nilai_sesudah_aman, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : \App\Models\AuditLog::LABEL_NILAI_KOSONG }}</pre>
+                                        </div>
+                                    </div>
+                                </details>
                             @else
-                                <span class="text-ink-muted">-</span>
-                            @endif
-                        </td>
-                        <td class="px-4 py-3.5 text-[12px] max-w-xs">
-                            @if(!empty($log->nilai_sesudah_aman))
-                                <pre class="p-2.5 rounded-[8px] bg-white/80 border border-border-glass text-[11px] font-mono text-ink whitespace-pre-wrap break-words">{{ json_encode($log->nilai_sesudah_aman, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) }}</pre>
-                            @else
-                                <span class="text-ink-muted">-</span>
+                                <span class="text-ink-muted">{{ \App\Models\AuditLog::LABEL_NILAI_KOSONG }}</span>
                             @endif
                         </td>
                     </tr>

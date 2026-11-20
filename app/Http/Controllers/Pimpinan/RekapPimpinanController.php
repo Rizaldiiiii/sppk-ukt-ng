@@ -135,11 +135,20 @@ class RekapPimpinanController extends Controller
      */
     public function riwayat(Request $request): View
     {
+        $mode = AuditLog::normalisasiMode($request->query('mode'));
         $aksiFilter = trim((string) $request->query('aksi', ''));
+        $kategoriFilter = trim((string) $request->query('kategori', ''));
         $subjekFilter = trim((string) $request->query('subjek_tipe', ''));
         $kataKunci = trim((string) $request->query('q', ''));
 
-        $rekapAksiAudit = AuditLog::query()
+        $aksiModeRingkas = AuditLog::daftarAksiModeRingkas();
+
+        $baseModeQuery = AuditLog::query();
+        if ($mode === AuditLog::MODE_RINGKAS) {
+            $baseModeQuery->whereIn('aksi', $aksiModeRingkas);
+        }
+
+        $rekapAksiAudit = (clone $baseModeQuery)
             ->select('aksi', DB::raw('COUNT(*) as jumlah'))
             ->groupBy('aksi')
             ->orderByDesc('jumlah')
@@ -149,19 +158,43 @@ class RekapPimpinanController extends Controller
         $daftarAksi = array_keys($rekapAksiAudit);
         sort($daftarAksi);
 
-        $daftarSubjekTipe = AuditLog::query()
+        $daftarSubjekTipe = (clone $baseModeQuery)
             ->select('subjek_tipe')
             ->distinct()
             ->orderBy('subjek_tipe')
             ->pluck('subjek_tipe')
             ->toArray();
 
+        if ($mode === AuditLog::MODE_RINGKAS) {
+            $daftarKategori = array_values(array_unique(array_map(
+                static fn (string $kodeAksi) => AuditLog::kategoriUntukAksi($kodeAksi),
+                $daftarAksi
+            )));
+            $daftarKategori = $daftarKategori !== []
+                ? array_values(array_intersect(AuditLog::daftarKategoriUntukMode($mode), $daftarKategori))
+                : AuditLog::daftarKategoriUntukMode($mode);
+        } else {
+            $daftarKategori = AuditLog::DAFTAR_KATEGORI;
+        }
+
         $query = AuditLog::with('pelaku')
             ->latest('dibuat_pada')
             ->latest('id');
 
+        if ($mode === AuditLog::MODE_RINGKAS) {
+            $query->whereIn('aksi', $aksiModeRingkas);
+        }
+
         if ($aksiFilter !== '' && in_array($aksiFilter, $daftarAksi, true)) {
             $query->where('aksi', $aksiFilter);
+        }
+
+        if ($kategoriFilter !== '' && in_array($kategoriFilter, AuditLog::DAFTAR_KATEGORI, true)) {
+            if ($kategoriFilter === AuditLog::KATEGORI_SISTEM) {
+                $query->whereNotIn('aksi', AuditLog::aksiSelainSistem());
+            } else {
+                $query->whereIn('aksi', AuditLog::aksiUntukKategori($kategoriFilter));
+            }
         }
 
         if ($subjekFilter !== '' && in_array($subjekFilter, $daftarSubjekTipe, true)) {
@@ -187,11 +220,14 @@ class RekapPimpinanController extends Controller
         });
 
         return view('pimpinan.riwayat', [
+            'mode' => $mode,
             'rekapAksiAudit' => $rekapAksiAudit,
             'daftarLog' => $daftarLog,
             'daftarAksi' => $daftarAksi,
+            'daftarKategori' => $daftarKategori,
             'daftarSubjekTipe' => $daftarSubjekTipe,
             'aksiFilter' => $aksiFilter,
+            'kategoriFilter' => $kategoriFilter,
             'subjekFilter' => $subjekFilter,
             'kataKunci' => $kataKunci,
         ]);

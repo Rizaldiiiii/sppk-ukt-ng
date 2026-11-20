@@ -524,13 +524,22 @@ class AuditLog extends Model
 
     /**
      * Susun daftar perubahan per kunci: [['kunci' => ..., 'label' => ..., 'sebelum' => ..., 'sesudah' => ...], ...]
+     * Bila parameter $sebelumInput atau $sesudahInput diberikan (misal nilai_*_aman yang telah disamarkan
+     * untuk Pimpinan), gunakan hanya array yang diberikan dan jangan pernah membaca nilai mentah model.
      *
+     * @param  array<string, mixed>|null  $sebelumInput
+     * @param  array<string, mixed>|null  $sesudahInput
      * @return list<array{kunci: string, label: string, sebelum: string, sesudah: string}>
      */
-    public function daftarPerubahanTerbaca(): array
+    public function daftarPerubahanTerbaca(?array $sebelumInput = null, ?array $sesudahInput = null): array
     {
-        $sebelum = is_array($this->nilai_sebelum) ? $this->nilai_sebelum : [];
-        $sesudah = is_array($this->nilai_sesudah) ? $this->nilai_sesudah : [];
+        if (func_num_args() > 0) {
+            $sebelum = is_array($sebelumInput) ? $sebelumInput : [];
+            $sesudah = is_array($sesudahInput) ? $sesudahInput : [];
+        } else {
+            $sebelum = is_array($this->nilai_sebelum) ? $this->nilai_sebelum : [];
+            $sesudah = is_array($this->nilai_sesudah) ? $this->nilai_sesudah : [];
+        }
 
         if ($sebelum === [] && $sesudah === []) {
             return [];

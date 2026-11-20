@@ -215,7 +215,7 @@ tidak ada di daftar ini tidak dibuat sampai ada fungsi yang memakainya
 | Rute (contoh) | Halaman | Fungsi |
 | --- | --- | --- |
 | `/pimpinan/rekap` | Rekap agregat | Jumlah pengajuan per status, jumlah hasil per golongan — tanpa data ekonomi perorangan |
-| `/pimpinan/riwayat` | Riwayat (rekap) | Jejak perubahan agregat yang boleh dilihat auditor |
+| `/pimpinan/riwayat` | Riwayat (rekap) | Jejak perubahan dan akses yang boleh dilihat auditor dalam mode ringkas (bawaan, perubahan data) dan mode detail (semua log) dengan badge kategori serta penyamaran otomatis identitas dan data ekonomi perorangan mahasiswa |
 
 Akses pimpinan atas rincian perorangan **nonaktif secara default**
 sampai kampus mengonfirmasi kewenangannya (lihat PRD Bagian 3.3).
