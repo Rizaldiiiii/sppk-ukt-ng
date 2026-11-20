@@ -8,8 +8,12 @@ use Illuminate\Support\Str;
 
 class AuditLog extends Model
 {
+    public const MODE_RINGKAS = 'ringkas';
+    public const MODE_DETAIL = 'detail';
+
     public const KATEGORI_KEBERATAN = 'Keberatan';
     public const KATEGORI_PERTANYAAN = 'Pertanyaan';
+    public const KATEGORI_HASIL = 'Hasil';
     public const KATEGORI_KONTEN_PARAMETER = 'Konten & Parameter';
     public const KATEGORI_AKUN = 'Akun';
     public const KATEGORI_KEAMANAN = 'Keamanan';
@@ -18,10 +22,62 @@ class AuditLog extends Model
     public const DAFTAR_KATEGORI = [
         self::KATEGORI_KEBERATAN,
         self::KATEGORI_PERTANYAAN,
+        self::KATEGORI_HASIL,
         self::KATEGORI_KONTEN_PARAMETER,
         self::KATEGORI_AKUN,
         self::KATEGORI_KEAMANAN,
         self::KATEGORI_SISTEM,
+    ];
+
+    /**
+     * Pemetaan mode tampil untuk tiap aksi audit:
+     * - MODE_RINGKAS: hanya aksi perubahan data.
+     * - MODE_DETAIL: aksi akses dan peristiwa sistem (termasuk penolakan_akses dan aksi tak dikenal).
+     *
+     * @var array<string, string>
+     */
+    public const PETA_MODE_AKSI = [
+        // Perubahan data (tampil di mode ringkas & mode detail)
+        'ajukan_keberatan' => self::MODE_RINGKAS,
+        'ubah_status_keberatan' => self::MODE_RINGKAS,
+        'lengkapi_perbaikan_keberatan' => self::MODE_RINGKAS,
+        'buat_pertanyaan' => self::MODE_RINGKAS,
+        'jawab_pertanyaan' => self::MODE_RINGKAS,
+        'tutup_pertanyaan' => self::MODE_RINGKAS,
+        'buka_kembali_pertanyaan' => self::MODE_RINGKAS,
+        'tambah_faktor_penilaian' => self::MODE_RINGKAS,
+        'ubah_faktor_penilaian' => self::MODE_RINGKAS,
+        'tambah_golongan_ukt' => self::MODE_RINGKAS,
+        'ubah_golongan_ukt' => self::MODE_RINGKAS,
+        'buat_versi_parameter_baru' => self::MODE_RINGKAS,
+        'ubah_perkiraan_waktu' => self::MODE_RINGKAS,
+        'ubah_konten_publik' => self::MODE_RINGKAS,
+        'ubah_visual_panduan' => self::MODE_RINGKAS,
+        'entri_hasil_resmi' => self::MODE_RINGKAS,
+        'buat_hasil_simulasi' => self::MODE_RINGKAS,
+        'ubah_kata_sandi' => self::MODE_RINGKAS,
+
+        // Hanya akses & peristiwa sistem (tampil di mode detail saja)
+        'akses_dokumen_keberatan' => self::MODE_DETAIL,
+        'penolakan_akses' => self::MODE_DETAIL,
+        'peringatan_mendekati_tenggat_sla' => self::MODE_DETAIL,
+        'peringatan_terlewat_tenggat_sla' => self::MODE_DETAIL,
+        'email_notifikasi_gagal' => self::MODE_DETAIL,
+    ];
+
+    /**
+     * Pemetaan warna badge per kategori dari palet tema netral (tanpa hijau/success dan tanpa merah/error).
+     *
+     * @var array<string, string>
+     */
+    public const PETA_WARNA_KATEGORI = [
+        self::KATEGORI_KEBERATAN => 'bg-sekunder-light text-sekunder border border-[#550b14]/20',
+        self::KATEGORI_PERTANYAAN => 'bg-info-bg text-info border border-[#BFDBFE]',
+        self::KATEGORI_HASIL => 'bg-highlight-light text-highlight-dark border border-[#F5B301]/40',
+        self::KATEGORI_KONTEN_PARAMETER => 'bg-warning-bg text-warning border border-[#FDE68A]',
+        self::KATEGORI_AKUN => 'bg-[#F1F5F9] text-[#334155] border border-[#CBD5E1]',
+        self::KATEGORI_KEAMANAN => 'bg-sekunder text-white border border-sekunder',
+        self::KATEGORI_SISTEM => 'bg-surface-soft text-ink-secondary border border-divider',
     ];
 
     /**
@@ -74,6 +130,10 @@ class AuditLog extends Model
             'tutup_pertanyaan',
             'buka_kembali_pertanyaan',
         ],
+        self::KATEGORI_HASIL => [
+            'entri_hasil_resmi',
+            'buat_hasil_simulasi',
+        ],
         self::KATEGORI_KONTEN_PARAMETER => [
             'ubah_konten_publik',
             'ubah_visual_panduan',
@@ -83,8 +143,6 @@ class AuditLog extends Model
             'ubah_golongan_ukt',
             'buat_versi_parameter_baru',
             'ubah_perkiraan_waktu',
-            'entri_hasil_resmi',
-            'buat_hasil_simulasi',
         ],
         self::KATEGORI_AKUN => [
             'ubah_kata_sandi',
@@ -276,6 +334,85 @@ class AuditLog extends Model
         }
 
         return array_values(array_unique($hasil));
+    }
+
+    /**
+     * Normalisasi nilai query parameter mode ('ringkas' atau 'detail', default 'ringkas').
+     */
+    public static function normalisasiMode(?string $mode): string
+    {
+        return trim((string) $mode) === self::MODE_DETAIL
+            ? self::MODE_DETAIL
+            : self::MODE_RINGKAS;
+    }
+
+    /**
+     * Apakah aksi pada log ini ditampilkan di mode ringkas (perubahan data).
+     * Aksi tak dikenal selalu masuk mode detail (false).
+     */
+    public function tampilDiModeRingkas(?string $kode = null): bool
+    {
+        return self::apakahTampilDiModeRingkas($kode ?? (string) $this->aksi);
+    }
+
+    public static function apakahTampilDiModeRingkas(?string $kode): bool
+    {
+        $kodeBersih = trim((string) $kode);
+
+        return (self::PETA_MODE_AKSI[$kodeBersih] ?? self::MODE_DETAIL) === self::MODE_RINGKAS;
+    }
+
+    /**
+     * Daftar kode aksi yang ditampilkan pada mode ringkas.
+     *
+     * @return list<string>
+     */
+    public static function daftarAksiModeRingkas(): array
+    {
+        $hasil = [];
+        foreach (self::PETA_MODE_AKSI as $kodeAksi => $modeAksi) {
+            if ($modeAksi === self::MODE_RINGKAS) {
+                $hasil[] = $kodeAksi;
+            }
+        }
+
+        return $hasil;
+    }
+
+    /**
+     * Daftar kategori yang memiliki aksi pada mode yang dipilih.
+     *
+     * @return list<string>
+     */
+    public static function daftarKategoriUntukMode(string $mode): array
+    {
+        if (self::normalisasiMode($mode) === self::MODE_DETAIL) {
+            return self::DAFTAR_KATEGORI;
+        }
+
+        $aksiRingkas = self::daftarAksiModeRingkas();
+        $kategoriRingkas = [];
+
+        foreach (self::PETA_KATEGORI_AKSI as $namaKategori => $daftarKode) {
+            if (array_intersect($daftarKode, $aksiRingkas) !== []) {
+                $kategoriRingkas[] = $namaKategori;
+            }
+        }
+
+        return $kategoriRingkas;
+    }
+
+    /**
+     * Kelas warna badge untuk kategori log ini (tanpa warna hijau/success maupun merah/error).
+     */
+    public function kelasBadgeKategori(?string $kategori = null): string
+    {
+        return self::kelasWarnaKategori($kategori ?? $this->kategori());
+    }
+
+    public static function kelasWarnaKategori(string $kategori): string
+    {
+        return self::PETA_WARNA_KATEGORI[$kategori] ?? self::PETA_WARNA_KATEGORI[self::KATEGORI_SISTEM];
     }
 
     /**

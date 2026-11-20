@@ -16,36 +16,59 @@ class RiwayatController extends Controller
      */
     public function index(Request $request): View
     {
+        $mode = AuditLog::normalisasiMode($request->query('mode'));
         $aksiFilter = trim((string) $request->query('aksi', ''));
         $kategoriFilter = trim((string) $request->query('kategori', ''));
         $subjekFilter = trim((string) $request->query('subjek_tipe', ''));
         $kataKunci = trim((string) $request->query('q', ''));
 
-        $daftarAksi = AuditLog::query()
+        $aksiModeRingkas = AuditLog::daftarAksiModeRingkas();
+
+        $baseModeQuery = AuditLog::query();
+        if ($mode === AuditLog::MODE_RINGKAS) {
+            $baseModeQuery->whereIn('aksi', $aksiModeRingkas);
+        }
+
+        $daftarAksi = (clone $baseModeQuery)
             ->select('aksi')
             ->distinct()
             ->orderBy('aksi')
             ->pluck('aksi')
             ->toArray();
 
-        $daftarSubjekTipe = AuditLog::query()
+        $daftarSubjekTipe = (clone $baseModeQuery)
             ->select('subjek_tipe')
             ->distinct()
             ->orderBy('subjek_tipe')
             ->pluck('subjek_tipe')
             ->toArray();
 
-        $daftarKategori = AuditLog::DAFTAR_KATEGORI;
+        if ($mode === AuditLog::MODE_RINGKAS) {
+            $daftarKategori = array_values(array_unique(array_map(
+                static fn (string $kodeAksi) => AuditLog::kategoriUntukAksi($kodeAksi),
+                $daftarAksi
+            )));
+            // Urutkan sesuai urutan baku DAFTAR_KATEGORI; bila DB kosong tetap tampilkan kategori mode ringkas
+            $daftarKategori = $daftarKategori !== []
+                ? array_values(array_intersect(AuditLog::daftarKategoriUntukMode($mode), $daftarKategori))
+                : AuditLog::daftarKategoriUntukMode($mode);
+        } else {
+            $daftarKategori = AuditLog::DAFTAR_KATEGORI;
+        }
 
         $query = AuditLog::with('pelaku')
             ->latest('dibuat_pada')
             ->latest('id');
 
+        if ($mode === AuditLog::MODE_RINGKAS) {
+            $query->whereIn('aksi', $aksiModeRingkas);
+        }
+
         if ($aksiFilter !== '' && in_array($aksiFilter, $daftarAksi, true)) {
             $query->where('aksi', $aksiFilter);
         }
 
-        if ($kategoriFilter !== '' && in_array($kategoriFilter, $daftarKategori, true)) {
+        if ($kategoriFilter !== '' && in_array($kategoriFilter, AuditLog::DAFTAR_KATEGORI, true)) {
             if ($kategoriFilter === AuditLog::KATEGORI_SISTEM) {
                 $query->whereNotIn('aksi', AuditLog::aksiSelainSistem());
             } else {
@@ -73,7 +96,7 @@ class RiwayatController extends Controller
 
         $daftarLog = $query->paginate(15)->withQueryString();
 
-        $ringkasanAksi = AuditLog::query()
+        $ringkasanAksi = (clone $baseModeQuery)
             ->select('aksi', DB::raw('COUNT(*) as jumlah'))
             ->groupBy('aksi')
             ->orderByDesc('jumlah')
@@ -81,6 +104,7 @@ class RiwayatController extends Controller
             ->toArray();
 
         return view('petugas.riwayat.index', [
+            'mode' => $mode,
             'daftarLog' => $daftarLog,
             'daftarAksi' => $daftarAksi,
             'daftarKategori' => $daftarKategori,

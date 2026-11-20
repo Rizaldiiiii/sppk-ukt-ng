@@ -514,8 +514,8 @@ class SppkUktTahap2Test extends TestCase
             'buat_versi_parameter_baru' => ['Membuat versi parameter penilaian baru', AuditLog::KATEGORI_KONTEN_PARAMETER],
             'ubah_perkiraan_waktu' => ['Mengubah perkiraan waktu tunggu', AuditLog::KATEGORI_KONTEN_PARAMETER],
             'ubah_visual_panduan' => ['Mengubah visual panduan tahapan', AuditLog::KATEGORI_KONTEN_PARAMETER],
-            'entri_hasil_resmi' => ['Menyimpan hasil penetapan resmi', AuditLog::KATEGORI_KONTEN_PARAMETER],
-            'buat_hasil_simulasi' => ['Membuat hasil simulasi penilaian', AuditLog::KATEGORI_KONTEN_PARAMETER],
+            'entri_hasil_resmi' => ['Menyimpan hasil penetapan resmi', AuditLog::KATEGORI_HASIL],
+            'buat_hasil_simulasi' => ['Membuat hasil simulasi penilaian', AuditLog::KATEGORI_HASIL],
             'ubah_kata_sandi' => ['Mengubah kata sandi', AuditLog::KATEGORI_AKUN],
             'penolakan_akses' => ['Penolakan akses', AuditLog::KATEGORI_KEAMANAN],
             'peringatan_mendekati_tenggat_sla' => ['Peringatan mendekati tenggat SLA', AuditLog::KATEGORI_SISTEM],
@@ -588,6 +588,88 @@ class SppkUktTahap2Test extends TestCase
         foreach ($logsPertanyaan as $itemLog) {
             $this->assertSame(AuditLog::KATEGORI_PERTANYAAN, $itemLog->kategori());
         }
+
+        // 4. Uji Mode Ringkas vs Mode Detail, badge kategori tanpa simbol/warna hijau-merah, toggle, dan Reset
+        $logDetailSaja = [
+            'akses_dokumen_keberatan',
+            'penolakan_akses',
+            'peringatan_mendekati_tenggat_sla',
+            'peringatan_terlewat_tenggat_sla',
+            'email_notifikasi_gagal',
+        ];
+
+        foreach ($logDetailSaja as $aksiDetail) {
+            AuditLog::create([
+                'pelaku_id' => $petugas->id,
+                'aksi' => $aksiDetail,
+                'subjek_tipe' => PengajuanKeberatan::class,
+                'subjek_id' => '99',
+                'nilai_sebelum' => null,
+                'nilai_sesudah' => ['catatan' => 'uji_' . $aksiDetail],
+                'dibuat_pada' => now(),
+            ]);
+            $this->assertFalse(AuditLog::apakahTampilDiModeRingkas($aksiDetail));
+        }
+
+        foreach (['entri_hasil_resmi', 'buat_hasil_simulasi'] as $aksiHasil) {
+            $logHasil = AuditLog::create([
+                'pelaku_id' => $petugas->id,
+                'aksi' => $aksiHasil,
+                'subjek_tipe' => \App\Models\HasilUkt::class,
+                'subjek_id' => '1',
+                'nilai_sebelum' => null,
+                'nilai_sesudah' => ['sumber' => 'resmi'],
+                'dibuat_pada' => now(),
+            ]);
+            $this->assertSame(AuditLog::KATEGORI_HASIL, $logHasil->kategori());
+            $this->assertTrue($logHasil->tampilDiModeRingkas());
+        }
+
+        // Mode ringkas (default): hanya menampilkan perubahan data, TIDAK menampilkan 5 aksi akses/sistem
+        $resRingkas = $this->actingAs($petugas)->get('/petugas/riwayat');
+        $resRingkas->assertStatus(200);
+        foreach ($logDetailSaja as $aksiDetail) {
+            $resRingkas->assertDontSee('uji_' . $aksiDetail);
+        }
+        $resRingkas->assertSee('Mengubah status keberatan');
+        $resRingkas->assertSee('Menyimpan hasil penetapan resmi');
+
+        // Mode detail (?mode=detail): menampilkan semuanya termasuk 5 aksi akses/sistem
+        $resDetail = $this->actingAs($petugas)->get('/petugas/riwayat?mode=detail');
+        $resDetail->assertStatus(200);
+        foreach ($logDetailSaja as $aksiDetail) {
+            $resDetail->assertSee('uji_' . $aksiDetail);
+        }
+
+        // Badge kategori: tidak mengandung simbol ✓/✕/●/ℹ/! dan tidak memakai kelas hijau/merah (bg-success-bg, bg-error-bg, text-success, text-error)
+        foreach (AuditLog::DAFTAR_KATEGORI as $kat) {
+            $kelasWarna = AuditLog::kelasWarnaKategori($kat);
+            $this->assertStringNotContainsString('bg-success-bg', $kelasWarna);
+            $this->assertStringNotContainsString('bg-error-bg', $kelasWarna);
+            $this->assertStringNotContainsString('text-success', $kelasWarna);
+            $this->assertStringNotContainsString('text-error', $kelasWarna);
+        }
+
+        $htmlDetail = $resDetail->getContent();
+        preg_match_all('/<span\s+data-badge-kategori="[^"]*"[^>]*>(.*?)<\/span>/s', $htmlDetail, $matchesBadge);
+        $this->assertNotEmpty($matchesBadge[0]);
+        foreach ($matchesBadge[0] as $idx => $fullTag) {
+            $isiBadge = trim($matchesBadge[1][$idx]);
+            $this->assertStringNotContainsString('bg-success-bg', $fullTag);
+            $this->assertStringNotContainsString('bg-error-bg', $fullTag);
+            $this->assertStringNotContainsString('text-success', $fullTag);
+            $this->assertStringNotContainsString('text-error', $fullTag);
+            foreach (['✓', '✕', '●', 'ℹ', '!'] as $simbolTerlarang) {
+                $this->assertStringNotContainsString($simbolTerlarang, $isiBadge);
+            }
+        }
+
+        // Toggle mode mempertahankan filter lain (kategori, aksi, subjek_tipe, q) dan tombol Reset kembali ke mode ringkas
+        $resToggle = $this->actingAs($petugas)
+            ->get('/petugas/riwayat?mode=ringkas&kategori=Keberatan&q=Diajukan');
+        $resToggle->assertStatus(200)
+            ->assertSee('mode=detail&amp;kategori=Keberatan&amp;q=Diajukan', false)
+            ->assertSee('href="' . route('petugas.riwayat.index') . '"', false);
     }
 }
 

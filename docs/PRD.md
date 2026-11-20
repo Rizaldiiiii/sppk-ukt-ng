@@ -601,6 +601,13 @@ antarfungsi yang ditulis eksplisit.
     (bila ada kebijakan retensi) hanya lewat mekanisme yang tercatat.
   - Hasil perhitungan lama tetap bisa ditelusuri ke versi parameter
     yang memakainya, meski parameter sudah berubah.
+  - **Tampilan riwayat petugas (`/petugas/riwayat`):** menyediakan dua mode
+    tampilan pada rute yang sama (`mode=ringkas` sebagai bawaan yang hanya
+    menampilkan aksi perubahan data, serta `mode=detail` yang menampilkan
+    seluruh catatan termasuk akses dokumen, penolakan akses, peringatan
+    SLA, dan kegagalan email). Badge kategori ditampilkan sebagai label
+    teks tanpa ikon/simbol status dan menggunakan palet warna tema netral
+    per kategori (tanpa warna hijau positif maupun merah negatif).
 
 ### KF-14 — Rentang nominal tiap golongan UKT di halaman publik
 
