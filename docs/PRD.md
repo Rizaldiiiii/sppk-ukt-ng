@@ -603,8 +603,10 @@ antarfungsi yang ditulis eksplisit.
 ### KF-14 — Rentang nominal tiap golongan UKT di halaman publik
 
 - **Spesifikasi:** Sistem menampilkan rentang nominal tiap golongan UKT
-  pada halaman yang bisa dibuka tanpa login. Rentang ini dikelola petugas
-  dan mencantumkan sumber serta tanggal pembaruannya.
+  pada halaman yang bisa dibuka tanpa login. Rentang ini dikelola petugas;
+  sumber dan tanggal berlakunya tetap disimpan dan dikelola di sisi
+  petugas, sementara halaman publik menampilkan rentang nominal beserta
+  tanggal pembaruan daftarnya.
 - **Alasan dipilih:** 17 responden (70,8%) memilih rentang nominal dibuka
   tanpa login. Ini informasi umum yang tidak mengandung data pribadi,
   sehingga tidak ada alasan untuk menguncinya di balik login.

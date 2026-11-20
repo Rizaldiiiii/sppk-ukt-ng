@@ -179,7 +179,7 @@ tidak ada di daftar ini tidak dibuat sampai ada fungsi yang memakainya
 | `/` | Beranda publik | Ringkasan: apa itu sistem ini, tautan ke alur, faktor, rentang, prosedur |
 | `/alur` | Alur penentuan UKT | KF-02 umum: tahapan pengisian sampai penetapan |
 | `/faktor` | Daftar faktor penentu | KF-03 umum: nama, penjelasan singkat, pengaruh umum (status konfirmasi sumber tidak lagi ditampilkan di halaman publik ini) |
-| `/golongan` | Rentang nominal tiap golongan | KF-14: semua golongan, sumber, tanggal pembaruan |
+| `/golongan` | Rentang nominal tiap golongan | KF-14: semua golongan dan tanggal pembaruan daftar (sumber & tanggal berlaku tetap dikelola petugas, tidak ditampilkan di halaman publik) |
 | `/prosedur-keberatan` | Prosedur keberatan | KF-06: syarat, dokumen, tahapan, tautan ke formulir |
 | `/panduan` | Panduan visual tahapan | KF-10 (Tahap 3): diagram/video + alternatif teks |
 | `/bantuan` | Jalur bertanya (info umum) | KF-08 umum; pengiriman pertanyaan perlu login |
@@ -433,7 +433,9 @@ data, notifikasi, dan audit.
    `faktor_penilaian` yang aktif. Tidak ada query ke `hasil_ukt`,
    `rincian_penilaian`, atau `pengajuan_keberatan` di rute ini.
 3. Blade me-render halaman dengan token desain publik yang sama.
-   Halaman rentang golongan mencantumkan sumber dan tanggal pembaruan.
+   Halaman rentang golongan mencantumkan tanggal pembaruan daftar (sumber
+   & tanggal berlaku tetap dikelola petugas, tidak ditampilkan di halaman
+   publik).
 4. Petugas mengubah konten lewat `/petugas/konten`: Form Request
    memvalidasi, Service menyimpan, audit mencatat pelaku dan
    sebelum–sesudah, dan cache halaman publik (bila dipakai) dihapus

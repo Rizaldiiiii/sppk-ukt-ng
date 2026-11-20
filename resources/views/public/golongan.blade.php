@@ -11,7 +11,7 @@
                     Rentang Nominal Tiap Golongan UKT
                 </h1>
                 <p class="text-[16px] text-ink-secondary leading-relaxed">
-                    Daftar seluruh kelompok golongan Uang Kuliah Tunggal (UKT) yang berlaku beserta batas nominal minimum dan maksimum per semester, sumber ketetapan, dan tanggal mulai berlakunya.
+                    Daftar seluruh kelompok golongan Uang Kuliah Tunggal (UKT) yang berlaku beserta batas nominal minimum dan maksimum per semester.
                 </p>
                 @if($terakhirDiperbarui)
                     <p class="text-[12px] text-ink-muted pt-1">
@@ -35,7 +35,6 @@
                             <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink">Golongan UKT</th>
                             <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink text-right">Batas Bawah / Semester</th>
                             <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink text-right">Batas Atas / Semester</th>
-                            <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink">Sumber &amp; Berlaku Mulai</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-divider">
@@ -52,15 +51,6 @@
                                 </td>
                                 <td class="px-6 py-4 text-right tabular-nums font-bold text-sekunder">
                                     Rp {{ number_format($golongan->nominal_max, 0, ',', '.') }}
-                                </td>
-                                <td class="px-6 py-4 text-[13px] text-ink-secondary">
-                                    <div class="font-medium text-ink">{{ $golongan->sumber }}</div>
-                                    <div class="text-[12px] text-ink-muted">
-                                        Berlaku mulai {{ $golongan->berlaku_mulai?->locale('id')->translatedFormat('d M Y') }}
-                                        @if($golongan->berlaku_sampai)
-                                            s.d. {{ $golongan->berlaku_sampai->locale('id')->translatedFormat('d M Y') }}
-                                        @endif
-                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -79,10 +69,6 @@
                         <div class="p-3.5 rounded-[10px] bg-white/80 border border-border-glass flex items-center justify-between">
                             <span class="text-[13px] text-ink-secondary">Rentang / Semester</span>
                             <span class="font-heading font-bold text-sekunder tabular-nums">{{ $golongan->formatRentang() }}</span>
-                        </div>
-                        <div class="text-[12px] text-ink-secondary">
-                            <div><strong>Sumber:</strong> {{ $golongan->sumber }}</div>
-                            <div><strong>Berlaku mulai:</strong> {{ $golongan->berlaku_mulai?->locale('id')->translatedFormat('d M Y') }}</div>
                         </div>
                     </article>
                 @endforeach

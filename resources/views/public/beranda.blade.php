@@ -104,7 +104,7 @@
                         Rentang Nominal UKT
                     </h3>
                     <p class="text-[14px] text-ink-secondary leading-relaxed">
-                        Tabel batas bawah dan batas atas nominal per semester untuk tiap golongan UKT lengkap dengan sumber dan tanggal berlakunya.
+                        Tabel batas bawah dan batas atas nominal per semester untuk tiap golongan UKT.
                     </p>
                 </div>
                 <div class="mt-6 pt-4 border-t border-divider/80 font-heading font-bold text-[14px] text-sekunder flex items-center justify-between">

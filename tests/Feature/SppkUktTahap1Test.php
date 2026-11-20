@@ -56,12 +56,14 @@ class SppkUktTahap1Test extends TestCase
             ->assertDontSee('Status Sumber')
             ->assertDontSee('Terkonfirmasi resmi');
 
-        // KF-14: Halaman golongan menampilkan semua golongan beserta sumbernya
+        // KF-14: Halaman golongan menampilkan semua golongan tanpa kolom sumber & tanggal berlaku di halaman publik
         $this->get('/golongan')
             ->assertSee('Golongan I')
             ->assertSee('Golongan IV')
             ->assertSee('Golongan VIII')
-            ->assertSee('Rp 2.250.000');
+            ->assertSee('Rp 2.250.000')
+            ->assertDontSee('Sumber & Berlaku Mulai')
+            ->assertDontSee('Berlaku mulai');
 
         // KF-06: Halaman prosedur keberatan menautkan ke login saat belum login
         $this->get('/prosedur-keberatan')
