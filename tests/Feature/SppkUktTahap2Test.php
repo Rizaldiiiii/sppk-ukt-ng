@@ -844,12 +844,16 @@ class SppkUktTahap2Test extends TestCase
         $resCariNama = $this->actingAs($pimpinan)->get('/pimpinan/riwayat?mode=detail&q=Budi');
         $resCariNama->assertStatus(200)
             ->assertSee('Tidak Ada Catatan Riwayat yang Cocok')
-            ->assertDontSee('ajukan_keberatan');
+            ->assertDontSee('ID: 77')
+            ->assertDontSee('ID: 88');
+        $this->assertSame(0, $resCariNama->viewData('daftarLog')->total());
 
         $resCariNim = $this->actingAs($pimpinan)->get('/pimpinan/riwayat?mode=detail&q=531412001');
         $resCariNim->assertStatus(200)
             ->assertSee('Tidak Ada Catatan Riwayat yang Cocok')
-            ->assertDontSee('ajukan_keberatan');
+            ->assertDontSee('ID: 77')
+            ->assertDontSee('ID: 88');
+        $this->assertSame(0, $resCariNim->viewData('daftarLog')->total());
     }
 }
 
