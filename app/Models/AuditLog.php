@@ -72,9 +72,9 @@ class AuditLog extends Model
      * - Keberatan: Klein Blue (#4100F5), teks putih #FFFFFF
      * - Pertanyaan: Aquamarine (#9BF0E1), teks hitam #191414
      * - Konten & Parameter: Citric (#CDF564), teks hitam #191414
-     * - Hasil: Tangerine (#FF4632), teks hitam #191414
+     * - Hasil: Tangerine (#FF4632), teks putih #FFFFFF
      * - Akun: Black (#191414), teks putih #FFFFFF
-     * - Keamanan: Fushia (#F023A5), teks hitam #191414
+     * - Keamanan: Fushia (#F023A5), teks putih #FFFFFF
      * - Sistem: Gradient linear-gradient(180deg, #9BF0E1 0%, #FDEA2E 20%, #FF4632 40%, #191414 60%, #4100F5 80%, #8DA2D9 100%)
      *   (termasuk Factory Yellow #FDEA2E & Storm #8DA2D9), teks putih #FFFFFF + text-shadow gelap tipis, border #191414/30
      *
@@ -83,10 +83,10 @@ class AuditLog extends Model
     public const PETA_WARNA_KATEGORI = [
         self::KATEGORI_KEBERATAN => 'bg-[#4100F5] text-[#FFFFFF] border border-[#4100F5]/40',
         self::KATEGORI_PERTANYAAN => 'bg-[#9BF0E1] text-[#191414] border border-[#9BF0E1]/40',
-        self::KATEGORI_HASIL => 'bg-[#FF4632] text-[#191414] border border-[#FF4632]/40',
+        self::KATEGORI_HASIL => 'bg-[#FF4632] text-[#FFFFFF] border border-[#FF4632]/40',
         self::KATEGORI_KONTEN_PARAMETER => 'bg-[#CDF564] text-[#191414] border border-[#CDF564]/40',
         self::KATEGORI_AKUN => 'bg-[#191414] text-[#FFFFFF] border border-[#191414]/40',
-        self::KATEGORI_KEAMANAN => 'bg-[#F023A5] text-[#191414] border border-[#F023A5]/40',
+        self::KATEGORI_KEAMANAN => 'bg-[#F023A5] text-[#FFFFFF] border border-[#F023A5]/40',
         self::KATEGORI_SISTEM => 'bg-[linear-gradient(180deg,#9BF0E1_0%,#FDEA2E_20%,#FF4632_40%,#191414_60%,#4100F5_80%,#8DA2D9_100%)] text-[#FFFFFF] [text-shadow:0_1px_2px_rgba(0,0,0,0.45)] border border-[#191414]/30',
     ];
 

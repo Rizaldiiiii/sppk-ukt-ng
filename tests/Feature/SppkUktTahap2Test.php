@@ -714,9 +714,9 @@ class SppkUktTahap2Test extends TestCase
             AuditLog::KATEGORI_KEBERATAN => ['#4100F5', '#FFFFFF'],
             AuditLog::KATEGORI_PERTANYAAN => ['#9BF0E1', '#191414'],
             AuditLog::KATEGORI_KONTEN_PARAMETER => ['#CDF564', '#191414'],
-            AuditLog::KATEGORI_HASIL => ['#FF4632', '#191414'],
+            AuditLog::KATEGORI_HASIL => ['#FF4632', '#FFFFFF'],
             AuditLog::KATEGORI_AKUN => ['#191414', '#FFFFFF'],
-            AuditLog::KATEGORI_KEAMANAN => ['#F023A5', '#191414'],
+            AuditLog::KATEGORI_KEAMANAN => ['#F023A5', '#FFFFFF'],
             AuditLog::KATEGORI_SISTEM => ['#9BF0E1', '#FDEA2E', '#FF4632', '#191414', '#4100F5', '#8DA2D9', '#FFFFFF'],
         ];
 

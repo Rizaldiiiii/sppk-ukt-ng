@@ -610,8 +610,8 @@ antarfungsi yang ditulis eksplisit.
     Keberatan memakai Klein Blue (`#4100F5`, teks `#FFFFFF`), Pertanyaan
     memakai Aquamarine (`#9BF0E1`, teks `#191414`), Konten & Parameter
     memakai Citric (`#CDF564`, teks `#191414`), Hasil memakai Tangerine
-    (`#FF4632`, teks `#191414`), Akun memakai Black (`#191414`, teks
-    `#FFFFFF`), Keamanan memakai Fushia (`#F023A5`, teks `#191414`), dan
+    (`#FF4632`, teks `#FFFFFF`), Akun memakai Black (`#191414`, teks
+    `#FFFFFF`), Keamanan memakai Fushia (`#F023A5`, teks `#FFFFFF`), dan
     Sistem memakai gradient `linear-gradient(180deg, #9BF0E1 0%, #FDEA2E 20%, #FF4632 40%, #191414 60%, #4100F5 80%, #8DA2D9 100%)`
     (mencakup Factory Yellow `#FDEA2E` dan Storm `#8DA2D9`, teks `#FFFFFF`
     dengan bayangan teks tipis).
