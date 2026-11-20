@@ -297,7 +297,7 @@ class KontenController extends Controller
                 subjekTipe: GolonganUkt::class,
                 subjekId: $golongan->id,
                 nilaiSebelum: null,
-                nilaiSesudah: $golongan->only(['kode', 'nama', 'nominal_min', 'nominal_max', 'sumber', 'berlaku_mulai'])
+                nilaiSesudah: $golongan->only(['kode', 'nama', 'nominal_min', 'nominal_max'])
             );
         });
 
@@ -309,7 +309,7 @@ class KontenController extends Controller
         Gate::authorize('manage', KontenPublik::class);
 
         DB::transaction(function () use ($request, $golongan) {
-            $sebelum = $golongan->only(['nama', 'nominal_min', 'nominal_max', 'sumber', 'berlaku_mulai', 'berlaku_sampai', 'aktif']);
+            $sebelum = $golongan->only(['nama', 'nominal_min', 'nominal_max', 'aktif']);
             $data = $request->validated();
             $data['aktif'] = $request->boolean('aktif', true);
 
@@ -327,7 +327,7 @@ class KontenController extends Controller
                 subjekTipe: GolonganUkt::class,
                 subjekId: $golongan->id,
                 nilaiSebelum: $sebelum,
-                nilaiSesudah: $golongan->only(['nama', 'nominal_min', 'nominal_max', 'sumber', 'berlaku_mulai', 'berlaku_sampai', 'aktif'])
+                nilaiSesudah: $golongan->only(['nama', 'nominal_min', 'nominal_max', 'aktif'])
             );
         });
 

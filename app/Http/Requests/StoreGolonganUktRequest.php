@@ -27,9 +27,6 @@ class StoreGolonganUktRequest extends FormRequest
             'nama' => ['required', 'string', 'max:100'],
             'nominal_min' => ['required', 'integer', 'min:0'],
             'nominal_max' => ['required', 'integer', 'gte:nominal_min'],
-            'sumber' => ['required', 'string', 'max:255'],
-            'berlaku_mulai' => ['required', 'date'],
-            'berlaku_sampai' => ['nullable', 'date', 'after_or_equal:berlaku_mulai'],
             'aktif' => ['nullable', 'boolean'],
         ];
     }
@@ -42,8 +39,6 @@ class StoreGolonganUktRequest extends FormRequest
             'nominal_min.required' => 'Nominal batas bawah wajib diisi.',
             'nominal_max.required' => 'Nominal batas atas wajib diisi.',
             'nominal_max.gte' => 'Nominal batas atas harus lebih besar atau sama dengan nominal batas bawah.',
-            'sumber.required' => 'Sumber penetapan rentang golongan wajib dicantumkan.',
-            'berlaku_mulai.required' => 'Tanggal mulai berlaku wajib diisi.',
         ];
     }
 }

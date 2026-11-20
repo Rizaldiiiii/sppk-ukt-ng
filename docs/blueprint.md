@@ -179,7 +179,7 @@ tidak ada di daftar ini tidak dibuat sampai ada fungsi yang memakainya
 | `/` | Beranda publik | Ringkasan: apa itu sistem ini, tautan ke alur, faktor, rentang, prosedur |
 | `/alur` | Alur penentuan UKT | KF-02 umum: tahapan pengisian sampai penetapan |
 | `/faktor` | Daftar faktor penentu | KF-03 umum: nama, penjelasan singkat, pengaruh umum (status konfirmasi sumber tidak lagi ditampilkan di halaman mana pun, hanya tersimpan di database) |
-| `/golongan` | Rentang nominal tiap golongan | KF-14: semua golongan dan tanggal pembaruan daftar (sumber & tanggal berlaku tetap dikelola petugas, tidak ditampilkan di halaman publik) |
+| `/golongan` | Rentang nominal tiap golongan | KF-14: semua golongan dan tanggal pembaruan terakhir (sumber & tanggal berlaku hanya catatan internal di database, tidak ditampilkan atau diedit di UI) |
 | `/prosedur-keberatan` | Prosedur keberatan | KF-06: syarat, dokumen, tahapan, tautan ke formulir |
 | `/panduan` | Panduan visual tahapan | KF-10 (Tahap 3): diagram/video + alternatif teks |
 | `/bantuan` | Jalur bertanya (info umum) | KF-08 umum; pengiriman pertanyaan perlu login |
@@ -308,7 +308,7 @@ data sensitif (lihat Bagian 8).
 | Tabel | Kolom kunci | Relasi / catatan |
 | --- | --- | --- |
 | `konten_publik` | `id`, `slug` (`alur`, `faktor`, `prosedur-keberatan`, `panduan`, `kontak`, `petunjuk-pengisian`), `judul`, `ringkasan`, `isi`, `visual_path`, `diperbarui_oleh`, `diperbarui_pada` | Satu baris per halaman publik; `visual_path` menyimpan berkas gambar visual kustom `.png`/`.svg` untuk `/panduan` (KF-10); perubahan tercatat di audit |
-| `golongan_ukt` | `id`, `kode`, `nama`, `nominal_min`, `nominal_max`, `sumber`, `berlaku_mulai`, `berlaku_sampai` | Rentang KF-14; `sumber` dan tanggal wajib diisi |
+| `golongan_ukt` | `id`, `kode`, `nama`, `nominal_min`, `nominal_max`, `sumber`, `berlaku_mulai`, `berlaku_sampai` | Rentang KF-14; `sumber` dan tanggal berlaku hanya catatan internal di database (nullable, tidak ditampilkan atau diedit di UI) |
 | `faktor_penilaian` | `id`, `kode`, `nama`, `penjelasan_singkat`, `status_konfirmasi` (`terkonfirmasi`, `menunggu_konfirmasi`), `urutan`, `aktif` | Daftar KF-03; `status_konfirmasi` hanya tersimpan di database dan tidak lagi ditampilkan di halaman mana pun (baik publik maupun kelola petugas) |
 
 **Hasil dan mesin penilaian**
@@ -433,9 +433,9 @@ data, notifikasi, dan audit.
    `faktor_penilaian` yang aktif. Tidak ada query ke `hasil_ukt`,
    `rincian_penilaian`, atau `pengajuan_keberatan` di rute ini.
 3. Blade me-render halaman dengan token desain publik yang sama.
-   Halaman rentang golongan mencantumkan tanggal pembaruan daftar (sumber
-   & tanggal berlaku tetap dikelola petugas, tidak ditampilkan di halaman
-   publik).
+   Halaman rentang golongan mencantumkan tanggal pembaruan terakhir daftar
+   (sumber & tanggal berlaku hanya catatan internal di database, tidak
+   ditampilkan atau diedit di UI).
 4. Petugas mengubah konten lewat `/petugas/konten`: Form Request
    memvalidasi, Service menyimpan, audit mencatat pelaku dan
    sebelum–sesudah, dan cache halaman publik (bila dipakai) dihapus

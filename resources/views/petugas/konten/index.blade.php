@@ -120,7 +120,7 @@
                 <h2 class="text-[21px] font-heading font-bold text-ink">
                     Tambah Golongan UKT Baru
                 </h2>
-                <form method="POST" action="{{ route('petugas.golongan.store') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4" data-prevent-double-submit>
+                <form method="POST" action="{{ route('petugas.golongan.store') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4" data-prevent-double-submit>
                     @csrf
                     <div>
                         <label class="block text-[13px] font-medium text-ink mb-1">Kode Golongan</label>
@@ -131,10 +131,6 @@
                         <input name="nama" type="text" required placeholder="Golongan IX" class="glass-input w-full px-3.5 py-2.5 text-[14px]">
                     </div>
                     <div>
-                        <label class="block text-[13px] font-medium text-ink mb-1">Mulai Berlaku</label>
-                        <input name="berlaku_mulai" type="date" value="{{ now()->toDateString() }}" required class="glass-input w-full px-3.5 py-2.5 text-[14px]">
-                    </div>
-                    <div>
                         <label class="block text-[13px] font-medium text-ink mb-1">Nominal Minimum (Rp)</label>
                         <input name="nominal_min" type="number" min="0" required class="glass-input w-full px-3.5 py-2.5 text-[14px]">
                     </div>
@@ -142,11 +138,7 @@
                         <label class="block text-[13px] font-medium text-ink mb-1">Nominal Maksimum (Rp)</label>
                         <input name="nominal_max" type="number" min="0" required class="glass-input w-full px-3.5 py-2.5 text-[14px]">
                     </div>
-                    <div>
-                        <label class="block text-[13px] font-medium text-ink mb-1">Sumber Ketetapan</label>
-                        <input name="sumber" type="text" required placeholder="SK Rektor UNG..." class="glass-input w-full px-3.5 py-2.5 text-[14px]">
-                    </div>
-                    <div class="md:col-span-3">
+                    <div class="md:col-span-4">
                         <x-button type="submit" variant="primary">Simpan Golongan UKT</x-button>
                     </div>
                 </form>
@@ -154,7 +146,7 @@
 
             <div class="space-y-4">
                 @foreach($daftarGolongan as $golongan)
-                    <form method="POST" action="{{ route('petugas.golongan.update', $golongan) }}" class="glass-card p-6 grid grid-cols-1 md:grid-cols-5 gap-4 items-end" data-prevent-double-submit>
+                    <form method="POST" action="{{ route('petugas.golongan.update', $golongan) }}" class="glass-card p-6 grid grid-cols-1 md:grid-cols-4 gap-4 items-end" data-prevent-double-submit>
                         @csrf
                         @method('PUT')
                         <div>
@@ -168,11 +160,6 @@
                         <div>
                             <label class="block text-[13px] font-medium text-ink mb-1">Nominal Max (Rp)</label>
                             <input name="nominal_max" type="number" value="{{ $golongan->nominal_max }}" required class="glass-input w-full px-3.5 py-2 text-[14px] tabular-nums">
-                        </div>
-                        <div>
-                            <label class="block text-[13px] font-medium text-ink mb-1">Sumber &amp; Tanggal</label>
-                            <input name="sumber" type="text" value="{{ $golongan->sumber }}" required class="glass-input w-full px-3.5 py-2 text-[14px]">
-                            <input name="berlaku_mulai" type="hidden" value="{{ $golongan->berlaku_mulai?->format('Y-m-d') }}">
                         </div>
                         <div class="flex justify-end">
                             <x-button type="submit" variant="secondary">Simpan</x-button>

@@ -457,6 +457,51 @@ class SppkUktTahap2Test extends TestCase
             ->assertRedirect();
 
         $this->assertSame('Tagihan Air Bersih Rumah Tangga', $faktorBaru->fresh()->nama);
+
+        // 8. Tab Golongan di halaman kelola konten petugas tidak lagi menampilkan "Sumber Ketetapan", "Mulai Berlaku", dan "Sumber & Tanggal"
+        $this->actingAs($petugas)
+            ->get('/petugas/konten')
+            ->assertStatus(200)
+            ->assertDontSee('Sumber Ketetapan')
+            ->assertDontSee('Mulai Berlaku')
+            ->assertDontSee('Sumber &amp; Tanggal', false)
+            ->assertDontSee('Sumber & Tanggal');
+
+        // 9. Tambah golongan baru tanpa sumber/tanggal berhasil tersimpan (sumber & berlaku_mulai NULL)
+        $this->actingAs($petugas)
+            ->post('/petugas/golongan', [
+                'kode' => 'GOL-IX',
+                'nama' => 'Golongan IX',
+                'nominal_min' => 8000000,
+                'nominal_max' => 9500000,
+            ])
+            ->assertRedirect();
+
+        $golonganBaru = \App\Models\GolonganUkt::where('kode', 'GOL-IX')->firstOrFail();
+        $this->assertSame('Golongan IX', $golonganBaru->nama);
+        $this->assertNull($golonganBaru->sumber);
+        $this->assertNull($golonganBaru->berlaku_mulai);
+
+        // 10. Ubah golongan lama tanpa mengirim sumber/tanggal tidak menghapus nilai sumber dan berlaku_mulai lamanya di database
+        $golonganLama = \App\Models\GolonganUkt::where('kode', 'GOL-IV')->firstOrFail();
+        $sumberLama = $golonganLama->sumber;
+        $berlakuLama = $golonganLama->berlaku_mulai?->format('Y-m-d');
+        $this->assertNotNull($sumberLama);
+        $this->assertNotNull($berlakuLama);
+
+        $this->actingAs($petugas)
+            ->put('/petugas/golongan/' . $golonganLama->id, [
+                'nama' => 'Golongan IV (Diperbarui)',
+                'nominal_min' => 2300000,
+                'nominal_max' => 2800000,
+            ])
+            ->assertRedirect();
+
+        $golonganLama->refresh();
+        $this->assertSame('Golongan IV (Diperbarui)', $golonganLama->nama);
+        $this->assertSame(2300000, (int) $golonganLama->nominal_min);
+        $this->assertSame($sumberLama, $golonganLama->sumber);
+        $this->assertSame($berlakuLama, $golonganLama->berlaku_mulai?->format('Y-m-d'));
     }
 
     public function test_kf13_riwayat_audit_petugas_dan_pimpinan_serta_penolakan_akses_mahasiswa(): void
