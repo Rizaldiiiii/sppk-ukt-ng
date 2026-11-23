@@ -45,26 +45,47 @@
             Sebaran Jumlah Hasil per Golongan UKT (Agregat)
         </h2>
 
-        <x-table>
-            <thead>
-                <tr class="border-b border-divider bg-surface-soft/90">
-                    <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink">Kode</th>
-                    <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink">Golongan UKT</th>
-                    <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink text-right">Rentang Tarif / Semester</th>
-                    <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink text-right">Jumlah Hasil Tercatat</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-divider">
-                @foreach($daftarGolongan as $g)
-                    <tr class="hover:bg-surface-soft/80">
-                        <td class="px-6 py-4 font-heading font-bold text-sekunder">{{ $g->kode }}</td>
-                        <td class="px-6 py-4 font-heading font-bold text-ink">{{ $g->nama }}</td>
-                        <td class="px-6 py-4 text-right tabular-nums text-ink-secondary">{{ $g->formatRentang() }}</td>
-                        <td class="px-6 py-4 text-right tabular-nums font-heading font-bold text-ink">{{ $g->hasil_ukt_count }}</td>
+        <div class="hidden md:block">
+            <x-table>
+                <thead>
+                    <tr class="border-b border-divider bg-surface-soft/90">
+                        <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink">Kode</th>
+                        <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink">Golongan UKT</th>
+                        <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink text-right">Rentang Tarif / Semester</th>
+                        <th scope="col" class="px-6 py-4 font-heading font-semibold text-ink text-right">Jumlah Hasil Tercatat</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </x-table>
+                </thead>
+                <tbody class="divide-y divide-divider">
+                    @foreach($daftarGolongan as $g)
+                        <tr class="hover:bg-surface-soft/80">
+                            <td class="px-6 py-4 font-heading font-bold text-sekunder">{{ $g->kode }}</td>
+                            <td class="px-6 py-4 font-heading font-bold text-ink">{{ $g->nama }}</td>
+                            <td class="px-6 py-4 text-right tabular-nums text-ink-secondary">{{ $g->formatRentang() }}</td>
+                            <td class="px-6 py-4 text-right tabular-nums font-heading font-bold text-ink">{{ $g->hasil_ukt_count }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </x-table>
+        </div>
+
+        <div class="md:hidden space-y-2.5">
+            @foreach($daftarGolongan as $g)
+                <article class="glass-card p-4 flex items-center justify-between gap-3">
+                    <div>
+                        <div class="font-heading font-bold text-[14px] text-ink">
+                            <span class="text-sekunder">{{ $g->kode }}</span> — {{ $g->nama }}
+                        </div>
+                        <div class="text-[12px] text-ink-secondary tabular-nums mt-0.5">
+                            {{ $g->formatRentang() }}
+                        </div>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <div class="text-[18px] font-heading font-extrabold text-ink tabular-nums">{{ $g->hasil_ukt_count }}</div>
+                        <div class="text-[11px] text-ink-muted">Hasil</div>
+                    </div>
+                </article>
+            @endforeach
+        </div>
     </section>
 
     <!-- Rekap Status Pengajuan Keberatan (Agregat) -->
@@ -125,50 +146,70 @@
                 Saat ini tidak ada pengajuan keberatan aktif yang mendekati atau melewati tenggat waktu layanan.
             </div>
         @else
-            <x-table>
-                <thead>
-                    <tr class="border-b border-divider bg-surface-soft/90">
-                        <th scope="col" class="px-5 py-3.5 font-heading font-semibold text-ink">ID Pengajuan</th>
-                        <th scope="col" class="px-5 py-3.5 font-heading font-semibold text-ink">Tanggal Diajukan</th>
-                        <th scope="col" class="px-5 py-3.5 font-heading font-semibold text-ink">Tenggat Waktu</th>
-                        <th scope="col" class="px-5 py-3.5 font-heading font-semibold text-ink">Status</th>
-                        <th scope="col" class="px-5 py-3.5 font-heading font-semibold text-ink">Hari Terlewat / Sisa</th>
-                        <th scope="col" class="px-5 py-3.5 font-heading font-semibold text-ink">Keterangan Pemantauan</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-divider">
-                    @foreach($daftarPantauanSla as $tugas)
-                        <tr class="hover:bg-surface-soft/80">
-                            <td class="px-5 py-3.5 font-heading font-bold text-sekunder tabular-nums">
-                                #{{ $tugas['id'] }}
-                            </td>
-                            <td class="px-5 py-3.5 text-[13px] text-ink tabular-nums">
-                                {{ $tugas['diajukan_pada']?->locale('id')->translatedFormat('d M Y') ?? '-' }}
-                            </td>
-                            <td class="px-5 py-3.5 text-[13px] font-semibold text-ink tabular-nums">
-                                {{ $tugas['tenggat_waktu']?->locale('id')->translatedFormat('d M Y') ?? '-' }}
-                            </td>
-                            <td class="px-5 py-3.5">
-                                <x-badge-status :status="$tugas['status']" :label="$tugas['status']" />
-                            </td>
-                            <td class="px-5 py-3.5">
-                                <x-badge-status :status="$tugas['badge_status']" :label="$tugas['badge_label']" />
-                            </td>
-                            <td class="px-5 py-3.5">
-                                @if($tugas['perlu_tindak_lanjut_pimpinan'])
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-[8px] text-[12px] font-heading font-bold bg-error-bg text-error border border-[#FECACA]">
-                                        ! Perlu tindak lanjut pimpinan
-                                    </span>
-                                @else
-                                    <span class="text-[12px] text-ink-secondary">
-                                        Dalam pantauan mendekati tenggat
-                                    </span>
-                                @endif
-                            </td>
+            <div class="hidden md:block">
+                <x-table>
+                    <thead>
+                        <tr class="border-b border-divider bg-surface-soft/90">
+                            <th scope="col" class="px-5 py-3.5 font-heading font-semibold text-ink">ID Pengajuan</th>
+                            <th scope="col" class="px-5 py-3.5 font-heading font-semibold text-ink">Tanggal Diajukan</th>
+                            <th scope="col" class="px-5 py-3.5 font-heading font-semibold text-ink">Tenggat Waktu</th>
+                            <th scope="col" class="px-5 py-3.5 font-heading font-semibold text-ink">Status</th>
+                            <th scope="col" class="px-5 py-3.5 font-heading font-semibold text-ink">Hari Terlewat / Sisa</th>
+                            <th scope="col" class="px-5 py-3.5 font-heading font-semibold text-ink">Keterangan Pemantauan</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </x-table>
+                    </thead>
+                    <tbody class="divide-y divide-divider">
+                        @foreach($daftarPantauanSla as $tugas)
+                            <tr class="hover:bg-surface-soft/80">
+                                <td class="px-5 py-3.5 font-heading font-bold text-sekunder tabular-nums">
+                                    #{{ $tugas['id'] }}
+                                </td>
+                                <td class="px-5 py-3.5 text-[13px] text-ink tabular-nums">
+                                    {{ $tugas['diajukan_pada']?->locale('id')->translatedFormat('d M Y') ?? '-' }}
+                                </td>
+                                <td class="px-5 py-3.5 text-[13px] font-semibold text-ink tabular-nums">
+                                    {{ $tugas['tenggat_waktu']?->locale('id')->translatedFormat('d M Y') ?? '-' }}
+                                </td>
+                                <td class="px-5 py-3.5">
+                                    <x-badge-status :status="$tugas['status']" :label="$tugas['status']" />
+                                </td>
+                                <td class="px-5 py-3.5">
+                                    <x-badge-status :status="$tugas['badge_status']" :label="$tugas['badge_label']" />
+                                </td>
+                                <td class="px-5 py-3.5">
+                                    @if($tugas['perlu_tindak_lanjut_pimpinan'])
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-[8px] text-[12px] font-heading font-bold bg-error-bg text-error border border-[#FECACA]">
+                                            ! Perlu tindak lanjut pimpinan
+                                        </span>
+                                    @else
+                                        <span class="text-[12px] text-ink-secondary">
+                                            Dalam pantauan mendekati tenggat
+                                        </span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </x-table>
+            </div>
+
+            <div class="md:hidden space-y-3">
+                @foreach($daftarPantauanSla as $tugas)
+                    <article class="p-4 rounded-[12px] bg-white/85 border border-border-glass space-y-2 text-[12px]">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="font-heading font-bold text-[14px] text-sekunder tabular-nums">#{{ $tugas['id'] }}</span>
+                            <div class="flex flex-wrap items-center gap-1.5">
+                                <x-badge-status :status="$tugas['status']" :label="$tugas['status']" />
+                                <x-badge-status :status="$tugas['badge_status']" :label="$tugas['badge_label']" />
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-ink-secondary">
+                            <span>Diajukan: {{ $tugas['diajukan_pada']?->locale('id')->translatedFormat('d M Y') ?? '-' }}</span>
+                            <span>Tenggat: <strong class="text-ink">{{ $tugas['tenggat_waktu']?->locale('id')->translatedFormat('d M Y') ?? '-' }}</strong></span>
+                        </div>
+                    </article>
+                @endforeach
+            </div>
         @endif
     </section>
 </x-layouts.app>

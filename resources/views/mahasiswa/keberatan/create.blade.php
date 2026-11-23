@@ -9,7 +9,7 @@
     </x-slot:headerActions>
 
     @if($errors->any())
-        <section role="alert" class="glass-card p-6 border-l-4 border-l-error bg-error-bg/90 space-y-2">
+        <section role="alert" class="glass-card p-6 border-l-4 border-l-error bg-error-bg/90 space-y-3">
             <h2 class="text-[16px] font-heading font-bold text-error">
                 Pengajuan Belum Dapat Dikirim — Periksa Kolom yang Ditandai
             </h2>
@@ -21,6 +21,17 @@
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
+            @if(session('pengajuan_aktif_url'))
+                <div class="pt-1">
+                    <a
+                        href="{{ session('pengajuan_aktif_url') }}"
+                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-[10px] bg-white/95 border border-[#FECACA] text-[13px] font-heading font-bold text-sekunder hover:bg-sekunder-light/70 shadow-glass-xs"
+                    >
+                        <span>Lihat Pengajuan Keberatan Aktif #{{ session('pengajuan_aktif_id') }}</span>
+                        <span aria-hidden="true">&rarr;</span>
+                    </a>
+                </div>
+            @endif
         </section>
     @endif
 

@@ -82,69 +82,109 @@
             description="Belum ada pengajuan keberatan mahasiswa yang sesuai dengan filter pencarian saat ini."
         />
     @else
-        <x-table>
-            <thead>
-                <tr class="border-b border-divider bg-surface-soft/90">
-                    <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">ID</th>
-                    <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Mahasiswa</th>
-                    <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Hasil Diajukan</th>
-                    <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Ringkasan Alasan</th>
-                    <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Berkas</th>
-                    <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Status &amp; Tenggat</th>
-                    <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Diajukan</th>
-                    <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink text-right">Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-divider">
-                @foreach($daftarKeberatan as $item)
-                    @php $infoTenggat = $item->infoTenggat(); @endphp
-                    <tr class="hover:bg-surface-soft/80">
-                        <td class="px-5 py-4 font-heading font-bold text-sekunder tabular-nums">
-                            #{{ $item->id }}
-                        </td>
-                        <td class="px-5 py-4">
-                            <div class="font-heading font-bold text-ink">{{ $item->mahasiswa?->user?->nama ?? '-' }}</div>
+        <div class="hidden md:block">
+            <x-table>
+                <thead>
+                    <tr class="border-b border-divider bg-surface-soft/90">
+                        <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">ID</th>
+                        <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Mahasiswa</th>
+                        <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Hasil Diajukan</th>
+                        <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Ringkasan Alasan</th>
+                        <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Berkas</th>
+                        <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Status &amp; Tenggat</th>
+                        <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink">Diajukan</th>
+                        <th scope="col" class="px-5 py-4 font-heading font-semibold text-ink text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-divider">
+                    @foreach($daftarKeberatan as $item)
+                        @php $infoTenggat = $item->infoTenggat(); @endphp
+                        <tr class="hover:bg-surface-soft/80">
+                            <td class="px-5 py-4 font-heading font-bold text-sekunder tabular-nums">
+                                #{{ $item->id }}
+                            </td>
+                            <td class="px-5 py-4">
+                                <div class="font-heading font-bold text-ink">{{ $item->mahasiswa?->user?->nama ?? '-' }}</div>
+                                <div class="text-[12px] text-ink-secondary">
+                                    NIM {{ $item->mahasiswa?->nim ?? '-' }} • {{ $item->mahasiswa?->program_studi ?? '-' }}
+                                </div>
+                            </td>
+                            <td class="px-5 py-4">
+                                @if($item->hasil && $item->hasil->golongan)
+                                    <div class="font-heading font-semibold text-ink">{{ $item->hasil->golongan->nama }}</div>
+                                    <div class="text-[12px] text-ink-secondary tabular-nums">{{ $item->hasil->formatNominal() }}</div>
+                                @else
+                                    <span class="text-[12px] text-ink-muted">-</span>
+                                @endif
+                            </td>
+                            <td class="px-5 py-4 max-w-xs">
+                                <p class="text-[13px] text-ink line-clamp-2">{{ \Illuminate\Support\Str::limit($item->alasan, 110) }}</p>
+                            </td>
+                            <td class="px-5 py-4 text-[13px] tabular-nums text-ink">
+                                {{ $item->dokumen->count() }} berkas
+                            </td>
+                            <td class="px-5 py-4 space-y-1.5">
+                                <div class="flex flex-wrap items-center gap-1.5">
+                                    <x-badge-status :status="$item->status" :label="$item->status" />
+                                    @if($infoTenggat['badge_label'])
+                                        <x-badge-status :status="$infoTenggat['badge_status']" :label="$infoTenggat['badge_label']" />
+                                    @endif
+                                </div>
+                                <div class="text-[12px] text-ink-secondary">
+                                    {{ $infoTenggat['teks_perkiraan'] }}
+                                </div>
+                            </td>
+                            <td class="px-5 py-4 text-[12px] text-ink-secondary whitespace-nowrap">
+                                {{ $item->diajukan_pada?->locale('id')->translatedFormat('d M Y H:i') ?? '-' }}
+                            </td>
+                            <td class="px-5 py-4 text-right whitespace-nowrap">
+                                <x-button :href="route('petugas.keberatan.show', $item)" variant="secondary" class="text-[12px] px-3.5 py-2 min-h-[38px]">
+                                    Tinjau &amp; Putuskan
+                                </x-button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </x-table>
+        </div>
+
+        <!-- Kartu Ringkas Mobile (<768px) -->
+        <div class="md:hidden space-y-3">
+            @foreach($daftarKeberatan as $item)
+                @php $infoTenggat = $item->infoTenggat(); @endphp
+                <article class="glass-card p-4 space-y-3">
+                    <div class="flex flex-wrap items-start justify-between gap-2">
+                        <div>
+                            <div class="font-heading font-bold text-[14px] text-ink">
+                                <span class="text-sekunder">#{{ $item->id }}</span> — {{ $item->mahasiswa?->user?->nama ?? '-' }}
+                            </div>
                             <div class="text-[12px] text-ink-secondary">
                                 NIM {{ $item->mahasiswa?->nim ?? '-' }} • {{ $item->mahasiswa?->program_studi ?? '-' }}
                             </div>
-                        </td>
-                        <td class="px-5 py-4">
-                            @if($item->hasil && $item->hasil->golongan)
-                                <div class="font-heading font-semibold text-ink">{{ $item->hasil->golongan->nama }}</div>
-                                <div class="text-[12px] text-ink-secondary tabular-nums">{{ $item->hasil->formatNominal() }}</div>
-                            @else
-                                <span class="text-[12px] text-ink-muted">-</span>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            <x-badge-status :status="$item->status" :label="$item->status" />
+                            @if($infoTenggat['badge_label'])
+                                <x-badge-status :status="$infoTenggat['badge_status']" :label="$infoTenggat['badge_label']" />
                             @endif
-                        </td>
-                        <td class="px-5 py-4 max-w-xs">
-                            <p class="text-[13px] text-ink line-clamp-2">{{ \Illuminate\Support\Str::limit($item->alasan, 110) }}</p>
-                        </td>
-                        <td class="px-5 py-4 text-[13px] tabular-nums text-ink">
-                            {{ $item->dokumen->count() }} berkas
-                        </td>
-                        <td class="px-5 py-4 space-y-1.5">
-                            <div class="flex flex-wrap items-center gap-1.5">
-                                <x-badge-status :status="$item->status" :label="$item->status" />
-                                @if($infoTenggat['badge_label'])
-                                    <x-badge-status :status="$infoTenggat['badge_status']" :label="$infoTenggat['badge_label']" />
-                                @endif
-                            </div>
-                            <div class="text-[12px] text-ink-secondary">
-                                {{ $infoTenggat['teks_perkiraan'] }}
-                            </div>
-                        </td>
-                        <td class="px-5 py-4 text-[12px] text-ink-secondary whitespace-nowrap">
-                            {{ $item->diajukan_pada?->locale('id')->translatedFormat('d M Y H:i') ?? '-' }}
-                        </td>
-                        <td class="px-5 py-4 text-right whitespace-nowrap">
-                            <x-button :href="route('petugas.keberatan.show', $item)" variant="secondary" class="text-[12px] px-3.5 py-2 min-h-[38px]">
-                                Tinjau &amp; Putuskan
-                            </x-button>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </x-table>
+                        </div>
+                    </div>
+
+                    <p class="text-[13px] text-ink line-clamp-2">
+                        {{ \Illuminate\Support\Str::limit($item->alasan, 120) }}
+                    </p>
+
+                    <div class="flex flex-wrap items-center justify-between gap-2 text-[12px] text-ink-secondary pt-2 border-t border-divider/60">
+                        <span>{{ $item->hasil?->golongan?->nama ?? '-' }} ({{ $item->hasil?->formatNominal() ?? '-' }})</span>
+                        <span>{{ $item->dokumen->count() }} berkas • {{ $item->diajukan_pada?->locale('id')->translatedFormat('d M Y') ?? '-' }}</span>
+                    </div>
+
+                    <x-button :href="route('petugas.keberatan.show', $item)" variant="secondary" class="w-full text-[12px] py-2 min-h-[38px]">
+                        Tinjau &amp; Putuskan
+                    </x-button>
+                </article>
+            @endforeach
+        </div>
 
         <div class="pt-2">
             {{ $daftarKeberatan->links() }}

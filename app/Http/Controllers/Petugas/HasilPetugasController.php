@@ -20,18 +20,25 @@ class HasilPetugasController extends Controller
         private readonly RuleEngineService $ruleEngineService,
     ) {}
 
-    public function index(): View
+    public function index(Request $request): View
     {
         Gate::authorize('manage', HasilUkt::class);
 
         $daftarHasil = HasilUkt::with(['mahasiswa.user', 'golongan', 'versiParameter', 'penetap'])
             ->latest('id')
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         $daftarMahasiswa = Mahasiswa::with('user')->orderBy('nim')->get();
         $daftarGolongan = GolonganUkt::where('aktif', true)->orderBy('nominal_min')->get();
         $faktorAktif = FaktorPenilaian::where('aktif', true)->orderBy('urutan')->get();
         $versiAktif = $this->ruleEngineService->versiAktif();
+
+        $hasilTerpilih = null;
+        if ($request->filled('lihat')) {
+            $hasilTerpilih = HasilUkt::with(['mahasiswa.user', 'golongan', 'versiParameter', 'penetap', 'rincianPenilaian.faktor'])
+                ->find((int) $request->query('lihat'));
+        }
 
         return view('petugas.hasil.index', [
             'daftarHasil' => $daftarHasil,
@@ -39,6 +46,8 @@ class HasilPetugasController extends Controller
             'daftarGolongan' => $daftarGolongan,
             'faktorAktif' => $faktorAktif,
             'versiAktif' => $versiAktif,
+            'selectedMahasiswaId' => $request->query('mahasiswa_id'),
+            'hasilTerpilih' => $hasilTerpilih,
         ]);
     }
 

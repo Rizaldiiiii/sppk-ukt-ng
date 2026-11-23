@@ -128,6 +128,33 @@ class KeberatanController extends Controller
             ? (int) $validated['hasil_id']
             : $mahasiswa->hasilTerbaru?->id;
 
+        // Cegah pengajuan keberatan baru bila masih ada pengajuan aktif (Diajukan / Dalam Peninjauan) untuk hasil yang sama
+        $kueriAktif = PengajuanKeberatan::query()
+            ->where('mahasiswa_id', $mahasiswa->id)
+            ->whereIn('status', [
+                ObjectionService::STATUS_DIAJUKAN,
+                ObjectionService::STATUS_DALAM_PENINJAUAN,
+            ]);
+
+        if ($hasilId !== null) {
+            $kueriAktif->where('hasil_id', $hasilId);
+        } else {
+            $kueriAktif->whereNull('hasil_id');
+        }
+
+        $pengajuanAktif = $kueriAktif->latest('id')->first();
+        if ($pengajuanAktif) {
+            $tautanAktif = route('mahasiswa.keberatan.show', ['pengajuan' => $pengajuanAktif->id, 'shake' => 1]);
+            $pesanPenolakan = 'Masih ada pengajuan keberatan aktif (#' . $pengajuanAktif->id . ' — status ' . $pengajuanAktif->status . ') untuk hasil UKT yang sama. Silakan pantau pengajuan aktif tersebut hingga diputuskan sebelum mengajukan keberatan baru.';
+
+            return back()
+                ->withInput()
+                ->with('pengajuan_aktif_id', $pengajuanAktif->id)
+                ->with('pengajuan_aktif_url', $tautanAktif)
+                ->with('toast_error', $pesanPenolakan)
+                ->withErrors(['hasil_id' => $pesanPenolakan]);
+        }
+
         $berkasUnggahan = $request->file('dokumen', []) ?: [];
 
         $pengajuan = $this->objectionService->ajukan(

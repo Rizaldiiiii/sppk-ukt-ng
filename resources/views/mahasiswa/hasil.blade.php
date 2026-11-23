@@ -383,9 +383,14 @@
                     <!-- Rincian Perbandingan 5 Komponen Berdampingan (Hasil Saya vs Hasil Simulasi What-If) -->
                     <div class="space-y-4">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                            <h3 class="text-[18px] font-heading font-bold text-ink">
-                                Perbandingan Berdampingan per Komponen (Hasil Saya vs Hasil Simulasi What-If)
-                            </h3>
+                            <div class="space-y-0.5">
+                                <h3 class="text-[18px] font-heading font-bold text-ink">
+                                    Perbandingan Berdampingan per Komponen (Hasil Saya vs Hasil Simulasi What-If)
+                                </h3>
+                                <p class="text-[12px] font-medium text-ink-secondary">
+                                    Keterangan warna selisih: <span class="font-semibold text-success">Hijau = skor turun (UKT lebih rendah)</span>, <span class="font-semibold text-warning">kuning = skor naik</span>
+                                </p>
+                            </div>
                             <span class="text-[12px] text-ink-secondary">
                                 {{ $whatIf['jumlah_faktor_diubah'] }} dari {{ count($whatIf['perbandingan_komponen']) }} faktor diubah pada simulasi ini
                             </span>

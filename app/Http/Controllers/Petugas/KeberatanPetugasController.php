@@ -150,7 +150,12 @@ class KeberatanPetugasController extends Controller
                 ->with('toast_error', $e->getMessage());
         }
 
-        return back()->with('toast_success', 'Status pengajuan keberatan diperbarui menjadi "'.$validated['status'].'" dan pemberitahuan telah diantrekan.');
+        $pesanToast = 'Status pengajuan keberatan diperbarui menjadi "'.$validated['status'].'" dan pemberitahuan telah diantrekan.';
+        if ($validated['status'] === ObjectionService::STATUS_DISETUJUI) {
+            $pesanToast .= ' Keberatan disetujui. Langkah berikut: masukkan hasil resmi baru.';
+        }
+
+        return back()->with('toast_success', $pesanToast);
     }
 }
 

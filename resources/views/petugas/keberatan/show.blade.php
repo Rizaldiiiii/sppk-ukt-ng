@@ -66,11 +66,22 @@
                             <x-badge-status :status="$pengajuan->hasil->sumber" :label="$pengajuan->hasil->isResmi() ? 'Resmi' : 'Simulasi'" />
                         </div>
                         @if($pengajuan->hasil->rincianPenilaian->isNotEmpty())
-                            <div class="pt-2 border-t border-divider/70 space-y-1">
+                            <div class="pt-2 border-t border-divider/70 space-y-1.5">
                                 <div class="text-[12px] font-heading font-semibold text-ink-secondary">Ringkasan Komponen Hasil Saat Itu:</div>
-                                <ul class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[12px] text-ink">
+                                <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[12px] text-ink">
                                     @foreach($pengajuan->hasil->rincianPenilaian as $rincian)
-                                        <li>• <strong>{{ $rincian->faktor?->nama ?? '-' }}:</strong> {{ $rincian->data_masukan }} (Skor {{ $rincian->skor_baku }})</li>
+                                        <li class="p-2.5 rounded-[8px] bg-surface-soft/75 border border-border-subtle space-y-0.5">
+                                            <div>
+                                                • <strong>{{ $rincian->faktor?->nama ?? '-' }}:</strong>
+                                                <span class="font-medium text-ink">{{ $rincian->nilai_masukan }}</span>
+                                                <span class="text-sekunder font-heading font-semibold">(Skor {{ number_format((float) $rincian->nilai_komponen, 2, ',', '.') }})</span>
+                                            </div>
+                                            @if($rincian->kalimat_alasan)
+                                                <p class="text-[11px] text-ink-secondary pl-3 leading-relaxed">
+                                                    {{ $rincian->kalimat_alasan }}
+                                                </p>
+                                            @endif
+                                        </li>
                                     @endforeach
                                 </ul>
                             </div>
@@ -142,6 +153,32 @@
                     </p>
                 @endif
             </div>
+
+            @if($pengajuan->status === 'Disetujui')
+                <div
+                    data-tindak-lanjut-disetujui
+                    class="p-5 rounded-[12px] bg-success-bg/90 border border-[#BBF7D0] flex flex-col md:flex-row md:items-center justify-between gap-4"
+                >
+                    <div class="space-y-1">
+                        <span class="inline-block px-2.5 py-0.5 rounded-[6px] bg-white/90 text-success font-heading font-bold text-[11px] uppercase tracking-wider">
+                            Tindak Lanjut Keputusan
+                        </span>
+                        <h4 class="text-[16px] font-heading font-bold text-ink">
+                            Keberatan disetujui. Langkah berikut: masukkan hasil resmi baru
+                        </h4>
+                        <p class="text-[13px] text-ink-secondary leading-relaxed">
+                            Persetujuan keberatan tidak mengubah golongan UKT secara otomatis. Silakan catat penetapan hasil resmi baru untuk <strong>{{ $pengajuan->mahasiswa?->user?->nama ?? 'mahasiswa ini' }}</strong> (NIM {{ $pengajuan->mahasiswa?->nim ?? '-' }}).
+                        </p>
+                    </div>
+                    <x-button
+                        :href="route('petugas.hasil.index', ['mahasiswa_id' => $pengajuan->mahasiswa_id])"
+                        variant="primary"
+                        class="shrink-0"
+                    >
+                        Masukkan Hasil Resmi Baru &rarr;
+                    </x-button>
+                </div>
+            @endif
         @else
             <form
                 method="POST"

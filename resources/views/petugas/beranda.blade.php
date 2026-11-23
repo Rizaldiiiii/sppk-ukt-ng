@@ -2,6 +2,74 @@
     title="Beranda Petugas UKT"
     subtitle="Ringkasan pengelolaan rincian hasil, parameter penilaian berversi, dan konten informasi publik"
 >
+    <!-- Antrean Kerja Prioritas Petugas -->
+    <section class="space-y-3" aria-labelledby="heading-antrean-kerja">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+            <h2 id="heading-antrean-kerja" class="text-[18px] font-heading font-bold text-ink">
+                Antrean Kerja yang Perlu Ditindaklanjuti
+            </h2>
+            <span class="text-[12px] text-ink-secondary">
+                Klik kartu untuk langsung membuka daftar terfilter
+            </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <a
+                href="{{ route('petugas.keberatan.index', ['status' => 'Diajukan']) }}"
+                class="glass-card glass-card-light p-5 border-l-4 border-l-sekunder hover:bg-white/85 transition-colors duration-150 flex flex-col justify-between gap-3"
+            >
+                <div class="space-y-1">
+                    <div class="text-[13px] font-heading font-semibold text-ink-secondary">
+                        Keberatan Menunggu Diputuskan
+                    </div>
+                    <div class="text-[28px] font-heading font-extrabold text-sekunder tabular-nums">
+                        {{ $keberatanMenunggu ?? 0 }} Pengajuan
+                    </div>
+                </div>
+                <div class="text-[12px] font-heading font-semibold text-sekunder flex items-center justify-between">
+                    <span>Status Diajukan, Dalam Peninjauan, atau Perlu Perbaikan</span>
+                    <span aria-hidden="true">&rarr;</span>
+                </div>
+            </a>
+
+            <a
+                href="{{ route('petugas.pertanyaan.index', ['status' => 'baru']) }}"
+                class="glass-card glass-card-light p-5 border-l-4 border-l-highlight hover:bg-white/85 transition-colors duration-150 flex flex-col justify-between gap-3"
+            >
+                <div class="space-y-1">
+                    <div class="text-[13px] font-heading font-semibold text-ink-secondary">
+                        Pertanyaan Belum Dijawab
+                    </div>
+                    <div class="text-[28px] font-heading font-extrabold text-ink tabular-nums">
+                        {{ $pertanyaanBelumDijawab ?? 0 }} Pertanyaan
+                    </div>
+                </div>
+                <div class="text-[12px] font-heading font-semibold text-sekunder flex items-center justify-between">
+                    <span>Pertanyaan mahasiswa berstatus Baru</span>
+                    <span aria-hidden="true">&rarr;</span>
+                </div>
+            </a>
+
+            <a
+                href="{{ route('petugas.keberatan.index', ['status_tenggat' => ($jumlahMelewatiTenggat ?? 0) > 0 ? 'terlewat' : 'mendekati']) }}"
+                class="glass-card glass-card-light p-5 border-l-4 {{ ($jumlahMelewatiTenggat ?? 0) > 0 ? 'border-l-error' : 'border-l-warning' }} hover:bg-white/85 transition-colors duration-150 flex flex-col justify-between gap-3"
+            >
+                <div class="space-y-1">
+                    <div class="text-[13px] font-heading font-semibold text-ink-secondary">
+                        Mendekati &amp; Terlewat Tenggat SLA
+                    </div>
+                    <div class="text-[28px] font-heading font-extrabold {{ ($jumlahMelewatiTenggat ?? 0) > 0 ? 'text-error' : 'text-warning' }} tabular-nums">
+                        {{ $totalPerhatianSla ?? 0 }} Pengajuan
+                    </div>
+                </div>
+                <div class="text-[12px] text-ink-secondary flex items-center justify-between">
+                    <span>{{ $jumlahMendekatiTenggat ?? 0 }} mendekati • {{ $jumlahMelewatiTenggat ?? 0 }} terlewat tenggat</span>
+                    <span class="font-heading font-semibold text-sekunder" aria-hidden="true">&rarr;</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
     <!-- Statistik Ringkas Petugas -->
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
         <div class="glass-card glass-card-light p-6 space-y-2" data-reveal="up" style="--reveal-delay: 0ms">
@@ -73,7 +141,7 @@
                     Kelola Konten Publik
                 </h2>
                 <p class="text-[14px] text-ink-secondary leading-relaxed">
-                    Perbarui penjelasan alur proses, daftar faktor penentu beserta status konfirmasinya, rentang nominal golongan UKT, dan prosedur keberatan.
+                    Perbarui penjelasan alur proses, daftar faktor penentu, rentang nominal golongan UKT, dan prosedur keberatan.
                 </p>
             </div>
             <x-button :href="route('petugas.konten.index')" variant="secondary">

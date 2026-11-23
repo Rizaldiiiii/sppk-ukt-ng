@@ -156,88 +156,129 @@
             description="Belum ada entri audit_logs yang sesuai dengan kriteria pencarian atau filter yang Anda pilih."
         />
     @else
-        <x-table>
-            <thead>
-                <tr class="border-b border-divider bg-surface-soft/90">
-                    <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Waktu</th>
-                    <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Pelaku</th>
-                    <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Aksi &amp; Kategori</th>
-                    <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Subjek &amp; ID</th>
-                    <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Perubahan Data (Sebelum &rarr; Sesudah)</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-divider align-top">
-                @foreach($daftarLog as $log)
-                    @php
-                        $kategoriLog = $log->kategori();
-                        $perubahanTerbaca = $log->daftarPerubahanTerbaca();
-                    @endphp
-                    <tr class="hover:bg-surface-soft/80">
-                        <td class="px-4 py-3.5 text-[12px] text-ink-secondary whitespace-nowrap tabular-nums">
-                            {{ $log->dibuat_pada?->locale('id')->translatedFormat('d M Y H:i:s') ?? '-' }}
-                        </td>
-                        <td class="px-4 py-3.5 text-[13px]">
-                            <div class="font-heading font-bold text-ink">
-                                {{ $log->pelaku?->nama ?? 'Sistem / Publik' }}
-                            </div>
-                            <div class="text-[11px] text-ink-secondary">
-                                {{ $log->pelaku?->labelPeran() ?? 'Tanpa sesi' }}
-                            </div>
-                        </td>
-                        <td class="px-4 py-3.5 space-y-1.5">
-                            <div>
-                                <span
-                                    data-badge-kategori="{{ $kategoriLog }}"
-                                    class="inline-flex items-center px-2.5 py-0.5 rounded-[8px] text-[11px] font-heading font-semibold {{ $log->kelasBadgeKategori() }}"
-                                >{{ $kategoriLog }}</span>
-                            </div>
-                            <div class="font-heading font-bold text-[13px] text-ink leading-snug">
-                                {{ $log->labelAksi() }}
-                            </div>
-                            <div class="font-mono text-[11px] text-ink-muted">
-                                {{ $log->aksi }}
-                            </div>
-                        </td>
-                        <td class="px-4 py-3.5 text-[12px]">
-                            <div class="font-heading font-semibold text-ink">{{ $log->labelSubjekTipe() }}</div>
-                            <div class="text-ink-muted font-mono">ID: {{ $log->subjek_id ?? \App\Models\AuditLog::LABEL_NILAI_KOSONG }}</div>
-                        </td>
-                        <td class="px-4 py-3.5 text-[12px] max-w-md">
-                            @if($perubahanTerbaca !== [])
-                                <ul class="space-y-1 text-[12px] text-ink">
-                                    @foreach($perubahanTerbaca as $baris)
-                                        <li class="leading-relaxed break-words">
-                                            <strong class="font-heading font-semibold text-ink">{{ $baris['label'] }}:</strong>
-                                            <span class="text-ink-secondary">{{ $baris['sebelum'] }}</span>
-                                            <span class="text-sekunder font-bold px-0.5">&rarr;</span>
-                                            <span class="font-medium text-ink">{{ $baris['sesudah'] }}</span>
-                                        </li>
-                                    @endforeach
-                                </ul>
-
-                                <details class="mt-2 text-[11px]">
-                                    <summary class="cursor-pointer font-heading font-semibold text-sekunder hover:underline select-none">
-                                        Lihat JSON mentah
-                                    </summary>
-                                    <div class="mt-1.5 grid grid-cols-1 gap-2">
-                                        <div>
-                                            <div class="text-[10px] font-semibold uppercase text-ink-muted">Sebelum:</div>
-                                            <pre class="p-2 rounded-[8px] bg-white/80 border border-border-glass text-[11px] font-mono text-ink-secondary whitespace-pre-wrap break-words">{{ !empty($log->nilai_sebelum) ? json_encode($log->nilai_sebelum, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : \App\Models\AuditLog::LABEL_NILAI_KOSONG }}</pre>
-                                        </div>
-                                        <div>
-                                            <div class="text-[10px] font-semibold uppercase text-ink-muted">Sesudah:</div>
-                                            <pre class="p-2 rounded-[8px] bg-white/80 border border-border-glass text-[11px] font-mono text-ink whitespace-pre-wrap break-words">{{ !empty($log->nilai_sesudah) ? json_encode($log->nilai_sesudah, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : \App\Models\AuditLog::LABEL_NILAI_KOSONG }}</pre>
-                                        </div>
-                                    </div>
-                                </details>
-                            @else
-                                <span class="text-ink-muted">{{ \App\Models\AuditLog::LABEL_NILAI_KOSONG }}</span>
-                            @endif
-                        </td>
+        <div class="hidden md:block">
+            <x-table>
+                <thead>
+                    <tr class="border-b border-divider bg-surface-soft/90">
+                        <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Waktu</th>
+                        <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Pelaku</th>
+                        <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Aksi &amp; Kategori</th>
+                        <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Subjek &amp; ID</th>
+                        <th scope="col" class="px-4 py-3.5 font-heading font-semibold text-ink">Perubahan Data (Sebelum &rarr; Sesudah)</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </x-table>
+                </thead>
+                <tbody class="divide-y divide-divider align-top">
+                    @foreach($daftarLog as $log)
+                        @php
+                            $kategoriLog = $log->kategori();
+                            $perubahanTerbaca = $log->daftarPerubahanTerbaca();
+                        @endphp
+                        <tr class="hover:bg-surface-soft/80">
+                            <td class="px-4 py-3.5 text-[12px] text-ink-secondary whitespace-nowrap tabular-nums">
+                                {{ $log->dibuat_pada?->locale('id')->translatedFormat('d M Y H:i:s') ?? '-' }}
+                            </td>
+                            <td class="px-4 py-3.5 text-[13px]">
+                                <div class="font-heading font-bold text-ink">
+                                    {{ $log->pelaku?->nama ?? 'Sistem / Publik' }}
+                                </div>
+                                <div class="text-[11px] text-ink-secondary">
+                                    {{ $log->pelaku?->labelPeran() ?? 'Tanpa sesi' }}
+                                </div>
+                            </td>
+                            <td class="px-4 py-3.5 space-y-1.5">
+                                <div>
+                                    <span
+                                        data-badge-kategori="{{ $kategoriLog }}"
+                                        class="inline-flex items-center px-2.5 py-0.5 rounded-[8px] text-[11px] font-heading font-semibold {{ $log->kelasBadgeKategori() }}"
+                                    >{{ $kategoriLog }}</span>
+                                </div>
+                                <div class="font-heading font-bold text-[13px] text-ink leading-snug">
+                                    {{ $log->labelAksi() }}
+                                </div>
+                                <div class="font-mono text-[11px] text-ink-muted">
+                                    {{ $log->aksi }}
+                                </div>
+                            </td>
+                            <td class="px-4 py-3.5 text-[12px]">
+                                <div class="font-heading font-semibold text-ink">{{ $log->labelSubjekTipe() }}</div>
+                                <div class="text-ink-muted font-mono">ID: {{ $log->subjek_id ?? \App\Models\AuditLog::LABEL_NILAI_KOSONG }}</div>
+                            </td>
+                            <td class="px-4 py-3.5 text-[12px] max-w-md">
+                                @if($perubahanTerbaca !== [])
+                                    <ul class="space-y-1 text-[12px] text-ink">
+                                        @foreach($perubahanTerbaca as $baris)
+                                            <li class="leading-relaxed break-words">
+                                                <strong class="font-heading font-semibold text-ink">{{ $baris['label'] }}:</strong>
+                                                <span class="text-ink-secondary">{{ $baris['sebelum'] }}</span>
+                                                <span class="text-sekunder font-bold px-0.5">&rarr;</span>
+                                                <span class="font-medium text-ink">{{ $baris['sesudah'] }}</span>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+
+                                    <details class="mt-2 text-[11px]">
+                                        <summary class="cursor-pointer font-heading font-semibold text-sekunder hover:underline select-none">
+                                            Lihat JSON mentah
+                                        </summary>
+                                        <div class="mt-1.5 grid grid-cols-1 gap-2">
+                                            <div>
+                                                <div class="text-[10px] font-semibold uppercase text-ink-muted">Sebelum:</div>
+                                                <pre class="p-2 rounded-[8px] bg-white/80 border border-border-glass text-[11px] font-mono text-ink-secondary whitespace-pre-wrap break-words">{{ !empty($log->nilai_sebelum) ? json_encode($log->nilai_sebelum, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : \App\Models\AuditLog::LABEL_NILAI_KOSONG }}</pre>
+                                            </div>
+                                            <div>
+                                                <div class="text-[10px] font-semibold uppercase text-ink-muted">Sesudah:</div>
+                                                <pre class="p-2 rounded-[8px] bg-white/80 border border-border-glass text-[11px] font-mono text-ink whitespace-pre-wrap break-words">{{ !empty($log->nilai_sesudah) ? json_encode($log->nilai_sesudah, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : \App\Models\AuditLog::LABEL_NILAI_KOSONG }}</pre>
+                                            </div>
+                                        </div>
+                                    </details>
+                                @else
+                                    <span class="text-ink-muted">{{ \App\Models\AuditLog::LABEL_NILAI_KOSONG }}</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </x-table>
+        </div>
+
+        <!-- Kartu Ringkas Mobile (<768px) -->
+        <div class="md:hidden space-y-3">
+            @foreach($daftarLog as $log)
+                @php
+                    $kategoriLog = $log->kategori();
+                    $perubahanTerbaca = $log->daftarPerubahanTerbaca();
+                @endphp
+                <article class="glass-card p-4 space-y-2.5 text-[12px]">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-[8px] text-[11px] font-heading font-semibold {{ $log->kelasBadgeKategori() }}">
+                            {{ $kategoriLog }}
+                        </span>
+                        <span class="text-[11px] text-ink-secondary tabular-nums">
+                            {{ $log->dibuat_pada?->locale('id')->translatedFormat('d M Y H:i') ?? '-' }}
+                        </span>
+                    </div>
+                    <div class="font-heading font-bold text-[14px] text-ink">
+                        {{ $log->labelAksi() }}
+                    </div>
+                    <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] text-ink-secondary border-b border-divider/60 pb-2">
+                        <span><strong>Pelaku:</strong> {{ $log->pelaku?->nama ?? 'Sistem / Publik' }}</span>
+                        <span><strong>Subjek:</strong> {{ $log->labelSubjekTipe() }} (ID: {{ $log->subjek_id ?? \App\Models\AuditLog::LABEL_NILAI_KOSONG }})</span>
+                    </div>
+                    @if($perubahanTerbaca !== [])
+                        <ul class="space-y-1 text-[12px] text-ink">
+                            @foreach($perubahanTerbaca as $baris)
+                                <li class="leading-relaxed break-words">
+                                    <strong class="font-heading font-semibold text-ink">{{ $baris['label'] }}:</strong>
+                                    <span class="text-ink-secondary">{{ $baris['sebelum'] }}</span>
+                                    <span class="text-sekunder font-bold px-0.5">&rarr;</span>
+                                    <span class="font-medium text-ink">{{ $baris['sesudah'] }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </article>
+            @endforeach
+        </div>
 
         <div class="pt-2">
             {{ $daftarLog->links() }}

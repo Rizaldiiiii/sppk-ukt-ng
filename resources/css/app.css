@@ -662,6 +662,23 @@ html.has-reveal [data-reveal].is-visible {
     }
 }
 
+/* Shake sekali saat kartu pengajuan keberatan aktif dibuka dari tautan penolakan duplikat */
+@keyframes shakeOnce {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    20%, 60% {
+        transform: translateX(-8px);
+    }
+    40%, 80% {
+        transform: translateX(8px);
+    }
+}
+
+.animate-shake-once {
+    animation: shakeOnce 480ms var(--ease-standard) 1;
+}
+
 /* Reduced Motion (Motion.md §15.1 — Wajib) */
 @media (prefers-reduced-motion: reduce) {
     *,

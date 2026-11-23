@@ -12,7 +12,10 @@
     </x-slot:headerActions>
 
     <!-- Ringkasan Status & Tanggal Perubahan Terakhir -->
-    <section class="glass-card glass-card-glow p-6 md:p-8 relative overflow-hidden space-y-6">
+    <section
+        data-kartu-keberatan-utama
+        class="glass-card glass-card-glow p-6 md:p-8 relative overflow-hidden space-y-6 {{ request()->boolean('shake') ? 'animate-shake-once' : '' }}"
+    >
         <div class="accent-bar absolute top-0 inset-x-0" aria-hidden="true"></div>
 
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-divider/80 pb-5">

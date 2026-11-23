@@ -856,5 +856,133 @@ class SppkUktTahap2Test extends TestCase
             ->assertDontSee('ID: 88');
         $this->assertSame(0, $resCariNim->viewData('daftarLog')->total());
     }
+
+    public function test_detail_keberatan_petugas_menampilkan_rincian_komponen_dan_kartu_tindak_lanjut_disetujui(): void
+    {
+        Mail::fake();
+
+        $petugas = User::where('email', 'petugas@ung.ac.id')->firstOrFail();
+        $budi = User::where('email', 'budi.pratama@student.ung.ac.id')->firstOrFail();
+        $hasilBudi = $budi->mahasiswa->hasilTerbaru;
+
+        $pengajuan = PengajuanKeberatan::create([
+            'mahasiswa_id' => $budi->mahasiswa->id,
+            'hasil_id' => $hasilBudi->id,
+            'alasan' => 'Penghasilan keluarga menurun drastis sehingga mohon peninjauan ulang.',
+            'status' => ObjectionService::STATUS_DIAJUKAN,
+            'diajukan_pada' => now(),
+        ]);
+        $pengajuan->load('hasil.rincianPenilaian');
+
+        $resShow = $this->actingAs($petugas)->get(route('petugas.keberatan.show', $pengajuan));
+        $resShow->assertStatus(200);
+
+        foreach ($pengajuan->hasil->rincianPenilaian as $rincian) {
+            $resShow->assertSee($rincian->nilai_masukan)
+                ->assertSee(number_format((float) $rincian->nilai_komponen, 2, ',', '.'))
+                ->assertSee($rincian->kalimat_alasan);
+        }
+
+        // Ubah status menjadi Disetujui dan pastikan kartu tindak lanjut beserta tautan mahasiswa_id tampil
+        $resApprove = $this->actingAs($petugas)->patch(route('petugas.keberatan.ubah-status', $pengajuan), [
+            'status' => 'Disetujui',
+            'catatan_petugas' => 'Berkas telah diverifikasi dan keberatan disetujui.',
+        ]);
+        $resApprove->assertRedirect();
+
+        $resAfterApprove = $this->actingAs($petugas)->get(route('petugas.keberatan.show', $pengajuan));
+        $resAfterApprove->assertStatus(200)
+            ->assertSee('Keberatan disetujui. Langkah berikut: masukkan hasil resmi baru')
+            ->assertSee(route('petugas.hasil.index', ['mahasiswa_id' => $pengajuan->mahasiswa_id]), false);
+    }
+
+    public function test_form_hasil_petugas_tidak_terisi_nilai_contoh_awal_dan_validasi_gagal_bila_kosong(): void
+    {
+        $petugas = User::where('email', 'petugas@ung.ac.id')->firstOrFail();
+
+        $resIndex = $this->actingAs($petugas)->get(route('petugas.hasil.index'));
+        $resIndex->assertStatus(200)
+            ->assertDontSee('value="2500000"', false)
+            ->assertDontSee('value="SK Penetapan UKT Rektor UNG"', false)
+            ->assertDontSee('value="4000000"', false)
+            ->assertSee('placeholder="Contoh: 2500000"', false)
+            ->assertSee('placeholder="Contoh: SK Penetapan UKT Rektor UNG"', false);
+
+        // Kirim form resmi kosong harus gagal validasi
+        $resEmpty = $this->actingAs($petugas)
+            ->from(route('petugas.hasil.index'))
+            ->post(route('petugas.hasil.store-resmi'), []);
+        $resEmpty->assertRedirect(route('petugas.hasil.index'));
+        $resEmpty->assertSessionHasErrors(['mahasiswa_id', 'golongan_id', 'nominal', 'tanggal_penetapan', 'sumber_penetapan', 'masukan']);
+
+        // Rincian hasil terpilih tampil ketika ?lihat={id} dibuka
+        $hasilContoh = \App\Models\HasilUkt::with('rincianPenilaian')->firstOrFail();
+        $resLihat = $this->actingAs($petugas)->get(route('petugas.hasil.index', ['lihat' => $hasilContoh->id]));
+        $resLihat->assertStatus(200)
+            ->assertSee('Rincian Hasil UKT #' . $hasilContoh->id);
+    }
+
+    public function test_keberatan_kedua_untuk_hasil_sama_ditolak_saat_aktif_dan_berhasil_setelah_diputuskan(): void
+    {
+        Mail::fake();
+
+        $mhsUser = User::where('email', 'budi.pratama@student.ung.ac.id')->firstOrFail();
+        $mahasiswa = $mhsUser->mahasiswa;
+        $hasil = $mahasiswa->hasilTerbaru;
+
+        // Pastikan pengajuan lama untuk hasil ini diselesaikan dulu bila ada
+        PengajuanKeberatan::where('mahasiswa_id', $mahasiswa->id)
+            ->where('hasil_id', $hasil->id)
+            ->update(['status' => 'Ditolak']);
+
+        // 1. Pengajuan pertama berhasil
+        $resPertama = $this->actingAs($mhsUser)->post(route('mahasiswa.keberatan.store'), [
+            'hasil_id' => $hasil->id,
+            'alasan' => 'Pengajuan keberatan pertama dengan uraian lengkap kondisi ekonomi keluarga saat ini.',
+        ]);
+        $resPertama->assertRedirect();
+
+        $pengajuanAktif = PengajuanKeberatan::where('mahasiswa_id', $mahasiswa->id)
+            ->where('hasil_id', $hasil->id)
+            ->where('status', 'Diajukan')
+            ->latest('id')
+            ->firstOrFail();
+
+        // 2. Pengajuan kedua untuk hasil_id yang sama saat masih aktif (Diajukan) harus ditolak dengan tautan ke pengajuan aktif
+        $resKedua = $this->actingAs($mhsUser)
+            ->from(route('mahasiswa.keberatan.create'))
+            ->post(route('mahasiswa.keberatan.store'), [
+                'hasil_id' => $hasil->id,
+                'alasan' => 'Pengajuan keberatan kedua yang seharusnya ditolak karena masih ada pengajuan aktif.',
+            ]);
+        $resKedua->assertRedirect(route('mahasiswa.keberatan.create'));
+        $resKedua->assertSessionHasErrors(['hasil_id']);
+        $resKedua->assertSessionHas('pengajuan_aktif_id', $pengajuanAktif->id);
+        $resKedua->assertSessionHas(
+            'pengajuan_aktif_url',
+            route('mahasiswa.keberatan.show', ['pengajuan' => $pengajuanAktif->id, 'shake' => 1])
+        );
+
+        // Buka tautan pengajuan aktif dengan ?shake=1 dan pastikan kelas animate-shake-once tampil
+        $resShake = $this->actingAs($mhsUser)->get(route('mahasiswa.keberatan.show', [
+            'pengajuan' => $pengajuanAktif->id,
+            'shake' => 1,
+        ]));
+        $resShake->assertStatus(200)
+            ->assertSee('animate-shake-once', false);
+
+        // 3. Setelah pengajuan lama diputuskan (Ditolak/Disetujui), pengajuan baru untuk hasil yang sama berhasil
+        $pengajuanAktif->update([
+            'status' => 'Ditolak',
+            'diputuskan_pada' => now(),
+        ]);
+
+        $resKetiga = $this->actingAs($mhsUser)->post(route('mahasiswa.keberatan.store'), [
+            'hasil_id' => $hasil->id,
+            'alasan' => 'Pengajuan keberatan baru setelah pengajuan sebelumnya diputuskan secara final.',
+        ]);
+        $resKetiga->assertSessionHasNoErrors();
+        $resKetiga->assertRedirect();
+    }
 }
 
